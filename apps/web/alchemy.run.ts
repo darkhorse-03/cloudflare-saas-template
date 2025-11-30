@@ -2,9 +2,9 @@ import { api } from '@repo/api/alchemy'
 import alchemy from 'alchemy'
 import { Vite } from 'alchemy/cloudflare'
 
-const app = await alchemy('web')
+const app = await alchemy('underdog-web')
 
-export const web = await Vite('web', {
+export const web = await Vite('underdog-web', {
   entrypoint: './worker.ts',
   bindings: {
     api,
@@ -12,6 +12,9 @@ export const web = await Vite('web', {
   assets: {
     run_worker_first: ['/api/*'],
   },
+  domains: [
+    "underdog.sarimahmed.net"
+  ]
 })
 
 console.log({ url: web.url })
