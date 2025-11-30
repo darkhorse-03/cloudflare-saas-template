@@ -1,5 +1,5 @@
 {
-  "name": "fullstack-monorepo-template",
+  "name": "underdog-template",
   "private": true,
   "scripts": {
     "build": "turbo run build",
