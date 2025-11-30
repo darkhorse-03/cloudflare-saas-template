@@ -7,6 +7,9 @@ const app = await alchemy('underdog-api')
 export const api = await Worker('underdog-api', {
   entrypoint: path.join(import.meta.dirname, 'src', 'index.ts'),
   url: false,
+  placement: {
+    mode: 'smart',
+  }
 })
 
 await app.finalize()

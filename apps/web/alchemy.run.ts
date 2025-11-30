@@ -14,7 +14,10 @@ export const web = await Vite('underdog-web', {
   },
   domains: [
     "underdog.sarimahmed.net"
-  ]
+  ],
+  placement: {
+    mode: 'smart',
+  }
 })
 
 console.log({ url: web.url })

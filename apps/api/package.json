@@ -13,9 +13,9 @@
     }
   },
   "scripts": {
-    "dev": "alchemy dev --app api",
-    "deploy": "alchemy deploy --app api",
-    "destroy": "alchemy destroy --app api",
+    "dev": "alchemy dev --app underdog-api",
+    "deploy": "alchemy deploy --app underdog-api",
+    "destroy": "alchemy destroy --app underdog-api",
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
