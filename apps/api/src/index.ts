@@ -7,31 +7,22 @@ app.use('/*', cors())
 
 const routes = app
   .get('/', (c) => {
-    return c.json({ message: 'Welcome to underdog Template API' })
+    return c.json({ message: 'Welcome to underdog API' })
   })
-  .get('/health', (c) => {
-    return c.json({ status: 'ok', timestamp: Date.now() })
+  .get('/ping', (c) => {
+    return c.json({ pong: Date.now() })
   })
-  .get('/users', (c) => {
-    const users = [
-      { id: 1, name: 'Alice', email: 'alice@example.com' },
-      { id: 2, name: 'Bob', email: 'bob@example.com' },
-      { id: 3, name: 'Charlie', email: 'charlie@example.com' },
-    ]
-    return c.json(users)
+  .get('/time', (c) => {
+    return c.json({
+      iso: new Date().toISOString(),
+      unix: Date.now(),
+    })
   })
-  .get('/users/:id', (c) => {
-    const id = Number(c.req.param('id'))
-    const users = [
-      { id: 1, name: 'Alice', email: 'alice@example.com' },
-      { id: 2, name: 'Bob', email: 'bob@example.com' },
-      { id: 3, name: 'Charlie', email: 'charlie@example.com' },
-    ]
-    const user = users.find((u) => u.id === id)
-    if (!user) {
-      return c.json({ error: 'User not found' }, 404)
-    }
-    return c.json(user)
+  .get('/random', (c) => {
+    return c.json({
+      number: Math.floor(Math.random() * 100),
+      uuid: crypto.randomUUID(),
+    })
   })
 
 export type AppType = typeof routes
