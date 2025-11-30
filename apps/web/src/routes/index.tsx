@@ -24,9 +24,7 @@ function App() {
           <h1 className="text-4xl font-bold mb-2">underdog</h1>
           <p className="text-muted-foreground">Hono + TanStack Router + React Query</p>
           {health && (
-            <p className="text-xs text-muted-foreground mt-2">
-              API Status: {health.status}
-            </p>
+            <p className="text-xs text-muted-foreground mt-2">API Status: {health.status}</p>
           )}
         </header>
 
@@ -45,21 +43,14 @@ function App() {
             </Button>
           </div>
 
-          {usersLoading && (
-            <p className="text-muted-foreground">Loading users...</p>
-          )}
+          {usersLoading && <p className="text-muted-foreground">Loading users...</p>}
 
-          {usersError && (
-            <p className="text-destructive">Error loading users</p>
-          )}
+          {usersError && <p className="text-destructive">Error loading users</p>}
 
           {users && (
             <ul className="space-y-3">
               {users.map((user) => (
-                <li
-                  key={user.id}
-                  className="p-4 bg-card rounded-lg border"
-                >
+                <li key={user.id} className="p-4 bg-card rounded-lg border">
                   <p className="font-medium">{user.name}</p>
                   <p className="text-sm text-muted-foreground">{user.email}</p>
                 </li>
