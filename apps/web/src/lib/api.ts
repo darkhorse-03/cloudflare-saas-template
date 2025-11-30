@@ -1,5 +1,7 @@
-import { createApiClient } from '@repo/api-client'
+import { hcWithType } from '@repo/api/hc'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8787'
-
-export const api = createApiClient(API_URL)
+export const api = hcWithType('/api', {
+    init: {
+        credentials: 'include',
+    },
+})

@@ -4,20 +4,25 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./hc": "./src/hc.ts",
+    "./alchemy": {
+      "bun": "./alchemy.run.ts",
+      "import": "./alchemy.run.ts",
+      "types": "./alchemy.run.ts"
+    }
   },
   "scripts": {
-    "dev": "wrangler dev",
-    "build": "wrangler deploy --dry-run --outdir dist",
-    "deploy": "wrangler deploy --minify",
-    "cf-typegen": "wrangler types --env-interface CloudflareBindings",
+    "dev": "alchemy dev --app api",
+    "deploy": "alchemy deploy --app api",
+    "destroy": "alchemy destroy --app api",
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
-    "@cloudflare/workers-types": "^4.20251128.0",
     "hono": "^4.10.7"
   },
   "devDependencies": {
-    "wrangler": "^4.4.0"
+    "@cloudflare/workers-types": "^4.20251128.0",
+    "typescript": "^5.7.2"
   }
 }
