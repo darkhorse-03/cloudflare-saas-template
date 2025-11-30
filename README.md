@@ -1,6 +1,6 @@
 <div align="center">
 
-# underdog
+# underdog template
 
 **Fullstack Cloudflare Workers template with service bindings**
 

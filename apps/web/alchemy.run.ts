@@ -4,11 +4,13 @@ import { Vite } from 'alchemy/cloudflare'
 
 const app = await alchemy('underdog-web')
 
-export const web = await Vite('underdog-web', {
+export const web = await Vite('web', {
+  name: 'underdog-web',
   entrypoint: './worker.ts',
   bindings: {
     api,
   },
+  url: false,
   assets: {
     run_worker_first: ['/api/*'],
   },
