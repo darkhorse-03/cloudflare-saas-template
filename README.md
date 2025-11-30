@@ -13,76 +13,84 @@
 
 ![](docs/screenshot.png)
 
-</div>
-
----
-
 ```
 Browser → Web Worker ⚡ Service Binding ⚡ API Worker
 ```
 
-- ✓ No public API URL
-- ✓ Zero network latency
-- ✓ Type-safe end-to-end
+✓ No public API URL &nbsp;&nbsp; ✓ Zero network latency &nbsp;&nbsp; ✓ Type-safe end-to-end
+
+</div>
+
+---
 
 ## 🚀 Getting Started
 
-1. Click **"Use this template"** → **"Create a new repository"**
-2. Clone your new repo
-3. Install dependencies and start dev server:
-
 ```bash
+# 1. Use this template on GitHub, then clone your repo
+
+# 2. Install & run
 bun install
 bun run dev
 ```
 
-4. Update the project name in:
-   - `package.json` → `name`
-   - `apps/api/alchemy.run.ts` → app name and worker name
-   - `apps/web/alchemy.run.ts` → app name, worker name, and `domains`
+**Configure your project:**
 
-5. Clean up boilerplate:
-   - Delete `docs/` folder (screenshot)
-   - Replace demo components in `apps/web/src/components/`
-   - Replace demo routes in `apps/web/src/routes/`
-   - Update API routes in `apps/api/src/index.ts`
+| File | What to change |
+|------|----------------|
+| `package.json` | `name` |
+| `apps/api/alchemy.run.ts` | App name, worker name |
+| `apps/web/alchemy.run.ts` | App name, worker name, `domains` |
 
-6. Deploy to Cloudflare:
+**Clean up boilerplate:**
+
+Remove `docs/`, demo components in `apps/web/src/components/`, demo routes, and sample API endpoints.
+
+**Deploy:**
 
 ```bash
 bun run deploy
 ```
 
+---
+
 ## 📦 Stack
 
 | Tool | Purpose |
-|---|---|
-| **Hono** | Type-safe RPC |
-| **TanStack Router** | File-based routing |
-| **React Query** | Smart caching |
-| **shadcn/ui** | UI components |
-| **Alchemy** | One-command deploy |
-| **Biome** | Fast lint & format |
-| **Turborepo** | Monorepo tasks |
+|------|---------|
+| [Hono](https://hono.dev) | Type-safe RPC |
+| [TanStack Router](https://tanstack.com/router) | File-based routing |
+| [React Query](https://tanstack.com/query) | Smart caching |
+| [shadcn/ui](https://ui.shadcn.com) | UI components |
+| [Alchemy](https://alchemy.run) | One-command deploy |
+| [Biome](https://biomejs.dev) | Fast lint & format |
+| [Turborepo](https://turbo.build) | Monorepo tasks |
+
+---
 
 ## 📁 Structure
 
 ```
 apps/
-  api/     → Hono API (Cloudflare Worker)
-  web/     → React SPA (Cloudflare Pages)
+  api/   →  Hono API (Cloudflare Worker)
+  web/   →  React SPA (Cloudflare Pages)
 ```
+
+---
 
 ## 🛠 Commands
 
-```bash
-bun run dev      # Start dev servers
-bun run deploy   # Deploy to Cloudflare
-bun run check    # Lint & format
-```
+| Command | Description |
+|---------|-------------|
+| `bun run dev` | Start dev servers |
+| `bun run deploy` | Deploy to Cloudflare |
+| `bun run check` | Lint & format |
+
+---
 
 ## 🔜 Roadmap
 
-- **Better Auth** - Authentication
-- **Drizzle + D1** - Database
-- **Resend** - Emails
+| Feature | Status |
+|---------|--------|
+| Better Auth | Planned |
+| Drizzle + D1 | Planned |
+| Resend | Planned |
