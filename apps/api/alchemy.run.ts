@@ -9,6 +9,9 @@ export const api = await Worker('underdog-api', {
   url: false,
   placement: {
     mode: 'smart',
+  },
+  dev: {
+    port: 8787,
   }
 })
 
