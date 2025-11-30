@@ -21,7 +21,9 @@
 Browser → Web Worker ⚡ Service Binding ⚡ API Worker
 ```
 
-No public API URL. Zero network latency. Type-safe end-to-end.
+- ✓ No public API URL
+- ✓ Zero network latency
+- ✓ Type-safe end-to-end
 
 ## 🚀 Getting Started
 
