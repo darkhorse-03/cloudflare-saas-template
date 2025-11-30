@@ -1,7 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { RefreshCw } from 'lucide-react'
-import { useUsers, useHealth } from '../lib/api'
 import { Button } from '@/components/ui/button'
+import { useHealth } from '@/hooks/use-health'
+import { useUsers } from '@/hooks/use-users'
 
 export const Route = createFileRoute('/')({
   component: App,
