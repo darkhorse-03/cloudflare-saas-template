@@ -1,7 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { RefreshCw } from 'lucide-react'
+import { Moon, RefreshCw, Sun } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useHealth } from '@/hooks/use-health'
+import { useTheme } from '@/hooks/use-theme'
 import { useUsers } from '@/hooks/use-users'
 
 export const Route = createFileRoute('/')({
@@ -17,9 +18,16 @@ function App() {
     refetch,
   } = useUsers()
   const { data: health } = useHealth()
+  const { theme, toggleTheme } = useTheme()
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <div className="absolute top-4 right-4">
+        <Button variant="ghost" size="icon" onClick={toggleTheme} className="cursor-pointer">
+          {theme === 'dark' ? <Sun className="size-5" /> : <Moon className="size-5" />}
+        </Button>
+      </div>
+
       <div className="container mx-auto px-4 py-16 max-w-2xl">
         <header className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-2">underdog</h1>
