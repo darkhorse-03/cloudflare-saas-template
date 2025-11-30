@@ -9,7 +9,7 @@
 [![React](https://img.shields.io/badge/React-61DAFB?logo=react&logoColor=black)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 
-[Live Demo](https://underdog.sarimahmed.net) · [Getting Started](#getting-started) · [Stack](#stack)
+[Live Demo](https://underdog.sarimahmed.net) · [Getting Started](#-getting-started) · [Stack](#-stack)
 
 ![](docs/screenshot.png)
 
@@ -18,12 +18,12 @@
 ---
 
 ```
-Browser → Web Worker → Service Binding → API Worker
+Browser → Web Worker ⚡ Service Binding ⚡ API Worker
 ```
 
 No public API URL. Zero network latency. Type-safe end-to-end.
 
-## Getting Started
+## 🚀 Getting Started
 
 1. Click **"Use this template"** → **"Create a new repository"**
 2. Clone your new repo
@@ -51,7 +51,7 @@ bun run dev
 bun run deploy
 ```
 
-## Stack
+## 📦 Stack
 
 | Tool | Purpose |
 |---|---|
@@ -63,7 +63,7 @@ bun run deploy
 | **Biome** | Fast lint & format |
 | **Turborepo** | Monorepo tasks |
 
-## Structure
+## 📁 Structure
 
 ```
 apps/
@@ -71,7 +71,7 @@ apps/
   web/     → React SPA (Cloudflare Pages)
 ```
 
-## Commands
+## 🛠 Commands
 
 ```bash
 bun run dev      # Start dev servers
@@ -79,7 +79,7 @@ bun run deploy   # Deploy to Cloudflare
 bun run check    # Lint & format
 ```
 
-## Roadmap
+## 🔜 Roadmap
 
 - **Better Auth** - Authentication
 - **Drizzle + D1** - Database
