@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { Layout } from '@/components/layout'
+import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 
 export const Route = createFileRoute('/features')({
   component: FeaturesPage,
@@ -47,13 +48,12 @@ function FeaturesPage() {
 
         <div className="grid md:grid-cols-2 gap-6">
           {features.map((feature) => (
-            <div
-              key={feature.title}
-              className="p-6 border border-border rounded-lg hover:shadow-md transition-shadow"
-            >
-              <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
-              <p className="text-muted-foreground">{feature.description}</p>
-            </div>
+            <Card key={feature.title}>
+              <CardHeader>
+                <CardTitle>{feature.title}</CardTitle>
+                <CardDescription>{feature.description}</CardDescription>
+              </CardHeader>
+            </Card>
           ))}
         </div>
       </div>
