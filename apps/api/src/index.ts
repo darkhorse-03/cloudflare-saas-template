@@ -1,3 +1,4 @@
+import { config } from '@repo/config'
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 
@@ -7,7 +8,10 @@ app.use('/*', cors())
 
 const routes = app
   .get('/', (c) => {
-    return c.json({ message: 'Welcome to underdog API' })
+    return c.json({
+      message: `Welcome to ${config.appName} API`,
+      description: config.description,
+    })
   })
   .get('/ping', (c) => {
     return c.json({ pong: Date.now() })

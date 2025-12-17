@@ -19,6 +19,7 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
+    "@repo/config": "*",
     "hono": "^4.10.7"
   },
   "devDependencies": {

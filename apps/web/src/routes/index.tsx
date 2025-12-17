@@ -1,36 +1,40 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { Layout } from '@/components/layout'
 import { ArchitectureDiagram } from '@/components/architecture-diagram'
 import { FeatureCards } from '@/components/feature-cards'
+import { config } from '@repo/config'
 
 export const Route = createFileRoute('/')({
-  component: App,
+  component: HomePage,
 })
 
-function App() {
+function HomePage() {
   return (
-    <div className="h-screen bg-background text-foreground flex flex-col">
-      <div className="container mx-auto px-4 py-6 max-w-3xl flex-1 flex flex-col">
-        <header className="text-center mb-6">
-          <h1 className="text-3xl font-bold mb-1">underdog</h1>
-          <p className="text-sm text-muted-foreground">Fullstack Cloudflare Workers Template</p>
-        </header>
+    <Layout>
+      <div className="container mx-auto px-4 py-12 max-w-4xl">
+        {/* Hero Section */}
+        <section className="text-center mb-16">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">{config.appName}</h1>
+          <p className="text-lg text-muted-foreground mb-8">{config.tagline}</p>
+          <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
+            {config.description}
+          </p>
+        </section>
 
-        <main className="space-y-6 flex-1">
-          <section>
-            <h2 className="text-sm font-semibold text-center mb-4">Service Binding Architecture</h2>
-            <ArchitectureDiagram />
-          </section>
+        {/* Architecture Section */}
+        <section className="mb-16">
+          <h2 className="text-2xl font-semibold text-center mb-6">
+            Service Binding Architecture
+          </h2>
+          <ArchitectureDiagram />
+        </section>
 
-          <section>
-            <h2 className="text-sm font-semibold text-center mb-4">Stack Features</h2>
-            <FeatureCards />
-          </section>
-        </main>
-
-        <footer className="py-4 text-center text-xs text-muted-foreground">
-          <p>Built with Cloudflare Workers, Hono, TanStack, Alchemy</p>
-        </footer>
+        {/* Features Section */}
+        <section>
+          <h2 className="text-2xl font-semibold text-center mb-6">Stack Features</h2>
+          <FeatureCards />
+        </section>
       </div>
-    </div>
+    </Layout>
   )
 }
