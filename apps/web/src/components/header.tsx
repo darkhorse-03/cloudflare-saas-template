@@ -3,7 +3,7 @@ import { Link } from '@tanstack/react-router'
 import { Menu } from 'lucide-react'
 import { ThemeToggle } from './theme-toggle'
 import { Button } from './ui/button'
-import { Sheet, SheetContent, SheetTrigger } from './ui/sheet'
+import { Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from './ui/sheet'
 
 export function Header() {
   return (
@@ -46,6 +46,10 @@ export function Header() {
                 </Button>
               </SheetTrigger>
               <SheetContent side="right" className="w-[280px] p-0 flex flex-col">
+                <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
+                <SheetDescription className="sr-only">
+                  Navigate to different pages and adjust theme settings
+                </SheetDescription>
                 {/* Main Navigation */}
                 <div className="flex-1 overflow-y-auto">
                   <div className="px-6 py-8">
