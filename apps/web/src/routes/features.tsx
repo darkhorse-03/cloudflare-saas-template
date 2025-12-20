@@ -36,15 +36,15 @@ function FeaturesPage() {
 
   return (
     <Layout>
-      <div className="container max-w-6xl mx-auto px-4 py-12">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold mb-4">Features</h1>
+      <div className="container mx-auto max-w-6xl px-4 py-12">
+        <div className="mb-12 text-center">
+          <h1 className="mb-4 font-bold text-4xl">Features</h1>
           <p className="text-lg text-muted-foreground">
             Everything you need to build modern fullstack applications
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid gap-6 md:grid-cols-2">
           {features.map((feature) => (
             <Card key={feature.title}>
               <CardHeader>

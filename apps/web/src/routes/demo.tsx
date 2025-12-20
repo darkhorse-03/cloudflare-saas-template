@@ -9,19 +9,19 @@ export const Route = createFileRoute('/demo')({
 function DemoPage() {
   return (
     <div className="min-h-screen text-foreground">
-      <div className="container mx-auto px-4 py-16 max-w-3xl">
+      <div className="container mx-auto max-w-3xl px-4 py-16">
         <Link to="/">
-          <Button variant="ghost" size="sm" className="mb-8 cursor-pointer">
-            <ArrowLeft className="size-4 mr-2" />
+          <Button className="mb-8 cursor-pointer" size="sm" variant="ghost">
+            <ArrowLeft className="mr-2 size-4" />
             Back
           </Button>
         </Link>
 
-        <h1 className="text-2xl font-bold mb-4">Demo Page</h1>
+        <h1 className="mb-4 font-bold text-2xl">Demo Page</h1>
         <p className="text-muted-foreground">
           This page demonstrates TanStack Router's instant navigation with prefetching.
         </p>
-        <p className="text-muted-foreground mt-4">
+        <p className="mt-4 text-muted-foreground">
           Notice how fast the navigation was? TanStack Router prefetches routes on hover.
         </p>
       </div>

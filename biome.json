@@ -10,9 +10,7 @@
   },
   "overrides": [
     {
-      "includes": [
-        "**/routeTree.gen.ts"
-      ],
+      "includes": ["**/routeTree.gen.ts"],
       "linter": {
         "enabled": false
       },
@@ -52,8 +50,5 @@
       }
     }
   },
-  "extends": [
-    "ultracite/core",
-    "ultracite/react"  
-  ]
+  "extends": ["ultracite/core", "ultracite/react"]
 }

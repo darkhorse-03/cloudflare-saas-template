@@ -2,9 +2,9 @@ import { config } from '@repo/config'
 
 export function Footer() {
   return (
-    <footer className="border-t border-border mt-auto">
-      <div className="container max-w-6xl mx-auto px-4 py-6">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
+    <footer className="mt-auto border-border border-t">
+      <div className="container mx-auto max-w-6xl px-4 py-6">
+        <div className="flex flex-col items-center justify-between gap-4 text-muted-foreground text-sm md:flex-row">
           {/* Brand */}
           <p>
             © {new Date().getFullYear()} {config.appName}. Built with Cloudflare Workers.
@@ -14,11 +14,11 @@ export function Footer() {
           <div className="flex items-center gap-4">
             {config.footer.links.map((link) => (
               <a
-                key={link.href}
+                className="transition-colors hover:text-foreground"
                 href={link.href}
-                target={link.href.startsWith('http') ? '_blank' : undefined}
+                key={link.href}
                 rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                className="hover:text-foreground transition-colors"
+                target={link.href.startsWith('http') ? '_blank' : undefined}
               >
                 {link.label}
               </a>

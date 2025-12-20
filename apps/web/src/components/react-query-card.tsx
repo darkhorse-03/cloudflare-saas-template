@@ -26,20 +26,20 @@ export function ReactQueryCard() {
         <CardDescription>Smart caching with stale indicators</CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">
-        <div className="bg-muted/50 rounded-lg p-3 space-y-1">
+        <div className="space-y-1 rounded-lg bg-muted/50 p-3">
           <div className="flex items-center justify-between">
-            <span className="text-xs text-muted-foreground">number:</span>
+            <span className="text-muted-foreground text-xs">number:</span>
             <span className="font-mono text-sm">{data?.number ?? '---'}</span>
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-xs text-muted-foreground">status:</span>
+            <span className="text-muted-foreground text-xs">status:</span>
             <span className={`text-xs ${isStale ? 'text-yellow-500' : 'text-green-500'}`}>
               {isStale ? 'stale' : 'fresh'}
             </span>
           </div>
         </div>
 
-        <Button onClick={() => refetch()} disabled={isFetching} className="w-full" size="sm">
+        <Button className="w-full" disabled={isFetching} onClick={() => refetch()} size="sm">
           <RefreshCw className={`size-4 ${isFetching ? 'animate-spin' : ''}`} />
           {isFetching ? 'Fetching...' : 'Refetch'}
         </Button>

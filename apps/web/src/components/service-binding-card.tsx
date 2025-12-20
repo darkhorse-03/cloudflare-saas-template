@@ -16,7 +16,7 @@ export function ServiceBindingCard() {
         <CardDescription>Zero-latency worker-to-worker calls</CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">
-        <div className="flex items-center justify-between bg-muted/50 rounded-lg p-3">
+        <div className="flex items-center justify-between rounded-lg bg-muted/50 p-3">
           <div className="flex items-center gap-2">
             <Activity
               className={`size-4 ${isFetching ? 'animate-pulse text-yellow-500' : 'text-green-500'}`}
@@ -25,13 +25,13 @@ export function ServiceBindingCard() {
               {latency !== undefined ? `${latency}ms` : '---'}
             </span>
           </div>
-          <span className="text-xs text-muted-foreground">round-trip</span>
+          <span className="text-muted-foreground text-xs">round-trip</span>
         </div>
 
         <Button
-          onClick={() => refetch()}
-          disabled={isFetching}
           className="w-full"
+          disabled={isFetching}
+          onClick={() => refetch()}
           size="sm"
           variant="default"
         >

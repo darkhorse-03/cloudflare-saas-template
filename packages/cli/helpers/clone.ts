@@ -4,7 +4,7 @@ import degit from 'degit'
 import pc from 'picocolors'
 
 const TEMPLATE_REPO = 'https://github.com/sarim2000/underdog-template'
-const CLONE_TIMEOUT = 30000
+const CLONE_TIMEOUT = 30_000
 
 export async function cloneTemplate(projectName: string): Promise<void> {
   const s = spinner()

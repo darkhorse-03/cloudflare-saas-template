@@ -26,7 +26,7 @@ export function HonoRpcCard() {
         <CardDescription>Type-safe API calls with autocomplete</CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">
-        <div className="bg-muted/50 rounded-lg p-3 font-mono text-xs">
+        <div className="rounded-lg bg-muted/50 p-3 font-mono text-xs">
           <span className="text-muted-foreground">const</span> res{' '}
           <span className="text-muted-foreground">=</span>{' '}
           <span className="text-muted-foreground">await</span> api.
@@ -34,12 +34,12 @@ export function HonoRpcCard() {
           .$get()
         </div>
 
-        <Button onClick={callApi} disabled={isLoading} className="w-full" size="sm">
+        <Button className="w-full" disabled={isLoading} onClick={callApi} size="sm">
           {isLoading ? 'Calling...' : 'Call API'}
         </Button>
 
         {response && (
-          <pre className="bg-muted/50 rounded-lg p-3 text-xs overflow-auto max-h-24">
+          <pre className="max-h-24 overflow-auto rounded-lg bg-muted/50 p-3 text-xs">
             {response}
           </pre>
         )}

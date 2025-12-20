@@ -11,23 +11,23 @@ export const Route = createFileRoute('/')({
 function HomePage() {
   return (
     <Layout>
-      <div className="container max-w-6xl mx-auto px-4 py-12">
+      <div className="container mx-auto max-w-6xl px-4 py-12">
         {/* Hero Section */}
-        <section className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">{config.appName}</h1>
-          <p className="text-lg text-muted-foreground mb-8">{config.tagline}</p>
-          <p className="text-sm text-muted-foreground max-w-2xl mx-auto">{config.description}</p>
+        <section className="mb-16 text-center">
+          <h1 className="mb-4 font-bold text-4xl md:text-5xl">{config.appName}</h1>
+          <p className="mb-8 text-lg text-muted-foreground">{config.tagline}</p>
+          <p className="mx-auto max-w-2xl text-muted-foreground text-sm">{config.description}</p>
         </section>
 
         {/* Architecture Section */}
         <section className="mb-16">
-          <h2 className="text-2xl font-semibold text-center mb-6">Service Binding Architecture</h2>
+          <h2 className="mb-6 text-center font-semibold text-2xl">Service Binding Architecture</h2>
           <ArchitectureDiagram />
         </section>
 
         {/* Features Section */}
         <section>
-          <h2 className="text-2xl font-semibold text-center mb-6">Stack Features</h2>
+          <h2 className="mb-6 text-center font-semibold text-2xl">Stack Features</h2>
           <FeatureCards />
         </section>
       </div>

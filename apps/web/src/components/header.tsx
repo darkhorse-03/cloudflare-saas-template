@@ -8,30 +8,30 @@ import { Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from 
 export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container max-w-6xl mx-auto px-4 h-16 flex items-center">
-        <div className="flex items-center justify-between w-full">
+      <div className="container mx-auto flex h-16 max-w-6xl items-center px-4">
+        <div className="flex w-full items-center justify-between">
           <Link
+            className="flex items-center font-bold text-lg transition-opacity hover:opacity-80"
             to="/"
-            className="flex items-center text-lg font-bold hover:opacity-80 transition-opacity"
           >
             {config.appName}
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-1">
+          <nav className="hidden items-center gap-1 md:flex">
             {config.nav.map((item) => (
               <Link
-                key={item.href}
-                to={item.href}
-                className="px-3 py-2 text-sm font-medium rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
                 activeProps={{
                   className: 'text-foreground bg-accent',
                 }}
+                className="rounded-md px-3 py-2 font-medium text-muted-foreground text-sm transition-colors hover:bg-accent hover:text-foreground"
+                key={item.href}
+                to={item.href}
               >
                 {item.label}
               </Link>
             ))}
-            <div className="ml-2 pl-2 border-l">
+            <div className="ml-2 border-l pl-2">
               <ThemeToggle />
             </div>
           </nav>
@@ -40,12 +40,12 @@ export function Header() {
           <div className="md:hidden">
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon">
+                <Button size="icon" variant="ghost">
                   <Menu className="h-5 w-5" />
                   <span className="sr-only">Toggle menu</span>
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="w-[280px] p-0 flex flex-col">
+              <SheetContent className="flex w-[280px] flex-col p-0" side="right">
                 <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
                 <SheetDescription className="sr-only">
                   Navigate to different pages and adjust theme settings
@@ -56,12 +56,12 @@ export function Header() {
                     <nav className="flex flex-col gap-1">
                       {config.nav.map((item) => (
                         <Link
-                          key={item.href}
-                          to={item.href}
-                          className="flex items-center px-3 py-3 rounded-md text-base font-medium text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
                           activeProps={{
                             className: 'text-foreground bg-accent',
                           }}
+                          className="flex items-center rounded-md px-3 py-3 font-medium text-base text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                          key={item.href}
+                          to={item.href}
                         >
                           {item.label}
                         </Link>
@@ -72,8 +72,8 @@ export function Header() {
 
                 {/* Settings Section - Sticky Bottom */}
                 <div className="border-t bg-muted/30 p-4">
-                  <div className="flex items-center justify-between px-3 py-2 rounded-md bg-background">
-                    <span className="text-sm font-medium">Theme</span>
+                  <div className="flex items-center justify-between rounded-md bg-background px-3 py-2">
+                    <span className="font-medium text-sm">Theme</span>
                     <ThemeToggle />
                   </div>
                 </div>

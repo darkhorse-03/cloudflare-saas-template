@@ -7,27 +7,25 @@ const app = new Hono()
 app.use('/*', cors())
 
 const routes = app
-  .get('/', (c) => {
-    return c.json({
+  .get('/', (c) =>
+    c.json({
       message: `Welcome to ${config.appName} API`,
       description: config.description,
-    })
-  })
-  .get('/ping', (c) => {
-    return c.json({ pong: Date.now() })
-  })
-  .get('/time', (c) => {
-    return c.json({
+    }),
+  )
+  .get('/ping', (c) => c.json({ pong: Date.now() }))
+  .get('/time', (c) =>
+    c.json({
       iso: new Date().toISOString(),
       unix: Date.now(),
-    })
-  })
-  .get('/random', (c) => {
-    return c.json({
+    }),
+  )
+  .get('/random', (c) =>
+    c.json({
       number: Math.floor(Math.random() * 100),
       uuid: crypto.randomUUID(),
-    })
-  })
+    }),
+  )
 
 export type AppType = typeof routes
 export default app

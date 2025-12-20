@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
 import { api } from '@/lib/api'
 
-export const usePing = () => {
-  return useQuery({
+export const usePing = () =>
+  useQuery({
     queryKey: ['ping'],
     queryFn: async () => {
       const start = performance.now()
@@ -11,4 +11,3 @@ export const usePing = () => {
       return Math.round(end - start)
     },
   })
-}
