@@ -3,18 +3,17 @@ import { Menu } from 'lucide-react'
 import { config } from '@repo/config'
 import { ThemeToggle } from './theme-toggle'
 import { Button } from './ui/button'
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-} from './ui/sheet'
+import { Sheet, SheetContent, SheetTrigger } from './ui/sheet'
 
 export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container max-w-6xl mx-auto px-4 h-16 flex items-center">
         <div className="flex items-center justify-between w-full">
-          <Link to="/" className="flex items-center text-lg font-bold hover:opacity-80 transition-opacity">
+          <Link
+            to="/"
+            className="flex items-center text-lg font-bold hover:opacity-80 transition-opacity"
+          >
             {config.appName}
           </Link>
 

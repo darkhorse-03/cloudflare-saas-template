@@ -41,7 +41,7 @@ program
         '\n' +
         pc.dim(`  ${config.shouldInstall ? '' : 'bun install\n  '}bun run dev`) +
         '\n\n' +
-        pc.dim('Happy coding! 🚀')
+        pc.dim('Happy coding! 🚀'),
     )
 
     process.exit(0)

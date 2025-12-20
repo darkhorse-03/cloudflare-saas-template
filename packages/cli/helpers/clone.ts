@@ -21,8 +21,8 @@ export async function cloneTemplate(projectName: string): Promise<void> {
       new Promise((_, reject) =>
         setTimeout(
           () => reject(new Error('Clone timeout - please check your internet connection')),
-          CLONE_TIMEOUT
-        )
+          CLONE_TIMEOUT,
+        ),
       ),
     ])
 

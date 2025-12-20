@@ -50,7 +50,9 @@ export function ArchitectureDiagram() {
           className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-card border rounded-full cursor-pointer hover:bg-accent transition-colors"
           onClick={() => refetch()}
         >
-          <Activity className={`size-4 ${isFetching ? 'animate-pulse text-yellow-500' : 'text-green-500'}`} />
+          <Activity
+            className={`size-4 ${isFetching ? 'animate-pulse text-yellow-500' : 'text-green-500'}`}
+          />
           <span className="text-xs sm:text-sm font-mono">
             {latency !== undefined ? `${latency}ms` : '---'}
           </span>

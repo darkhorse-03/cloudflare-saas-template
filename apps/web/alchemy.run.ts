@@ -14,12 +14,10 @@ export const web = await Vite('web', {
   assets: {
     run_worker_first: ['/api/*'],
   },
-  domains: [
-    "underdog.sarimahmed.net"
-  ],
+  domains: ['underdog.sarimahmed.net'],
   placement: {
     mode: 'smart',
-  }
+  },
 })
 
 console.log({ url: web.url })

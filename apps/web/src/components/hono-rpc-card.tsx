@@ -27,8 +27,10 @@ export function HonoRpcCard() {
       </CardHeader>
       <CardContent className="space-y-3">
         <div className="bg-muted/50 rounded-lg p-3 font-mono text-xs">
-          <span className="text-muted-foreground">const</span> res <span className="text-muted-foreground">=</span>{' '}
-          <span className="text-muted-foreground">await</span> api.<span className="text-blue-500">time</span>
+          <span className="text-muted-foreground">const</span> res{' '}
+          <span className="text-muted-foreground">=</span>{' '}
+          <span className="text-muted-foreground">await</span> api.
+          <span className="text-blue-500">time</span>
           .$get()
         </div>
 
@@ -37,7 +39,9 @@ export function HonoRpcCard() {
         </Button>
 
         {response && (
-          <pre className="bg-muted/50 rounded-lg p-3 text-xs overflow-auto max-h-24">{response}</pre>
+          <pre className="bg-muted/50 rounded-lg p-3 text-xs overflow-auto max-h-24">
+            {response}
+          </pre>
         )}
       </CardContent>
     </Card>

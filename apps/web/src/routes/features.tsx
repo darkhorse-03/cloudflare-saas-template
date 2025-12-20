@@ -10,8 +10,7 @@ function FeaturesPage() {
   const features = [
     {
       title: 'Service Bindings',
-      description:
-        'Zero-latency worker-to-worker communication with no public API exposure.',
+      description: 'Zero-latency worker-to-worker communication with no public API exposure.',
     },
     {
       title: 'Type-Safe RPC',
@@ -23,8 +22,7 @@ function FeaturesPage() {
     },
     {
       title: 'Smart Caching',
-      description:
-        'React Query handles data fetching, caching, and synchronization automatically.',
+      description: 'React Query handles data fetching, caching, and synchronization automatically.',
     },
     {
       title: 'Edge Computing',

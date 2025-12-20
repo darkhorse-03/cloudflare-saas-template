@@ -13,7 +13,7 @@ export const api = await Worker('worker', {
   },
   dev: {
     port: 8787,
-  }
+  },
 })
 
 await app.finalize()
