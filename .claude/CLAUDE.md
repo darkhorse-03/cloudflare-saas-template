@@ -7,6 +7,8 @@
 - **Build**: Turborepo monorepo, Bun package manager
 - **Quality**: Ultracite (Biome) + Lefthook pre-commit hooks
 
+> **Note**: This project uses **Bun exclusively**. Always use `bun` or `bunx` commands - never npm, yarn, pnpm, or npx.
+
 ## Monorepo Structure
 ```
 ├── apps/
