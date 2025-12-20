@@ -14,7 +14,7 @@ export async function initGit(projectName: string): Promise<void> {
       stdio: 'ignore',
     })
     s.stop('Git initialized ✓')
-  } catch (error) {
+  } catch (_error) {
     s.stop('Git initialization skipped')
     console.warn(pc.yellow('Warning: Could not initialize git'))
   }

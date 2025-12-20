@@ -46,7 +46,8 @@ export function ArchitectureDiagram() {
 
       {/* Latency Indicator */}
       <div className="mt-6 sm:mt-8 flex justify-center">
-        <div
+        <button
+          type="button"
           className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-card border rounded-full cursor-pointer hover:bg-accent transition-colors"
           onClick={() => refetch()}
         >
@@ -57,7 +58,7 @@ export function ArchitectureDiagram() {
             {latency !== undefined ? `${latency}ms` : '---'}
           </span>
           <span className="text-xs text-muted-foreground">round-trip</span>
-        </div>
+        </button>
       </div>
     </div>
   )

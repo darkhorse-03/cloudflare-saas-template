@@ -9,7 +9,7 @@ export async function installDependencies(projectName: string): Promise<void> {
   try {
     execSync('bun install', { cwd: projectName, stdio: 'ignore' })
     s.stop('Dependencies installed ✓')
-  } catch (error) {
+  } catch (_error) {
     s.stop('Dependency installation skipped')
     console.warn(pc.yellow('Warning: Could not install dependencies'))
     console.log(pc.dim('You can run `bun install` manually'))
