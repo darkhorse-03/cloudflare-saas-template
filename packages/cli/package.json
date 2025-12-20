@@ -1,0 +1,38 @@
+{
+  "name": "create-underdog-app",
+  "version": "0.0.1",
+  "description": "Create a new Underdog fullstack app",
+  "module": "index.ts",
+  "type": "module",
+  "bin": {
+    "create-underdog-app": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "keywords": [
+    "cloudflare",
+    "workers",
+    "template",
+    "hono",
+    "react",
+    "fullstack"
+  ],
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/degit": "^2.8.6"
+  },
+  "peerDependencies": {
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@clack/prompts": "^0.11.0",
+    "commander": "^14.0.2",
+    "degit": "^2.8.4",
+    "picocolors": "^1.1.1"
+  }
+}
