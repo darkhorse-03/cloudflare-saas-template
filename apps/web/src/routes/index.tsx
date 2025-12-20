@@ -11,7 +11,7 @@ export const Route = createFileRoute('/')({
 function HomePage() {
   return (
     <Layout>
-      <div className="container mx-auto px-4 py-12 max-w-4xl">
+      <div className="container max-w-6xl mx-auto px-4 py-12">
         {/* Hero Section */}
         <section className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">{config.appName}</h1>

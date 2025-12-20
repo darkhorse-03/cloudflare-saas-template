@@ -10,7 +10,7 @@ export function ThemeToggle() {
       variant="ghost"
       size="icon"
       onClick={toggleTheme}
-      className="fixed top-4 right-4 cursor-pointer"
+      className="cursor-pointer"
     >
       {theme === 'dark' ? <Sun className="size-5" /> : <Moon className="size-5" />}
     </Button>

@@ -9,7 +9,7 @@ export const Route = createFileRoute('/about')({
 function AboutPage() {
   return (
     <Layout>
-      <div className="container mx-auto px-4 py-12 max-w-3xl">
+      <div className="container max-w-6xl mx-auto px-4 py-12">
         <h1 className="text-4xl font-bold mb-8">About {config.appName}</h1>
 
         <div className="prose prose-slate dark:prose-invert max-w-none">
