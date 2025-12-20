@@ -11,14 +11,11 @@ export async function updateConfig(projectName: string, description: string): Pr
     const configPath = join(projectName, 'packages/config/src/index.ts')
     let configContent = await readFile(configPath, 'utf-8')
 
-    configContent = configContent.replace(
-      /appName: ['\"]underdog['\"]/,
-      `appName: '${projectName}'`,
-    )
+    configContent = configContent.replace(/appName: ['"]underdog['"]/, `appName: '${projectName}'`)
 
     if (description) {
       configContent = configContent.replace(
-        /description: ['\"].*?['\"]/,
+        /description: ['"].*?['"]/,
         `description: '${description}'`,
       )
     }
@@ -33,7 +30,7 @@ export async function updateConfig(projectName: string, description: string): Pr
     const rootPkgPath = join(projectName, 'package.json')
     const rootPkg = JSON.parse(await readFile(rootPkgPath, 'utf-8'))
     rootPkg.name = `${projectName}-monorepo`
-    await writeFile(rootPkgPath, JSON.stringify(rootPkg, null, 2) + '\n', 'utf-8')
+    await writeFile(rootPkgPath, `${JSON.stringify(rootPkg, null, 2)}\n`, 'utf-8')
 
     s.stop('Configuration updated ✓')
   } catch (error) {

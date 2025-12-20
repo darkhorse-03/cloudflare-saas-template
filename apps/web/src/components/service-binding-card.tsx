@@ -1,7 +1,7 @@
 import { Activity, Zap } from 'lucide-react'
-import { usePing } from '@/hooks/use-ping'
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { usePing } from '@/hooks/use-ping'
 
 export function ServiceBindingCard() {
   const { data: latency, isFetching, refetch } = usePing()

@@ -1,6 +1,6 @@
+import { config } from '@repo/config'
 import { Link } from '@tanstack/react-router'
 import { Menu } from 'lucide-react'
-import { config } from '@repo/config'
 import { ThemeToggle } from './theme-toggle'
 import { Button } from './ui/button'
 import { Sheet, SheetContent, SheetTrigger } from './ui/sheet'

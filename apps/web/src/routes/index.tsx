@@ -1,8 +1,8 @@
+import { config } from '@repo/config'
 import { createFileRoute } from '@tanstack/react-router'
-import { Layout } from '@/components/layout'
 import { ArchitectureDiagram } from '@/components/architecture-diagram'
 import { FeatureCards } from '@/components/feature-cards'
-import { config } from '@repo/config'
+import { Layout } from '@/components/layout'
 
 export const Route = createFileRoute('/')({
   component: HomePage,

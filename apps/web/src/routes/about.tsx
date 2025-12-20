@@ -1,6 +1,6 @@
+import { config } from '@repo/config'
 import { createFileRoute } from '@tanstack/react-router'
 import { Layout } from '@/components/layout'
-import { config } from '@repo/config'
 
 export const Route = createFileRoute('/about')({
   component: AboutPage,

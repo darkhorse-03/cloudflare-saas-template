@@ -1,8 +1,8 @@
-import { useState } from 'react'
 import { Code } from 'lucide-react'
-import { api } from '@/lib/api'
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { api } from '@/lib/api'
 
 export function HonoRpcCard() {
   const [response, setResponse] = useState<string | null>(null)

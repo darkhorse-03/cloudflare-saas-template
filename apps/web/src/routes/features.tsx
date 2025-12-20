@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { Layout } from '@/components/layout'
-import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
 export const Route = createFileRoute('/features')({
   component: FeaturesPage,
