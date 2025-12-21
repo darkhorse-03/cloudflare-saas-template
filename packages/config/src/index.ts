@@ -8,6 +8,12 @@ export const config = {
   tagline: 'Fullstack Cloudflare Workers Template',
   description: 'underdog Template - Hono + TanStack Router + React Query',
 
+  // SEO & Open Graph
+  seo: {
+    url: 'https://your-domain.com',
+    ogImage: 'https://your-domain.com/og-image.png',
+  },
+
   // Development tools configuration
   devtools: {
     enabled: import.meta.env?.DEV ?? true,

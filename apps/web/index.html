@@ -5,17 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="/favicon.ico">
     <meta name="theme-color" content="#09090b">
-    <meta name="description" content="{{DESCRIPTION}}">
-    <link rel="manifest" href="/manifest.json">
+
+    <!-- Primary Meta Tags -->
     <title>{{APP_NAME}}</title>
+    <meta name="title" content="{{APP_NAME}}">
+    <meta name="description" content="{{DESCRIPTION}}">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{OG_URL}}">
+    <meta property="og:title" content="{{APP_NAME}}">
+    <meta property="og:description" content="{{DESCRIPTION}}">
+    <meta property="og:image" content="{{OG_IMAGE}}">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="{{OG_URL}}">
+    <meta name="twitter:title" content="{{APP_NAME}}">
+    <meta name="twitter:description" content="{{DESCRIPTION}}">
+    <meta name="twitter:image" content="{{OG_IMAGE}}">
+
+    <link rel="manifest" href="/manifest.json">
     <script>
     'use strict'
-    // Prevent flash of white background on load
     ;(() => {
       const theme =
         localStorage.getItem('theme') ||
         (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
-      if (theme === 'dark') {
+      if (theme === 'dark'){
         document.documentElement.classList.add('dark')
       }
     })()

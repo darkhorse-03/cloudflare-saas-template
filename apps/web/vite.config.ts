@@ -24,10 +24,12 @@ export default defineConfig({
     tailwindcss(),
     {
       name: 'html-transform',
-      transformIndexHtml(html) {
+      transformIndexHtml(html: string) {
         return html
           .replace(/{{APP_NAME}}/g, config.appName)
           .replace(/{{DESCRIPTION}}/g, config.description)
+          .replace(/{{OG_URL}}/g, config.seo.url)
+          .replace(/{{OG_IMAGE}}/g, config.seo.ogImage)
       },
     },
   ].filter(Boolean),
