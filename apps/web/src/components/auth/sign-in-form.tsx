@@ -1,26 +1,49 @@
 import { useForm } from '@tanstack/react-form'
-import { useNavigate } from '@tanstack/react-router'
+import { useNavigate, useRouter } from '@tanstack/react-router'
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { useAuth } from '@/hooks/use-auth'
+import { signIn, useSession } from '@/lib/auth-client'
 import { signInSchema } from '@/schemas/auth'
 import { useAuthDialog } from './auth-dialog'
 
 export function SignInForm() {
-  const { signIn } = useAuth()
   const { closeDialog } = useAuthDialog()
-  const navigate = useNavigate()
+  const [error, setError] = useState<string | null>(null)
+  const [isPending, setIsPending] = useState(false)
 
+  const navigate = useNavigate()
+  const router = useRouter()
+  const session = useSession()
   const form = useForm({
     defaultValues: {
       email: '',
       password: '',
     },
     onSubmit: async ({ value }) => {
-      await signIn.mutateAsync(value)
-      closeDialog()
-      navigate({ to: '/dashboard' })
+      setIsPending(true)
+      setError(null)
+
+      const { data, error: signInError } = await signIn.email({
+        email: value.email,
+        password: value.password,
+      })
+
+      if (signInError) {
+        setError(signInError.message || 'Failed to sign in')
+        setIsPending(false)
+        return
+      }
+
+      if (data) {
+        closeDialog()
+        await session.refetch()
+        await router.invalidate()
+        navigate({ to: '/dashboard/analytics' })
+      }
+
+      setIsPending(false)
     },
   })
 
@@ -44,7 +67,7 @@ export function SignInForm() {
             <Label htmlFor={field.name}>Email</Label>
             <Input
               autoComplete="email"
-              disabled={signIn.isPending}
+              disabled={isPending}
               id={field.name}
               name={field.name}
               onBlur={field.handleBlur}
@@ -73,7 +96,7 @@ export function SignInForm() {
             <Label htmlFor={field.name}>Password</Label>
             <Input
               autoComplete="current-password"
-              disabled={signIn.isPending}
+              disabled={isPending}
               id={field.name}
               name={field.name}
               onBlur={field.handleBlur}
@@ -91,12 +114,12 @@ export function SignInForm() {
         )}
       </form.Field>
 
-      {signIn.error && <p className="text-destructive text-sm">{signIn.error.message}</p>}
+      {error && <p className="text-destructive text-sm">{error}</p>}
 
       <form.Subscribe selector={(state) => [state.canSubmit, state.isSubmitting]}>
-        {([canSubmit, isSubmitting]) => (
-          <Button className="w-full" disabled={!canSubmit || signIn.isPending} type="submit">
-            {isSubmitting || signIn.isPending ? 'Signing in...' : 'Sign In'}
+        {([canSubmit]) => (
+          <Button className="w-full" disabled={!canSubmit || isPending} type="submit">
+            {isPending ? 'Signing in...' : 'Sign In'}
           </Button>
         )}
       </form.Subscribe>

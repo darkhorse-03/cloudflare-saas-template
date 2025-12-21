@@ -1,16 +1,21 @@
 import { useForm } from '@tanstack/react-form'
-import { useNavigate } from '@tanstack/react-router'
+import { useNavigate, useRouter } from '@tanstack/react-router'
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { useAuth } from '@/hooks/use-auth'
+import { signUp, useSession } from '@/lib/auth-client'
 import { signUpSchema } from '@/schemas/auth'
 import { useAuthDialog } from './auth-dialog'
 
 export function SignUpForm() {
-  const { signUp } = useAuth()
   const { closeDialog } = useAuthDialog()
+  const [error, setError] = useState<string | null>(null)
+  const [isPending, setIsPending] = useState(false)
+
   const navigate = useNavigate()
+  const router = useRouter()
+  const session = useSession()
 
   const form = useForm({
     defaultValues: {
@@ -19,9 +24,29 @@ export function SignUpForm() {
       password: '',
     },
     onSubmit: async ({ value }) => {
-      await signUp.mutateAsync(value)
-      closeDialog()
-      navigate({ to: '/dashboard' })
+      setIsPending(true)
+      setError(null)
+
+      const { data, error: signUpError } = await signUp.email({
+        email: value.email,
+        password: value.password,
+        name: value.name,
+      })
+
+      if (signUpError) {
+        setError(signUpError.message || 'Failed to sign up')
+        setIsPending(false)
+        return
+      }
+
+      if (data) {
+        closeDialog()
+        await session.refetch()
+        await router.invalidate()
+        navigate({ to: '/dashboard' })
+      }
+
+      setIsPending(false)
     },
   })
 
@@ -45,7 +70,7 @@ export function SignUpForm() {
             <Label htmlFor={field.name}>Name</Label>
             <Input
               autoComplete="name"
-              disabled={signUp.isPending}
+              disabled={isPending}
               id={field.name}
               name={field.name}
               onBlur={field.handleBlur}
@@ -74,7 +99,7 @@ export function SignUpForm() {
             <Label htmlFor={field.name}>Email</Label>
             <Input
               autoComplete="email"
-              disabled={signUp.isPending}
+              disabled={isPending}
               id={field.name}
               name={field.name}
               onBlur={field.handleBlur}
@@ -103,7 +128,7 @@ export function SignUpForm() {
             <Label htmlFor={field.name}>Password</Label>
             <Input
               autoComplete="new-password"
-              disabled={signUp.isPending}
+              disabled={isPending}
               id={field.name}
               name={field.name}
               onBlur={field.handleBlur}
@@ -123,12 +148,12 @@ export function SignUpForm() {
         )}
       </form.Field>
 
-      {signUp.error && <p className="text-destructive text-sm">{signUp.error.message}</p>}
+      {error && <p className="text-destructive text-sm">{error}</p>}
 
       <form.Subscribe selector={(state) => [state.canSubmit, state.isSubmitting]}>
-        {([canSubmit, isSubmitting]) => (
-          <Button className="w-full" disabled={!canSubmit || signUp.isPending} type="submit">
-            {isSubmitting || signUp.isPending ? 'Creating account...' : 'Create Account'}
+        {([canSubmit]) => (
+          <Button className="w-full" disabled={!canSubmit || isPending} type="submit">
+            {isPending ? 'Creating account...' : 'Create Account'}
           </Button>
         )}
       </form.Subscribe>

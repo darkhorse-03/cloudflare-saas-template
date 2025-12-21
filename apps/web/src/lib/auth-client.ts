@@ -1,16 +1,10 @@
 import { createAuthClient } from 'better-auth/react'
-import { cloudflareClient } from 'better-auth-cloudflare/client'
 
 export const authClient = createAuthClient({
-  // baseURL defaults to current origin (localhost:5173 in dev)
-  // Requests go to /api/auth/* which worker routes to API service
-  plugins: [cloudflareClient()],
+  baseURL: import.meta.env.VITE_API_URL,
   fetchOptions: {
-    credentials: 'include',
+    credentials: 'include', // Ensure cookies are sent cross-origin
   },
 })
 
-// Export React hooks provided by better-auth
-export const { useSession, signIn, signUp, signOut } = authClient
-
-export type AuthClient = typeof authClient
+export const { signIn, signUp, signOut, useSession, $Infer, $ERROR_CODES } = authClient

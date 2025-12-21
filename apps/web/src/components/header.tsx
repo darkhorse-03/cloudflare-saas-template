@@ -1,5 +1,5 @@
 import { config } from '@repo/config'
-import { Link } from '@tanstack/react-router'
+import { Link, useLocation } from '@tanstack/react-router'
 import { Menu } from 'lucide-react'
 import { ThemeToggle } from './theme-toggle'
 import { Button } from './ui/button'
@@ -7,6 +7,8 @@ import { Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from 
 import { UserButton } from './user/user-button'
 
 export function Header() {
+  const location = useLocation()
+
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-16 max-w-6xl items-center px-4">
@@ -40,21 +42,21 @@ export function Header() {
 
           {/* Mobile Navigation */}
           <div className="md:hidden">
-            <Sheet>
+            <Sheet key={location.pathname}>
               <SheetTrigger asChild>
                 <Button size="icon" variant="ghost">
                   <Menu className="h-5 w-5" />
                   <span className="sr-only">Toggle menu</span>
                 </Button>
               </SheetTrigger>
-              <SheetContent className="flex w-[280px] flex-col p-0" side="right">
+              <SheetContent className="flex w-[280px] flex-col [&>button]:hidden" side="right">
                 <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
                 <SheetDescription className="sr-only">
                   Navigate to different pages and adjust theme settings
                 </SheetDescription>
                 {/* Main Navigation */}
                 <div className="flex-1 overflow-y-auto">
-                  <div className="px-6 py-8">
+                  <div className="px-2 py-4">
                     <nav className="flex flex-col gap-1">
                       {config.nav.map((item) => (
                         <Link

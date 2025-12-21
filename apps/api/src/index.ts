@@ -2,12 +2,13 @@ import type { IncomingRequestCfProperties } from '@cloudflare/workers-types'
 import { config } from '@repo/config'
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
+import { logger } from 'hono/logger'
 import { createAuth } from './auth'
 import type { AppContext } from './env'
 
 const app = new Hono<AppContext>()
 
-// app.use(logger())
+app.use(logger())
 
 app.use(
   '/*',

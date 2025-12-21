@@ -1,5 +1,5 @@
 import { config } from '@repo/config'
-import { Link, useRouterState } from '@tanstack/react-router'
+import { Link, useNavigate, useRouterState } from '@tanstack/react-router'
 import { BarChart3, ChevronUp, Home, LogOut, Moon, Settings, Sun, User, Users } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import {
@@ -23,6 +23,8 @@ import {
 } from '@/components/ui/sidebar'
 import { useAuth } from '@/hooks/use-auth'
 import { useTheme } from '@/hooks/use-theme'
+
+import { signOut } from '@/lib/auth-client'
 
 const navItems = [
   {
@@ -53,13 +55,15 @@ const navItems = [
 ]
 
 export function DashboardSidebar() {
-  const { user, signOut } = useAuth()
+  const { user } = useAuth()
   const { theme, toggleTheme } = useTheme()
-  const router = useRouterState()
-  const currentPath = router.location.pathname
-
+  const routerState = useRouterState()
+  const currentPath = routerState.location.pathname
+  const navigate = useNavigate()
   const getUserInitials = () => {
-    if (!user?.name) return '?'
+    if (!user?.name) {
+      return '?'
+    }
     return user.name
       .split(' ')
       .map((n) => n[0])
@@ -68,6 +72,10 @@ export function DashboardSidebar() {
       .slice(0, 2)
   }
 
+  const handleSignOut = async () => {
+    await signOut()
+    navigate({ to: '/' })
+  }
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
@@ -146,7 +154,7 @@ export function DashboardSidebar() {
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => signOut.mutate()}>
+                <DropdownMenuItem onClick={handleSignOut}>
                   <LogOut className="mr-2 size-4" />
                   <span>Sign Out</span>
                 </DropdownMenuItem>

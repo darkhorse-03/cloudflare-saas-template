@@ -11,12 +11,19 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { useAuth } from '@/hooks/use-auth'
+import { signOut } from '@/lib/auth-client'
 
 export function UserDropdown() {
-  const { user, signOut } = useAuth()
+  const { user } = useAuth()
 
   if (!user) {
     return null
+  }
+
+  const handleSignOut = async () => {
+    await signOut()
+    // Full page reload to ensure session context updates
+    window.location.href = '/'
   }
 
   const initials =
@@ -51,7 +58,7 @@ export function UserDropdown() {
           </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="cursor-pointer text-red-600" onClick={() => signOut.mutate()}>
+        <DropdownMenuItem className="cursor-pointer text-red-600" onClick={handleSignOut}>
           <LogOut className="mr-2 h-4 w-4" />
           <span>Sign Out</span>
         </DropdownMenuItem>

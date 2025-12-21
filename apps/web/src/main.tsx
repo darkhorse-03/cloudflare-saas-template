@@ -1,4 +1,5 @@
 import { createRouter, RouterProvider } from '@tanstack/react-router'
+import { TanStackRouterDevtools } from '@tanstack/router-devtools'
 import { StrictMode } from 'react'
 import ReactDOM from 'react-dom/client'
 import { AuthDialogProvider } from './components/auth/auth-dialog'
@@ -48,16 +49,19 @@ function InnerApp() {
   }
 
   return (
-    <RouterProvider
-      context={{
-        ...TanStackQueryProviderContext,
-        auth: {
-          isAuthenticated: !!session.data?.user,
-          user: session.data?.user ?? null,
-        },
-      }}
-      router={router}
-    />
+    <>
+      <RouterProvider
+        context={{
+          ...TanStackQueryProviderContext,
+          auth: {
+            isAuthenticated: !!session.data?.user,
+            user: session.data?.user ?? null,
+          },
+        }}
+        router={router}
+      />
+      <TanStackRouterDevtools router={router} />
+    </>
   )
 }
 

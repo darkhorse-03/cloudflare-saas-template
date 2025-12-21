@@ -17,7 +17,7 @@ export const requireAuth = () => {
       throw redirect({
         to: '/',
         search: {
-          redirect: location.href,
+          redirect: location.pathname,
         },
       })
     }

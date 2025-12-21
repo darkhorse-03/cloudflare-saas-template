@@ -10,7 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { SignInForm } from './sign-in-form'
 import { SignUpForm } from './sign-up-form'
 
-interface AuthDialogContextType {
+type AuthDialogContextType = {
   isOpen: boolean
   openDialog: () => void
   closeDialog: () => void
