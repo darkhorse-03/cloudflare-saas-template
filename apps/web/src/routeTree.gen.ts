@@ -9,8 +9,8 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as GettingStartedRouteImport } from './routes/getting-started'
 import { Route as FeaturesRouteImport } from './routes/features'
-import { Route as DemoRouteImport } from './routes/demo'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as DashboardRouteRouteImport } from './routes/dashboard/route'
 import { Route as IndexRouteImport } from './routes/index'
@@ -20,14 +20,14 @@ import { Route as DashboardSettingsRouteImport } from './routes/dashboard/settin
 import { Route as DashboardProfileRouteImport } from './routes/dashboard/profile'
 import { Route as DashboardAnalyticsRouteImport } from './routes/dashboard/analytics'
 
+const GettingStartedRoute = GettingStartedRouteImport.update({
+  id: '/getting-started',
+  path: '/getting-started',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FeaturesRoute = FeaturesRouteImport.update({
   id: '/features',
   path: '/features',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DemoRoute = DemoRouteImport.update({
-  id: '/demo',
-  path: '/demo',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -75,8 +75,8 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRouteRouteWithChildren
   '/about': typeof AboutRoute
-  '/demo': typeof DemoRoute
   '/features': typeof FeaturesRoute
+  '/getting-started': typeof GettingStartedRoute
   '/dashboard/analytics': typeof DashboardAnalyticsRoute
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
@@ -86,8 +86,8 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/demo': typeof DemoRoute
   '/features': typeof FeaturesRoute
+  '/getting-started': typeof GettingStartedRoute
   '/dashboard/analytics': typeof DashboardAnalyticsRoute
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
@@ -99,8 +99,8 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRouteRouteWithChildren
   '/about': typeof AboutRoute
-  '/demo': typeof DemoRoute
   '/features': typeof FeaturesRoute
+  '/getting-started': typeof GettingStartedRoute
   '/dashboard/analytics': typeof DashboardAnalyticsRoute
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
@@ -113,8 +113,8 @@ export interface FileRouteTypes {
     | '/'
     | '/dashboard'
     | '/about'
-    | '/demo'
     | '/features'
+    | '/getting-started'
     | '/dashboard/analytics'
     | '/dashboard/profile'
     | '/dashboard/settings'
@@ -124,8 +124,8 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
-    | '/demo'
     | '/features'
+    | '/getting-started'
     | '/dashboard/analytics'
     | '/dashboard/profile'
     | '/dashboard/settings'
@@ -136,8 +136,8 @@ export interface FileRouteTypes {
     | '/'
     | '/dashboard'
     | '/about'
-    | '/demo'
     | '/features'
+    | '/getting-started'
     | '/dashboard/analytics'
     | '/dashboard/profile'
     | '/dashboard/settings'
@@ -149,24 +149,24 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DashboardRouteRoute: typeof DashboardRouteRouteWithChildren
   AboutRoute: typeof AboutRoute
-  DemoRoute: typeof DemoRoute
   FeaturesRoute: typeof FeaturesRoute
+  GettingStartedRoute: typeof GettingStartedRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/getting-started': {
+      id: '/getting-started'
+      path: '/getting-started'
+      fullPath: '/getting-started'
+      preLoaderRoute: typeof GettingStartedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/features': {
       id: '/features'
       path: '/features'
       fullPath: '/features'
       preLoaderRoute: typeof FeaturesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/demo': {
-      id: '/demo'
-      path: '/demo'
-      fullPath: '/demo'
-      preLoaderRoute: typeof DemoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -252,8 +252,8 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DashboardRouteRoute: DashboardRouteRouteWithChildren,
   AboutRoute: AboutRoute,
-  DemoRoute: DemoRoute,
   FeaturesRoute: FeaturesRoute,
+  GettingStartedRoute: GettingStartedRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

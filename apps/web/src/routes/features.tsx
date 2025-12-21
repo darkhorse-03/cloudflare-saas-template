@@ -9,28 +9,60 @@ export const Route = createFileRoute('/features')({
 function FeaturesPage() {
   const features = [
     {
-      title: 'Service Bindings',
-      description: 'Zero-latency worker-to-worker communication with no public API exposure.',
+      title: 'New Project in 60 Seconds',
+      timeSaved: '3 days',
+      description:
+        'Run one command. Answer 3 prompts. Your fullstack app is ready. No research, no decision fatigue, no configuration hell.',
+      icon: '⚡',
     },
     {
-      title: 'Type-Safe RPC',
-      description: 'End-to-end type safety from API to frontend using Hono RPC client.',
+      title: 'Skip 8 Hours of Auth Setup Hell',
+      timeSaved: '8 hours',
+      description:
+        'Better Auth pre-configured. Login, signup, sessions, protected routes. All working. TanStack Form + Zod validation included. Rate limiting configured. Just start building your features.',
+      icon: '🔐',
     },
     {
-      title: 'File-Based Routing',
-      description: 'TanStack Router provides automatic route generation and type safety.',
+      title: 'Database Ready to Query',
+      timeSaved: '6 hours',
+      description:
+        'D1 + Drizzle ORM configured. Schema defined. Migrations automated. Type-safe queries from day one. No "which ORM?" debates, no setup tutorials.',
+      icon: '🗄️',
     },
     {
-      title: 'Smart Caching',
-      description: 'React Query handles data fetching, caching, and synchronization automatically.',
+      title: 'Deploy Globally in 60 Seconds',
+      timeSaved: '6 hours',
+      description:
+        'One command: bun run deploy. 300+ edge locations worldwide. Zero DevOps knowledge required. No Docker, no Kubernetes, no cloud provider confusion.',
+      icon: '🌍',
     },
     {
-      title: 'Edge Computing',
-      description: 'Deploy globally on Cloudflare Workers for ultra-low latency.',
+      title: 'Catch Bugs at Compile Time, Not in Production',
+      timeSaved: '4 hours',
+      description:
+        'End-to-end type safety with Hono RPC. API changes? Your IDE tells you immediately. Full autocomplete everywhere. Ship with confidence.',
+      icon: '🎯',
     },
     {
-      title: 'Modern Tooling',
-      description: 'Built with Vite, TypeScript, Tailwind CSS, and shadcn/ui components.',
+      title: 'Zero-Latency Internal APIs',
+      timeSaved: '2 hours',
+      description:
+        'Service Bindings for worker-to-worker calls. No public URLs, no network overhead, no security headaches. Just fast, private APIs.',
+      icon: '⚡',
+    },
+    {
+      title: 'File-Based Routing That Just Works',
+      timeSaved: '1 hour',
+      description:
+        'Create a file, get a route. TanStack Router handles the rest. Type-safe navigation, automatic code splitting, prefetching on hover. No routing config files.',
+      icon: '🗺️',
+    },
+    {
+      title: 'AI-Assisted Development Ready',
+      timeSaved: '4 hours',
+      description:
+        'Optimized for Claude Code. Biome auto-formatting, type-safe codebase, clear structure. AI navigates your code better, suggests accurate changes, and ships working features.',
+      icon: '🤖',
     },
   ]
 
@@ -38,18 +70,27 @@ function FeaturesPage() {
     <Layout>
       <div className="container mx-auto max-w-6xl px-4 py-12">
         <div className="mb-12 text-center">
-          <h1 className="mb-4 font-bold text-4xl">Features</h1>
+          <h1 className="mb-4 font-bold text-4xl">Everything Pre-Built. Nothing to Setup.</h1>
           <p className="text-lg text-muted-foreground">
-            Everything you need to build modern fullstack applications
+            Cloudflare Workers template optimized for AI-assisted development. Deploy in 60 seconds,
+            skip 3 days of configuration.
           </p>
         </div>
 
         <div className="grid gap-6 md:grid-cols-2">
           {features.map((feature) => (
-            <Card key={feature.title}>
+            <Card className="transition-shadow hover:shadow-lg" key={feature.title}>
               <CardHeader>
-                <CardTitle>{feature.title}</CardTitle>
-                <CardDescription>{feature.description}</CardDescription>
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center gap-3">
+                    <span className="text-3xl">{feature.icon}</span>
+                    <CardTitle>{feature.title}</CardTitle>
+                  </div>
+                  <div className="rounded-full bg-primary/10 px-3 py-1 font-mono text-primary text-xs">
+                    Save {feature.timeSaved}
+                  </div>
+                </div>
+                <CardDescription className="mt-2">{feature.description}</CardDescription>
               </CardHeader>
             </Card>
           ))}

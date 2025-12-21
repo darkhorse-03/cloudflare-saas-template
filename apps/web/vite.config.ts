@@ -28,6 +28,8 @@ export default defineConfig({
         return html
           .replace(/{{APP_NAME}}/g, config.appName)
           .replace(/{{DESCRIPTION}}/g, config.description)
+          .replace(/{{SEO_TITLE}}/g, config.seo.title)
+          .replace(/{{SEO_DESCRIPTION}}/g, config.seo.description)
           .replace(/{{OG_URL}}/g, config.seo.url)
           .replace(/{{OG_IMAGE}}/g, config.seo.ogImage)
       },
