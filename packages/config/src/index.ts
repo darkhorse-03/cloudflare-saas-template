@@ -8,6 +8,11 @@ export const config = {
   tagline: 'Fullstack Cloudflare Workers Template',
   description: 'underdog Template - Hono + TanStack Router + React Query',
 
+  // Development tools configuration
+  devtools: {
+    enabled: import.meta.env?.DEV ?? true,
+  },
+
   // Navigation links (web only)
   nav: [
     { label: 'Home', href: '/' },

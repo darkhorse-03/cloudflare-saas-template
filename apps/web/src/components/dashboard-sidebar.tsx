@@ -42,16 +42,6 @@ const navItems = [
     url: '/dashboard/team',
     icon: Users,
   },
-  {
-    title: 'Settings',
-    url: '/dashboard/settings',
-    icon: Settings,
-  },
-  {
-    title: 'Profile',
-    url: '/dashboard/profile',
-    icon: User,
-  },
 ]
 
 export function DashboardSidebar() {
@@ -153,6 +143,14 @@ export function DashboardSidebar() {
                     <span>Settings</span>
                   </Link>
                 </DropdownMenuItem>
+                <DropdownMenuItem onClick={toggleTheme}>
+                  {theme === 'dark' ? (
+                    <Sun className="mr-2 size-4" />
+                  ) : (
+                    <Moon className="mr-2 size-4" />
+                  )}
+                  <span>{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
+                </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleSignOut}>
                   <LogOut className="mr-2 size-4" />
@@ -160,12 +158,6 @@ export function DashboardSidebar() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-          </SidebarMenuItem>
-          <SidebarMenuItem>
-            <SidebarMenuButton onClick={toggleTheme}>
-              {theme === 'dark' ? <Sun /> : <Moon />}
-              <span>Toggle Theme</span>
-            </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>

@@ -40,7 +40,7 @@ export function SignInForm() {
         closeDialog()
         await session.refetch()
         await router.invalidate()
-        navigate({ to: '/dashboard/analytics' })
+        navigate({ to: '/dashboard' })
       }
 
       setIsPending(false)

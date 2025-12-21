@@ -14,6 +14,10 @@ function createAuth(env?: Env, cf?: IncomingRequestCfProperties) {
 
   return betterAuth({
     basePath: '/auth', // Web worker strips /api, so we get /auth here
+    session: {
+      expiresIn: 60 * 60 * 24 * 7, // 7 days (in seconds)
+      updateAge: 60 * 60 * 24, // Update session if older than 1 day
+    },
     ...withCloudflare(
       {
         autoDetectIpAddress: true,

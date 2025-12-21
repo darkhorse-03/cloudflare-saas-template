@@ -1,5 +1,8 @@
+import { config } from '@repo/config'
+import { TanStackDevtools } from '@tanstack/react-devtools'
+import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools'
 import { createRouter, RouterProvider } from '@tanstack/react-router'
-import { TanStackRouterDevtools } from '@tanstack/router-devtools'
+import { TanStackRouterDevtoolsPanel } from '@tanstack/router-devtools'
 import { StrictMode } from 'react'
 import ReactDOM from 'react-dom/client'
 import { AuthDialogProvider } from './components/auth/auth-dialog'
@@ -39,10 +42,9 @@ function InnerApp() {
   // Show loading screen while checking session
   if (session.isPending) {
     return (
-      <div className="flex h-screen items-center justify-center">
+      <div className="flex h-screen items-center justify-center bg-background">
         <div className="text-center">
-          <div className="mb-4 h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-blue-600" />
-          <p className="text-muted-foreground">Loading...</p>
+          <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-muted border-t-primary" />
         </div>
       </div>
     )
@@ -60,7 +62,22 @@ function InnerApp() {
         }}
         router={router}
       />
-      <TanStackRouterDevtools router={router} />
+      {config.devtools.enabled && (
+        <TanStackDevtools
+          plugins={[
+            {
+              name: 'TanStack Query',
+              render: <ReactQueryDevtoolsPanel />,
+              defaultOpen: false,
+            },
+            {
+              name: 'TanStack Router',
+              render: <TanStackRouterDevtoolsPanel router={router} />,
+              defaultOpen: false,
+            },
+          ]}
+        />
+      )}
     </>
   )
 }
