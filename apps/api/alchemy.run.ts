@@ -6,6 +6,7 @@ const app = await alchemy('underdog-api')
 
 const db = await D1Database('db', {
   name: 'underdog-db',
+  migrationsDir: path.join(import.meta.dirname, 'drizzle', 'migrations'),
 })
 
 const kv = await KVNamespace('kv', {
@@ -19,6 +20,7 @@ export const api = await Worker('worker', {
     DB: db,
     KV: kv,
   },
+  compatibilityFlags: ['nodejs_compat'],
   url: false,
   placement: {
     mode: 'smart',

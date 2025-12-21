@@ -4,6 +4,7 @@ import { Menu } from 'lucide-react'
 import { ThemeToggle } from './theme-toggle'
 import { Button } from './ui/button'
 import { Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from './ui/sheet'
+import { UserButton } from './user/user-button'
 
 export function Header() {
   return (
@@ -31,8 +32,9 @@ export function Header() {
                 {item.label}
               </Link>
             ))}
-            <div className="ml-2 border-l pl-2">
+            <div className="ml-2 flex items-center gap-2 border-l pl-2">
               <ThemeToggle />
+              <UserButton />
             </div>
           </nav>
 
@@ -71,7 +73,10 @@ export function Header() {
                 </div>
 
                 {/* Settings Section - Sticky Bottom */}
-                <div className="border-t bg-muted/30 p-4">
+                <div className="space-y-3 border-t bg-muted/30 p-4">
+                  <div className="flex items-center justify-center">
+                    <UserButton />
+                  </div>
                   <div className="flex items-center justify-between rounded-md bg-background px-3 py-2">
                     <span className="font-medium text-sm">Theme</span>
                     <ThemeToggle />
