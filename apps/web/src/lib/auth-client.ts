@@ -1,4 +1,4 @@
-import { createAuthClient } from 'better-auth/client'
+import { createAuthClient } from 'better-auth/react'
 import { cloudflareClient } from 'better-auth-cloudflare/client'
 
 export const authClient = createAuthClient({
@@ -9,5 +9,8 @@ export const authClient = createAuthClient({
     credentials: 'include',
   },
 })
+
+// Export React hooks provided by better-auth
+export const { useSession, signIn, signUp, signOut } = authClient
 
 export type AuthClient = typeof authClient

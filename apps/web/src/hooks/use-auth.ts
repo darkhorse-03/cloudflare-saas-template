@@ -1,32 +1,24 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { authClient } from '@/lib/auth-client'
+import { useMutation } from '@tanstack/react-query'
+import {
+  signIn as signInAction,
+  signOut as signOutAction,
+  signUp as signUpAction,
+  useSession,
+} from '@/lib/auth-client'
 
 export function useAuth() {
-  const queryClient = useQueryClient()
-
-  // Get current session
-  const { data: session, isLoading } = useQuery({
-    queryKey: ['session'],
-    queryFn: async () => {
-      const { data, error } = await authClient.getSession()
-      if (error) {
-        return null
-      }
-      return data
-    },
-  })
+  // Use better-auth's built-in useSession hook
+  // Deduplication is handled automatically by better-auth
+  const { data: session, isPending } = useSession()
 
   // Sign in mutation
   const signIn = useMutation({
     mutationFn: async ({ email, password }: { email: string; password: string }) => {
-      const { data, error } = await authClient.signIn.email({ email, password })
+      const { data, error } = await signInAction.email({ email, password })
       if (error) {
         throw new Error(error.message || 'Failed to sign in')
       }
       return data
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['session'] })
     },
   })
 
@@ -41,34 +33,28 @@ export function useAuth() {
       password: string
       name: string
     }) => {
-      const { data, error } = await authClient.signUp.email({ email, password, name })
+      const { data, error } = await signUpAction.email({ email, password, name })
       if (error) {
         throw new Error(error.message || 'Failed to sign up')
       }
       return data
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['session'] })
     },
   })
 
   // Sign out mutation
   const signOut = useMutation({
     mutationFn: async () => {
-      const { error } = await authClient.signOut()
+      const { error } = await signOutAction()
       if (error) {
         throw new Error(error.message || 'Failed to sign out')
       }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['session'] })
     },
   })
 
   return {
     session,
     user: session?.user ?? null,
-    isLoading,
+    isLoading: isPending,
     isAuthenticated: !!session?.user,
     signIn,
     signUp,

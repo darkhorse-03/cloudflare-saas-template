@@ -1,23 +1,12 @@
-import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
+import { createFileRoute, Outlet } from '@tanstack/react-router'
 import { DashboardBreadcrumb } from '@/components/dashboard-breadcrumb'
 import { DashboardSidebar } from '@/components/dashboard-sidebar'
 import { Separator } from '@/components/ui/separator'
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
-import { authClient } from '@/lib/auth-client'
+import { requireAuth } from '@/lib/route-guards'
 
 export const Route = createFileRoute('/dashboard')({
-  beforeLoad: async () => {
-    const { data, error } = await authClient.getSession()
-
-    if (error || !data?.user) {
-      throw redirect({
-        to: '/',
-        search: {
-          redirect: '/dashboard',
-        },
-      })
-    }
-  },
+  beforeLoad: requireAuth(),
   component: DashboardLayout,
 })
 
