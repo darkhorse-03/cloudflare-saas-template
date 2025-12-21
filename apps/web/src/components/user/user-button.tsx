@@ -20,7 +20,7 @@ export function UserButton() {
   }
 
   return (
-    <Button onClick={openDialog} variant="default">
+    <Button onClick={openDialog} variant="ghost">
       Sign In
     </Button>
   )

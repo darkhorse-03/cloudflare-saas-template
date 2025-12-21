@@ -28,6 +28,7 @@ export function SignInForm() {
       <div className="space-y-2">
         <Label htmlFor="email">Email</Label>
         <Input
+          autoComplete="email"
           disabled={signIn.isPending}
           id="email"
           onChange={(e) => setEmail(e.target.value)}
@@ -41,6 +42,7 @@ export function SignInForm() {
       <div className="space-y-2">
         <Label htmlFor="password">Password</Label>
         <Input
+          autoComplete="current-password"
           disabled={signIn.isPending}
           id="password"
           onChange={(e) => setPassword(e.target.value)}

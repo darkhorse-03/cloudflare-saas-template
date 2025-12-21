@@ -29,6 +29,7 @@ export function SignUpForm() {
       <div className="space-y-2">
         <Label htmlFor="name">Name</Label>
         <Input
+          autoComplete="name"
           disabled={signUp.isPending}
           id="name"
           onChange={(e) => setName(e.target.value)}
@@ -42,6 +43,7 @@ export function SignUpForm() {
       <div className="space-y-2">
         <Label htmlFor="signup-email">Email</Label>
         <Input
+          autoComplete="email"
           disabled={signUp.isPending}
           id="signup-email"
           onChange={(e) => setEmail(e.target.value)}
@@ -55,6 +57,7 @@ export function SignUpForm() {
       <div className="space-y-2">
         <Label htmlFor="signup-password">Password</Label>
         <Input
+          autoComplete="new-password"
           disabled={signUp.isPending}
           id="signup-password"
           minLength={8}

@@ -1,11 +1,12 @@
 import { api } from '@repo/api/alchemy'
+import { config } from '@repo/config'
 import alchemy from 'alchemy'
 import { Vite } from 'alchemy/cloudflare'
 
-const app = await alchemy('underdog-web')
+const app = await alchemy(`${config.appName}-web`)
 
 export const web = await Vite('web', {
-  name: 'underdog-web',
+  name: `${config.appName}-web`,
   entrypoint: './worker.ts',
   bindings: {
     api,

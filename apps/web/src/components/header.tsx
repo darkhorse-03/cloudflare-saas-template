@@ -73,12 +73,9 @@ export function Header() {
                 </div>
 
                 {/* Settings Section - Sticky Bottom */}
-                <div className="space-y-3 border-t bg-muted/30 p-4">
-                  <div className="flex items-center justify-center">
+                <div className="border-t bg-muted/30 p-4">
+                  <div className="flex items-center justify-between">
                     <UserButton />
-                  </div>
-                  <div className="flex items-center justify-between rounded-md bg-background px-3 py-2">
-                    <span className="font-medium text-sm">Theme</span>
                     <ThemeToggle />
                   </div>
                 </div>

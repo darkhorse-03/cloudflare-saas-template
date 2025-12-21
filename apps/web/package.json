@@ -4,11 +4,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "alchemy dev --app underdog-web",
+    "dev": "bun run scripts/alchemy-dev.ts",
     "build": "vite build",
     "serve": "vite preview",
-    "deploy": "alchemy deploy --app underdog-web",
-    "destroy": "alchemy destroy --app underdog-web",
+    "deploy": "bun run scripts/alchemy-deploy.ts",
+    "destroy": "bun run scripts/alchemy-destroy.ts",
     "check-types": "tsc --noEmit"
   },
   "dependencies": {

@@ -13,14 +13,15 @@
     }
   },
   "scripts": {
-    "dev": "alchemy dev --app underdog-api",
-    "deploy": "alchemy deploy --app underdog-api",
-    "destroy": "alchemy destroy --app underdog-api",
+    "dev": "bun run scripts/alchemy-dev.ts",
+    "deploy": "bun run scripts/alchemy-deploy.ts",
+    "destroy": "bun run scripts/alchemy-destroy.ts",
     "check-types": "tsc --noEmit",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings"
   },
   "dependencies": {
     "@repo/config": "*",
+    "alchemy": "^0.82.1",
     "better-auth": "^1.4.7",
     "better-auth-cloudflare": "^0.2.9",
     "drizzle-orm": "^0.45.1",
