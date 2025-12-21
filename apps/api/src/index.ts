@@ -1,10 +1,19 @@
+import type { IncomingRequestCfProperties } from '@cloudflare/workers-types'
 import { config } from '@repo/config'
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
+import { createAuth } from './auth'
+import type { AppContext } from './env'
 
-const app = new Hono()
+const app = new Hono<AppContext>()
 
 app.use('/*', cors())
+
+// Auth routes - handle all Better Auth endpoints
+app.on(['POST', 'GET'], '/api/auth/**', (c) => {
+  const auth = createAuth(c.env, c.req.raw.cf as IncomingRequestCfProperties)
+  return auth.handler(c.req.raw)
+})
 
 const routes = app
   .get('/', (c) =>
