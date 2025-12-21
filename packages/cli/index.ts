@@ -22,7 +22,7 @@ program
     const config = await getProjectConfig(projectName)
 
     await cloneTemplate(config.name)
-    await updateConfig(config.name, config.description)
+    await updateConfig(config)
 
     if (config.shouldInitGit) {
       await initGit(config.name)
