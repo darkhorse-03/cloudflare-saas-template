@@ -1,7 +1,7 @@
 import { createRouter, RouterProvider } from '@tanstack/react-router'
 import { StrictMode } from 'react'
 import ReactDOM from 'react-dom/client'
-
+// biome-ignore lint: false positive
 import * as TanStackQueryProvider from './integrations/tanstack-query/root-provider'
 
 import { routeTree } from './routeTree.gen'
@@ -20,6 +20,7 @@ const router = createRouter({
 })
 
 declare module '@tanstack/react-router' {
+  // biome-ignore lint: false positive
   interface Register {
     router: typeof router
   }

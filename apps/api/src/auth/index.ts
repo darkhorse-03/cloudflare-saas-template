@@ -13,6 +13,7 @@ function createAuth(env?: Env, cf?: IncomingRequestCfProperties) {
   const db = env ? drizzle(env.DB, { schema, logger: true }) : ({} as any)
 
   return betterAuth({
+    basePath: '/auth', // Web worker strips /api, so we get /auth here
     ...withCloudflare(
       {
         autoDetectIpAddress: true,
