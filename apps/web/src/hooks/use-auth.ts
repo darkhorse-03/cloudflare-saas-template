@@ -1,10 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useNavigate } from '@tanstack/react-router'
 import { authClient } from '@/lib/auth-client'
 
 export function useAuth() {
   const queryClient = useQueryClient()
-  const navigate = useNavigate()
 
   // Get current session
   const { data: session, isLoading } = useQuery({
@@ -29,7 +27,6 @@ export function useAuth() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['session'] })
-      navigate({ to: '/dashboard' })
     },
   })
 
@@ -52,7 +49,6 @@ export function useAuth() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['session'] })
-      navigate({ to: '/dashboard' })
     },
   })
 
@@ -66,7 +62,6 @@ export function useAuth() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['session'] })
-      navigate({ to: '/' })
     },
   })
 

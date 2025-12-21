@@ -1,6 +1,7 @@
 import { createRouter, RouterProvider } from '@tanstack/react-router'
 import { StrictMode } from 'react'
 import ReactDOM from 'react-dom/client'
+import { AuthDialogProvider } from './components/auth/auth-dialog'
 // biome-ignore lint: false positive
 import * as TanStackQueryProvider from './integrations/tanstack-query/root-provider'
 
@@ -32,7 +33,9 @@ if (rootElement && !rootElement.innerHTML) {
   root.render(
     <StrictMode>
       <TanStackQueryProvider.Provider {...TanStackQueryProviderContext}>
-        <RouterProvider router={router} />
+        <AuthDialogProvider>
+          <RouterProvider router={router} />
+        </AuthDialogProvider>
       </TanStackQueryProvider.Provider>
     </StrictMode>,
   )

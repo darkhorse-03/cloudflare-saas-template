@@ -35,12 +35,11 @@ export function AuthDialogProvider({ children }: { children: ReactNode }) {
   return (
     <AuthDialogContext.Provider value={{ isOpen, openDialog, closeDialog }}>
       {children}
-      <AuthDialog />
     </AuthDialogContext.Provider>
   )
 }
 
-function AuthDialog() {
+export function AuthDialog() {
   const { isOpen, closeDialog } = useAuthDialog()
 
   return (
