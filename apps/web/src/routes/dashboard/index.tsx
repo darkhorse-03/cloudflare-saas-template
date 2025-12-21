@@ -12,8 +12,8 @@ function Dashboard() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="font-bold text-3xl tracking-tight">Dashboard</h1>
-        <p className="mt-2 text-gray-500">Welcome back, {user?.name}!</p>
+        <h1 className="font-bold text-3xl tracking-tight">Overview</h1>
+        <p className="mt-2 text-muted-foreground">Welcome back, {user?.name}!</p>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
