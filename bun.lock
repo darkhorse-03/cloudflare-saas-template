@@ -21,6 +21,7 @@
       "version": "0.0.0",
       "dependencies": {
         "@repo/config": "*",
+        "@repo/shared": "*",
         "alchemy": "^0.82.1",
         "better-auth": "^1.4.7",
         "better-auth-cloudflare": "^0.2.9",
@@ -107,6 +108,13 @@
     },
     "packages/config": {
       "name": "@repo/config",
+      "version": "0.0.0",
+      "devDependencies": {
+        "typescript": "^5.7.2",
+      },
+    },
+    "packages/shared": {
+      "name": "@repo/shared",
       "version": "0.0.0",
       "devDependencies": {
         "typescript": "^5.7.2",
@@ -519,6 +527,8 @@
     "@repo/api": ["@repo/api@workspace:apps/api"],
 
     "@repo/config": ["@repo/config@workspace:packages/config"],
+
+    "@repo/shared": ["@repo/shared@workspace:packages/shared"],
 
     "@repo/web": ["@repo/web@workspace:apps/web"],
 

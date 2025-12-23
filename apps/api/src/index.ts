@@ -4,6 +4,7 @@ import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { createAuth } from './auth'
 import type { AppContext } from './env'
+import { demoTodosRoutes } from './routes/demo-todos'
 
 const app = new Hono<AppContext>()
 
@@ -26,19 +27,6 @@ app.on(['POST', 'GET'], '/auth/**', (c) => {
   return auth.handler(c.req.raw)
 })
 
-// In-memory demo todos storage
-type DemoTodo = {
-  id: string
-  text: string
-  completed: boolean
-  createdAt: number
-}
-
-const demoTodos: DemoTodo[] = [
-  { id: '1', text: 'Try the auth demo above', completed: false, createdAt: Date.now() - 3_600_000 },
-  { id: '2', text: 'Create a new todo', completed: false, createdAt: Date.now() - 1_800_000 },
-]
-
 const routes = app
   .get('/', (c) =>
     c.json({
@@ -59,28 +47,7 @@ const routes = app
       uuid: crypto.randomUUID(),
     }),
   )
-  // Demo todo endpoints
-  .get('/demo/todos', (c) => c.json({ todos: demoTodos }))
-  .post('/demo/todos', async (c) => {
-    const body = await c.req.json<{ text: string }>()
-    const newTodo: DemoTodo = {
-      id: crypto.randomUUID(),
-      text: body.text,
-      completed: false,
-      createdAt: Date.now(),
-    }
-    demoTodos.push(newTodo)
-    return c.json({ todo: newTodo }, 201)
-  })
-  .delete('/demo/todos/:id', (c) => {
-    const id = c.req.param('id')
-    const index = demoTodos.findIndex((todo) => todo.id === id)
-    if (index === -1) {
-      return c.json({ error: 'Todo not found' }, 404)
-    }
-    demoTodos.splice(index, 1)
-    return c.json({ success: true })
-  })
+  .route('/demo/todos', demoTodosRoutes)
 
 export type AppType = typeof routes
 export default app

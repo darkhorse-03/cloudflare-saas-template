@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@repo/config": "*",
+    "@repo/shared": "*",
     "alchemy": "^0.82.1",
     "better-auth": "^1.4.7",
     "better-auth-cloudflare": "^0.2.9",

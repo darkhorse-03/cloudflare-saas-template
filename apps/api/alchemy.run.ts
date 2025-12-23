@@ -30,6 +30,16 @@ export const api = await Worker('worker', {
   dev: {
     port: 8787,
   },
+  observability: {
+    logs: {
+      enabled: true,
+      persist: false,
+    },
+    traces: {
+      enabled: true,
+      persist: false,
+    },
+  },
 })
 
 await app.finalize()
