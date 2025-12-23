@@ -1,4 +1,4 @@
-export type User = {
+export interface User {
   id: string
   email: string
   name: string
@@ -8,11 +8,11 @@ export type User = {
   updatedAt: Date
 }
 
-export type AuthContext = {
+export interface AuthContext {
   isAuthenticated: boolean
   user: User | null
 }
 
-export type RouteContext = {
+export interface RouteContext {
   auth: AuthContext
 }

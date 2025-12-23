@@ -4,7 +4,7 @@ import type { createAuth } from './auth'
 
 export type Auth = ReturnType<typeof createAuth>
 
-export type AppContext = {
+export interface AppContext {
   Bindings: {
     DB: D1Database
     KV: KVNamespace

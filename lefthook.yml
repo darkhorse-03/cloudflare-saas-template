@@ -1,7 +1,7 @@
 pre-commit:
   jobs:
     - run: bun x ultracite fix
-      glob: 
+      glob:
         - "*.js"
         - "*.jsx"
         - "*.ts"
@@ -10,3 +10,5 @@ pre-commit:
         - "*.jsonc"
         - "*.css"
       stage_fixed: true
+    - run: bun run lint
+      fail_text: "Linting failed. Fix the errors above before committing."

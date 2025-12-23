@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 
-type CommandCopyButtonProps = {
+interface CommandCopyButtonProps {
   command: string
   variant?: 'default' | 'large'
 }

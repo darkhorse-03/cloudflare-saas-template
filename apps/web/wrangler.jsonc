@@ -2,6 +2,7 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "underdog-web",
   "compatibility_date": "2025-11-11",
+  "compatibility_flags": ["nodejs_compat"],
   "main": "./worker.ts",
   "assets": {
     "directory": "./dist",

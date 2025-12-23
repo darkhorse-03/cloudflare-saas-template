@@ -12,6 +12,7 @@ export const web = await Vite('web', {
     api,
   },
   url: false,
+  compatibility: 'node',
   assets: {
     run_worker_first: ['/api/*'],
   },

@@ -20,7 +20,7 @@ export const config = {
 
   // Development tools configuration
   devtools: {
-    enabled: import.meta.env?.DEV ?? true,
+    enabled: true,
   },
 
   // Navigation links (web only)

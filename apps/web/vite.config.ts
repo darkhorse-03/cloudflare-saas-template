@@ -40,4 +40,33 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom'],
+          'tanstack-vendor': [
+            '@tanstack/react-query',
+            '@tanstack/react-router',
+            '@tanstack/react-form',
+          ],
+          'radix-vendor': [
+            '@radix-ui/react-avatar',
+            '@radix-ui/react-dialog',
+            '@radix-ui/react-dropdown-menu',
+            '@radix-ui/react-label',
+            '@radix-ui/react-separator',
+            '@radix-ui/react-slot',
+            '@radix-ui/react-tabs',
+            '@radix-ui/react-tooltip',
+          ],
+          'auth-vendor': ['better-auth', 'better-auth-cloudflare'],
+          'ui-vendor': ['lucide-react', 'sonner'],
+        },
+      },
+    },
+  },
+  ssr: {
+    external: ['better-auth', 'better-auth-cloudflare', '@better-auth/core'],
+  },
 })

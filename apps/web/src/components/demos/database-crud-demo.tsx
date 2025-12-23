@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input'
 import { api } from '@/lib/api'
 
-type DemoTodo = {
+interface DemoTodo {
   id: string
   text: string
   completed: boolean

@@ -1,4 +1,4 @@
-export type DemoTodo = {
+export interface DemoTodo {
   id: string
   text: string
   completed: boolean

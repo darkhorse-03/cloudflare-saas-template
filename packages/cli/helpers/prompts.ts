@@ -1,7 +1,7 @@
 import { confirm, isCancel, outro, text } from '@clack/prompts'
 import pc from 'picocolors'
 
-export type ProjectConfig = {
+export interface ProjectConfig {
   name: string
   description: string
   tagline: string

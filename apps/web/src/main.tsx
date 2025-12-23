@@ -1,9 +1,5 @@
-import { config } from '@repo/config'
-import { TanStackDevtools } from '@tanstack/react-devtools'
-import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools'
 import { createRouter, RouterProvider } from '@tanstack/react-router'
-import { TanStackRouterDevtoolsPanel } from '@tanstack/router-devtools'
-import { StrictMode } from 'react'
+import { lazy, StrictMode, Suspense } from 'react'
 import ReactDOM from 'react-dom/client'
 import { AuthDialogProvider } from './components/auth/auth-dialog'
 // biome-ignore lint: false positive
@@ -12,6 +8,19 @@ import { useSession } from './lib/auth-client'
 
 import { routeTree } from './routeTree.gen'
 import './styles.css'
+
+// Lazy load devtools only when needed
+const TanStackDevtools = lazy(() =>
+  import('@tanstack/react-devtools').then((m) => ({ default: m.TanStackDevtools })),
+)
+const ReactQueryDevtoolsPanel = lazy(() =>
+  import('@tanstack/react-query-devtools').then((m) => ({ default: m.ReactQueryDevtoolsPanel })),
+)
+const TanStackRouterDevtoolsPanel = lazy(() =>
+  import('@tanstack/react-router-devtools').then((m) => ({
+    default: m.TanStackRouterDevtoolsPanel,
+  })),
+)
 
 const TanStackQueryProviderContext = TanStackQueryProvider.getContext()
 const router = createRouter({
@@ -30,7 +39,6 @@ const router = createRouter({
 })
 
 declare module '@tanstack/react-router' {
-  // biome-ignore lint: false positive
   interface Register {
     router: typeof router
   }
@@ -62,7 +70,7 @@ function InnerApp() {
         }}
         router={router}
       />
-      {config.devtools.enabled && (
+      <Suspense fallback={null}>
         <TanStackDevtools
           plugins={[
             {
@@ -77,7 +85,7 @@ function InnerApp() {
             },
           ]}
         />
-      )}
+      </Suspense>
     </>
   )
 }

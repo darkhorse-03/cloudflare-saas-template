@@ -1,4 +1,4 @@
-type Env = {
+interface Env {
   api: Fetcher
   ASSETS: Fetcher
 }
