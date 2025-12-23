@@ -203,7 +203,7 @@ function GettingStartedPage() {
               the route:
             </p>
             <div className="not-prose mb-6 rounded-lg bg-muted/50 p-4 font-mono text-sm">
-              <div className="text-muted-foreground">// apps/web/src/routes/blog.tsx</div>
+              <div className="text-muted-foreground">{'// apps/web/src/routes/blog.tsx'}</div>
               <div className="mt-2">
                 import {'{ createFileRoute }'} from '@tanstack/react-router'
               </div>
@@ -223,7 +223,7 @@ function GettingStartedPage() {
             </p>
             <div className="not-prose mb-6 rounded-lg bg-muted/50 p-4 font-mono text-sm">
               <div className="text-muted-foreground">
-                // Autocomplete and type checking for routes
+                {'// Autocomplete and type checking for routes'}
               </div>
               <div className="mt-2">{'<Link to="/blog">View Blog</Link>'}</div>
             </div>

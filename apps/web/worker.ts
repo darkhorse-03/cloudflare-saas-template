@@ -1,17 +1,19 @@
-interface Env {
+type Env = {
   api: Fetcher
   ASSETS: Fetcher
 }
 
+const API_PREFIX_REGEX = /^\/api/
+
 export default {
-  async fetch(request: Request, env: Env): Promise<Response> {
+  fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url)
 
     // Proxy all /api/* requests to api via service binding
     if (url.pathname.startsWith('/api/')) {
       // Strip /api prefix before forwarding to api service
       const apiUrl = new URL(request.url)
-      apiUrl.pathname = url.pathname.replace(/^\/api/, '')
+      apiUrl.pathname = url.pathname.replace(API_PREFIX_REGEX, '')
       return env.api.fetch(new Request(apiUrl, request))
     }
 

@@ -86,7 +86,7 @@ export function CompetitorComparison() {
             </TableHeader>
             <TableBody>
               {features.map((feature, index) => (
-                <TableRow className={index % 2 === 0 ? 'bg-muted/30' : ''} key={index}>
+                <TableRow className={index % 2 === 0 ? 'bg-muted/30' : ''} key={feature.name}>
                   <TableCell className="font-medium">{feature.name}</TableCell>
                   <TableCell className="text-center">
                     <div className="flex items-center justify-center">

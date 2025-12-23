@@ -18,7 +18,7 @@ const routeLabels: Record<string, string> = {
 
 export function DashboardBreadcrumb() {
   const matches = useMatches()
-  const currentPath = matches[matches.length - 1]?.pathname || '/dashboard'
+  const currentPath = matches.at(-1)?.pathname || '/dashboard'
   const label = routeLabels[currentPath] || 'Dashboard'
 
   return (

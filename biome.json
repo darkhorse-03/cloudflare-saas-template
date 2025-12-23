@@ -17,6 +17,21 @@
       "formatter": {
         "enabled": false
       }
+    },
+    {
+      "includes": ["apps/web/index.html"],
+      "linter": {
+        "enabled": false
+      },
+      "formatter": {
+        "enabled": false
+      }
+    },
+    {
+      "includes": ["apps/web/src/components/ui/**"],
+      "linter": {
+        "enabled": false
+      }
     }
   ],
   "formatter": {
@@ -45,6 +60,7 @@
     }
   },
   "assist": {
+    "includes": ["!**/*.html"],
     "actions": {
       "source": {
         "organizeImports": "on"

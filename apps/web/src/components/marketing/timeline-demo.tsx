@@ -19,7 +19,9 @@ export function TimelineDemo() {
 
   // Auto-play animation
   useEffect(() => {
-    if (!isPlaying) return
+    if (!isPlaying) {
+      return
+    }
 
     const interval = setInterval(() => {
       setProgress((prev) => {
@@ -45,6 +47,13 @@ export function TimelineDemo() {
       setCurrentStage(stageIndex)
     }
   }, [progress, timeline])
+
+  const getButtonText = () => {
+    if (progress >= 100) {
+      return 'Replay'
+    }
+    return isPlaying ? 'Pause' : 'Play Animation'
+  }
 
   const handlePlayPause = () => {
     if (progress >= 100) {
@@ -92,6 +101,16 @@ export function TimelineDemo() {
               const isActive = index === currentStage
               const isCompleted = index < currentStage || progress >= 100
 
+              const getStageClassName = () => {
+                if (isCompleted) {
+                  return 'border-green-500 bg-green-500/10 text-green-500'
+                }
+                if (isActive) {
+                  return 'border-primary bg-primary/10 text-primary'
+                }
+                return 'border-muted bg-muted text-muted-foreground'
+              }
+
               return (
                 <div className="relative" key={stage.time}>
                   <div
@@ -101,13 +120,7 @@ export function TimelineDemo() {
                   >
                     {/* Icon */}
                     <div
-                      className={`mb-3 flex size-16 items-center justify-center rounded-full border-2 transition-all ${
-                        isCompleted
-                          ? 'border-green-500 bg-green-500/10 text-green-500'
-                          : isActive
-                            ? 'border-primary bg-primary/10 text-primary'
-                            : 'border-muted bg-muted text-muted-foreground'
-                      }`}
+                      className={`mb-3 flex size-16 items-center justify-center rounded-full border-2 transition-all ${getStageClassName()}`}
                     >
                       {isCompleted ? <Check className="size-8" /> : <Icon className="size-8" />}
                     </div>
@@ -131,8 +144,8 @@ export function TimelineDemo() {
           <div className="mb-6 rounded-lg bg-muted/50 p-6">
             <div className="mb-3 font-semibold">{timeline[currentStage].label}</div>
             <ul className="space-y-2 text-muted-foreground text-sm">
-              {timeline[currentStage].details.map((detail, index) => (
-                <li className="flex items-start gap-2" key={index}>
+              {timeline[currentStage].details.map((detail) => (
+                <li className="flex items-start gap-2" key={detail}>
                   <Check className="mt-0.5 size-4 shrink-0 text-green-500" />
                   <span>{detail}</span>
                 </li>
@@ -143,7 +156,7 @@ export function TimelineDemo() {
           {/* Play Button */}
           <div className="flex justify-center">
             <Button onClick={handlePlayPause} size="lg">
-              {progress >= 100 ? 'Replay' : isPlaying ? 'Pause' : 'Play Animation'}
+              {getButtonText()}
             </Button>
           </div>
         </Card>

@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input'
 import { api } from '@/lib/api'
 
-interface DemoTodo {
+type DemoTodo = {
   id: string
   text: string
   completed: boolean
@@ -23,7 +23,9 @@ export function DatabaseCRUDDemo() {
     queryKey: ['demo-todos'],
     queryFn: async () => {
       const res = await api.demo.todos.$get()
-      if (!res.ok) throw new Error('Failed to fetch todos')
+      if (!res.ok) {
+        throw new Error('Failed to fetch todos')
+      }
       return res.json()
     },
   })
@@ -34,7 +36,9 @@ export function DatabaseCRUDDemo() {
       const res = await api.demo.todos.$post({
         json: { text },
       })
-      if (!res.ok) throw new Error('Failed to create todo')
+      if (!res.ok) {
+        throw new Error('Failed to create todo')
+      }
       return res.json()
     },
     onSuccess: () => {
@@ -53,7 +57,9 @@ export function DatabaseCRUDDemo() {
       const res = await api.demo.todos[':id'].$delete({
         param: { id },
       })
-      if (!res.ok) throw new Error('Failed to delete todo')
+      if (!res.ok) {
+        throw new Error('Failed to delete todo')
+      }
       return res.json()
     },
     onSuccess: () => {
@@ -67,7 +73,9 @@ export function DatabaseCRUDDemo() {
 
   const handleAddTodo = (e: React.FormEvent) => {
     e.preventDefault()
-    if (!newTodoText.trim()) return
+    if (!newTodoText.trim()) {
+      return
+    }
     createMutation.mutate(newTodoText)
   }
 

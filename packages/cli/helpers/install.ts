@@ -2,7 +2,7 @@ import { execSync } from 'node:child_process'
 import { spinner } from '@clack/prompts'
 import pc from 'picocolors'
 
-export async function installDependencies(projectName: string): Promise<void> {
+export function installDependencies(projectName: string): void {
   const s = spinner()
   s.start('Installing dependencies (this may take a minute)...')
 

@@ -1,13 +1,14 @@
 import { config } from '@repo/config'
-import { Link, useLocation } from '@tanstack/react-router'
+import { Link } from '@tanstack/react-router'
 import { Menu } from 'lucide-react'
+import { useState } from 'react'
 import { ThemeToggle } from './theme-toggle'
 import { Button } from './ui/button'
 import { Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from './ui/sheet'
 import { UserButton } from './user/user-button'
 
 export function Header() {
-  const location = useLocation()
+  const [open, setOpen] = useState(false)
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -42,14 +43,21 @@ export function Header() {
 
           {/* Mobile Navigation */}
           <div className="md:hidden">
-            <Sheet key={location.pathname}>
+            <Sheet onOpenChange={setOpen} open={open}>
               <SheetTrigger asChild>
                 <Button size="icon" variant="ghost">
                   <Menu className="h-5 w-5" />
                   <span className="sr-only">Toggle menu</span>
                 </Button>
               </SheetTrigger>
-              <SheetContent className="flex w-[280px] flex-col [&>button]:hidden" side="right">
+              <SheetContent
+                className="flex w-[280px] flex-col"
+                onCloseAutoFocus={(event) => {
+                  event.preventDefault()
+                  document.body.style.pointerEvents = ''
+                }}
+                side="right"
+              >
                 <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
                 <SheetDescription className="sr-only">
                   Navigate to different pages and adjust theme settings
@@ -65,6 +73,7 @@ export function Header() {
                           }}
                           className="flex items-center rounded-md px-3 py-3 font-medium text-base text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
                           key={item.href}
+                          onClick={() => setOpen(false)}
                           to={item.href}
                         >
                           {item.label}

@@ -7,7 +7,7 @@ export function BeforeAfterComparison() {
 
   // Calculate total time saved
   const totalHoursSaved = painPoints.reduce((sum, point) => {
-    const hours = Number.parseInt(point.timeWithout.split(' ')[0])
+    const hours = Number.parseInt(point.timeWithout.split(' ')[0], 10)
     return sum + hours
   }, 0)
 
@@ -58,8 +58,8 @@ export function BeforeAfterComparison() {
                       {point.timeWithout}
                     </div>
                     <ul className="space-y-2 text-muted-foreground text-sm">
-                      {point.tasksWithout.map((task, index) => (
-                        <li className="flex items-start gap-2" key={index}>
+                      {point.tasksWithout.map((task) => (
+                        <li className="flex items-start gap-2" key={task}>
                           <span className="mt-0.5 text-destructive/70">•</span>
                           <span>{task}</span>
                         </li>
@@ -82,8 +82,8 @@ export function BeforeAfterComparison() {
                       {point.timeWith}
                     </div>
                     <ul className="space-y-2 text-sm">
-                      {point.tasksWith.map((task, index) => (
-                        <li className="flex items-start gap-2" key={index}>
+                      {point.tasksWith.map((task) => (
+                        <li className="flex items-start gap-2" key={task}>
                           <Check className="mt-0.5 size-4 shrink-0 text-green-500" />
                           <span>{task}</span>
                         </li>

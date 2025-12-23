@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 
-interface CommandCopyButtonProps {
+type CommandCopyButtonProps = {
   command: string
   variant?: 'default' | 'large'
 }
@@ -22,7 +22,7 @@ export function CommandCopyButton({ command, variant = 'default' }: CommandCopyB
       setTimeout(() => {
         setCopied(false)
       }, 2000)
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to copy', {
         description: 'Please try again or copy the command manually.',
       })

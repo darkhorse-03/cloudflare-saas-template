@@ -2,7 +2,7 @@ import { execSync } from 'node:child_process'
 import { spinner } from '@clack/prompts'
 import pc from 'picocolors'
 
-export async function initGit(projectName: string): Promise<void> {
+export function initGit(projectName: string): void {
   const s = spinner()
   s.start('Initializing git...')
 
