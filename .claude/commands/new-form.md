@@ -185,12 +185,12 @@ export function ${ARGUMENTS.form_name}({ onSubmit }: ${ARGUMENTS.form_name}Props
 8. **Example: With React Query mutation**:
 ```tsx
 import { useMutation } from '@tanstack/react-query'
-import { apiClient } from '@/lib/api-client'
+import { api } from '@/lib/api'
 
 export function ${ARGUMENTS.form_name}() {
   const mutation = useMutation({
     mutationFn: async (data: ${ARGUMENTS.form_name}Input) => {
-      const res = await apiClient.endpoint.$post({ json: data })
+      const res = await api.endpoint.$post({ json: data })
       if (!res.ok) throw new Error('Failed to submit')
       return res.json()
     },

@@ -70,7 +70,8 @@ function PageComponent() {
 ```tsx
 // apps/web/src/hooks/items/use-items.ts
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { apiClient } from '@/lib/api-client'
+import type { CreateItemInput, UpdateItemInput } from '@repo/shared'
+import { api } from '@/lib/api'
 
 export function useItems() {
   const queryClient = useQueryClient()
@@ -78,7 +79,7 @@ export function useItems() {
   const query = useQuery({
     queryKey: ['items'],
     queryFn: async () => {
-      const res = await apiClient.items.$get()
+      const res = await api.items.$get()
       if (!res.ok) {
         throw new Error('Failed to fetch items')
       }
@@ -88,7 +89,7 @@ export function useItems() {
 
   const createItem = useMutation({
     mutationFn: async (data: CreateItemInput) => {
-      const res = await apiClient.items.$post({ json: data })
+      const res = await api.items.$post({ json: data })
       if (!res.ok) {
         throw new Error('Failed to create item')
       }
@@ -157,13 +158,13 @@ For pages that need SSR data prefetching:
 ```tsx
 import { createFileRoute } from '@tanstack/react-router'
 import { queryOptions, useSuspenseQuery } from '@tanstack/react-query'
-import { apiClient } from '@/lib/api-client'
+import { api } from '@/lib/api'
 import { Layout } from '@/components/layout'
 
 const itemsQueryOptions = queryOptions({
   queryKey: ['items'],
   queryFn: async () => {
-    const res = await apiClient.items.$get()
+    const res = await api.items.$get()
     if (!res.ok) {
       throw new Error('Failed to fetch items')
     }

@@ -50,8 +50,8 @@ export function ${ARGUMENTS.component_name}({  }: ${ARGUMENTS.component_name}Pro
 ```tsx
 // apps/web/src/hooks/items/use-items.ts
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { apiClient } from '@/lib/api-client'
 import type { CreateItemInput, UpdateItemInput } from '@repo/shared'
+import { api } from '@/lib/api'
 
 export function useItems() {
   const queryClient = useQueryClient()
@@ -59,7 +59,7 @@ export function useItems() {
   const itemsQuery = useQuery({
     queryKey: ['items'],
     queryFn: async () => {
-      const res = await apiClient.demo.items.$get()
+      const res = await api.demo.items.$get()
       if (!res.ok) {
         throw new Error('Failed to fetch items')
       }
@@ -69,7 +69,7 @@ export function useItems() {
 
   const createItem = useMutation({
     mutationFn: async (data: CreateItemInput) => {
-      const res = await apiClient.demo.items.$post({ json: data })
+      const res = await api.demo.items.$post({ json: data })
       if (!res.ok) {
         throw new Error('Failed to create item')
       }
@@ -82,7 +82,7 @@ export function useItems() {
 
   const updateItem = useMutation({
     mutationFn: async ({ id, data }: { id: string; data: UpdateItemInput }) => {
-      const res = await apiClient.demo.items[':id'].$put({
+      const res = await api.demo.items[':id'].$patch({
         param: { id },
         json: data,
       })
@@ -98,7 +98,7 @@ export function useItems() {
 
   const deleteItem = useMutation({
     mutationFn: async (id: string) => {
-      const res = await apiClient.demo.items[':id'].$delete({ param: { id } })
+      const res = await api.demo.items[':id'].$delete({ param: { id } })
       if (!res.ok) {
         throw new Error('Failed to delete item')
       }

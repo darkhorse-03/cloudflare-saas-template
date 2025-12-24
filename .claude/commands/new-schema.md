@@ -349,7 +349,7 @@ const schema = {
 Create validation schemas and types:
 
 ```typescript
-// packages/shared/src/posts/schema.ts
+// packages/shared/src/posts/posts.ts
 import { z } from 'zod'
 
 export const createPostSchema = z.object({
@@ -374,8 +374,8 @@ export interface Post {
 ### 3. Export from `packages/shared/src/index.ts`
 
 ```typescript
-export type { Post, CreatePostInput } from './posts/schema'
-export { createPostSchema } from './posts/schema'
+export type { Post, CreatePostInput } from './posts/posts'
+export { createPostSchema } from './posts/posts'
 ```
 
 ---
