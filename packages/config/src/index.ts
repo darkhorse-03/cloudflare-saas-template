@@ -1,6 +1,10 @@
 /**
  * Shared configuration for the entire application
  * Used by both web and API workers
+ *
+ * ⚠️ WARNING: Everything in this file is PUBLIC and exposed to the frontend.
+ * ⚠️ DO NOT put secrets, API keys, or sensitive data here.
+ * ⚠️ Use environment variables (c.env) for secrets on the API side.
  */
 
 export const config = {
@@ -23,7 +27,8 @@ export const config = {
     enabled: true,
   },
 
-  // Navigation links (web only)
+  // Public/Marketing navigation links (Header component only)
+  // Note: Dashboard sidebar navigation is defined separately in dashboard-sidebar.tsx
   nav: [
     { label: 'Home', href: '/' },
     { label: 'Getting Started', href: '/getting-started' },
@@ -31,7 +36,7 @@ export const config = {
     { label: 'About', href: '/about' },
   ],
 
-  // Footer links (web only)
+  // Public footer links
   footer: {
     links: [
       { label: 'Documentation', href: '/getting-started' },
