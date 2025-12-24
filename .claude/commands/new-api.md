@@ -88,4 +88,34 @@ Then import in route:
 import { create${ARGUMENTS.route_name}Schema } from '@repo/shared/schemas'
 ```
 
+## Using Database in Routes
+
+If your route needs to interact with the database:
+
+1. **Import database helpers**:
+```ts
+import { getDb } from '@/db'
+import tableName from '@/db/schema/feature'
+import { eq } from 'drizzle-orm'
+import { getAuthUser, requireAuth } from '@/middleware/auth'
+```
+
+2. **Use in route handlers**:
+```ts
+const $ARGUMENTS.route_name = new Hono()
+  .get('/', requireAuth, async (c) => {
+    const user = getAuthUser(c)  // Get authenticated user
+    const db = getDb(c.env.DB)   // Get database instance
+
+    // Query with user scoping
+    const items = await db.query.tableName.findMany({
+      where: eq(tableName.userId, user.id),
+    })
+
+    return c.json({ items })
+  })
+```
+
+**Need to create tables?** Use `/new-schema` command to create database schemas.
+
 Follow patterns in `hono-api-patterns` skill.

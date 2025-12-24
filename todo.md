@@ -1,0 +1,5 @@
+- better config.ts route clarity, eveyrhting in here is public
+- better /new-route, /new-component command instructions to what i want (seperate hooks folder for react query etc
+- better claude.md instructions on how the template is setup and how to use it (with commands), how the two sidebar works, whats the navigation structure
+- going for full group by features split structure
+- use alchemy as IAC and more than wrangler.json

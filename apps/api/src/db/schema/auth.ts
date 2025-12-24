@@ -1,7 +1,7 @@
 import { relations, sql } from 'drizzle-orm'
 import { index, integer, sqliteTable, text } from 'drizzle-orm/sqlite-core'
 
-export const users = sqliteTable('users', {
+const users = sqliteTable('users', {
   id: text('id').primaryKey(),
   name: text('name').notNull(),
   email: text('email').notNull().unique(),
@@ -16,7 +16,7 @@ export const users = sqliteTable('users', {
     .notNull(),
 })
 
-export const sessions = sqliteTable(
+const sessions = sqliteTable(
   'sessions',
   {
     id: text('id').primaryKey(),
@@ -45,7 +45,7 @@ export const sessions = sqliteTable(
   (table) => [index('sessions_userId_idx').on(table.userId)],
 )
 
-export const accounts = sqliteTable(
+const accounts = sqliteTable(
   'accounts',
   {
     id: text('id').primaryKey(),
@@ -75,7 +75,7 @@ export const accounts = sqliteTable(
   (table) => [index('accounts_userId_idx').on(table.userId)],
 )
 
-export const verifications = sqliteTable(
+const verifications = sqliteTable(
   'verifications',
   {
     id: text('id').primaryKey(),
@@ -112,9 +112,5 @@ export const accountsRelations = relations(accounts, ({ one }) => ({
   }),
 }))
 
-export const authSchema = {
-  users,
-  sessions,
-  accounts,
-  verifications,
-} as const
+export default users
+export { sessions, accounts, verifications }

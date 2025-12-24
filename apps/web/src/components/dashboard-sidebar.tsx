@@ -1,6 +1,17 @@
 import { config } from '@repo/config'
 import { Link, useNavigate, useRouterState } from '@tanstack/react-router'
-import { BarChart3, ChevronUp, Home, LogOut, Moon, Settings, Sun, User, Users } from 'lucide-react'
+import {
+  BarChart3,
+  ChevronUp,
+  Home,
+  LogOut,
+  Moon,
+  Package,
+  Settings,
+  Sun,
+  User,
+  Users,
+} from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import {
   DropdownMenu,
@@ -41,6 +52,11 @@ const navItems = [
     title: 'Team',
     url: '/dashboard/team',
     icon: Users,
+  },
+  {
+    title: 'Items',
+    url: '/dashboard/items',
+    icon: Package,
   },
 ]
 

@@ -44,7 +44,10 @@
     "enabled": true,
     "rules": {
       "recommended": true,
-      "nursery": "off"
+      "nursery": "off",
+      "performance": {
+        "noBarrelFile": "off"
+      }
     }
   },
   "javascript": {

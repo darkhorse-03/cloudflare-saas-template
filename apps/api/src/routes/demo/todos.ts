@@ -1,6 +1,6 @@
 import type { DemoTodo } from '@repo/shared'
 import { Hono } from 'hono'
-import type { AppContext } from '../env'
+import type { AppContext } from '@/env'
 
 // In-memory demo todos storage
 const demoTodos: DemoTodo[] = [
@@ -8,7 +8,7 @@ const demoTodos: DemoTodo[] = [
   { id: '2', text: 'Create a new todo', completed: false, createdAt: Date.now() - 1_800_000 },
 ]
 
-export const demoTodosRoutes = new Hono<AppContext>()
+export const todosRoutes = new Hono<AppContext>()
   .get('/', (c) => c.json({ todos: demoTodos }))
   .post('/', async (c) => {
     const body = await c.req.json<{ text: string }>()

@@ -20,6 +20,7 @@
     "cf-typegen": "wrangler types --env-interface CloudflareBindings"
   },
   "dependencies": {
+    "@hono/zod-validator": "^0.7.6",
     "@repo/config": "*",
     "@repo/shared": "*",
     "alchemy": "^0.82.1",
@@ -31,6 +32,7 @@
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20251223.0",
     "@types/better-sqlite3": "^7.6.13",
+    "@types/bun": "latest",
     "better-sqlite3": "^12.5.0",
     "drizzle-kit": "^0.31.8",
     "typescript": "^5.9.3"

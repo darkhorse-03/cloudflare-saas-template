@@ -18,6 +18,7 @@ import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
 import { Route as DashboardTeamRouteImport } from './routes/dashboard/team'
 import { Route as DashboardSettingsRouteImport } from './routes/dashboard/settings'
 import { Route as DashboardProfileRouteImport } from './routes/dashboard/profile'
+import { Route as DashboardItemsRouteImport } from './routes/dashboard/items'
 import { Route as DashboardAnalyticsRouteImport } from './routes/dashboard/analytics'
 
 const GettingStartedRoute = GettingStartedRouteImport.update({
@@ -65,6 +66,11 @@ const DashboardProfileRoute = DashboardProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => DashboardRouteRoute,
 } as any)
+const DashboardItemsRoute = DashboardItemsRouteImport.update({
+  id: '/items',
+  path: '/items',
+  getParentRoute: () => DashboardRouteRoute,
+} as any)
 const DashboardAnalyticsRoute = DashboardAnalyticsRouteImport.update({
   id: '/analytics',
   path: '/analytics',
@@ -78,6 +84,7 @@ export interface FileRoutesByFullPath {
   '/features': typeof FeaturesRoute
   '/getting-started': typeof GettingStartedRoute
   '/dashboard/analytics': typeof DashboardAnalyticsRoute
+  '/dashboard/items': typeof DashboardItemsRoute
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/team': typeof DashboardTeamRoute
@@ -89,6 +96,7 @@ export interface FileRoutesByTo {
   '/features': typeof FeaturesRoute
   '/getting-started': typeof GettingStartedRoute
   '/dashboard/analytics': typeof DashboardAnalyticsRoute
+  '/dashboard/items': typeof DashboardItemsRoute
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/team': typeof DashboardTeamRoute
@@ -102,6 +110,7 @@ export interface FileRoutesById {
   '/features': typeof FeaturesRoute
   '/getting-started': typeof GettingStartedRoute
   '/dashboard/analytics': typeof DashboardAnalyticsRoute
+  '/dashboard/items': typeof DashboardItemsRoute
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/team': typeof DashboardTeamRoute
@@ -116,6 +125,7 @@ export interface FileRouteTypes {
     | '/features'
     | '/getting-started'
     | '/dashboard/analytics'
+    | '/dashboard/items'
     | '/dashboard/profile'
     | '/dashboard/settings'
     | '/dashboard/team'
@@ -127,6 +137,7 @@ export interface FileRouteTypes {
     | '/features'
     | '/getting-started'
     | '/dashboard/analytics'
+    | '/dashboard/items'
     | '/dashboard/profile'
     | '/dashboard/settings'
     | '/dashboard/team'
@@ -139,6 +150,7 @@ export interface FileRouteTypes {
     | '/features'
     | '/getting-started'
     | '/dashboard/analytics'
+    | '/dashboard/items'
     | '/dashboard/profile'
     | '/dashboard/settings'
     | '/dashboard/team'
@@ -218,6 +230,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardProfileRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
+    '/dashboard/items': {
+      id: '/dashboard/items'
+      path: '/items'
+      fullPath: '/dashboard/items'
+      preLoaderRoute: typeof DashboardItemsRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
     '/dashboard/analytics': {
       id: '/dashboard/analytics'
       path: '/analytics'
@@ -230,6 +249,7 @@ declare module '@tanstack/react-router' {
 
 interface DashboardRouteRouteChildren {
   DashboardAnalyticsRoute: typeof DashboardAnalyticsRoute
+  DashboardItemsRoute: typeof DashboardItemsRoute
   DashboardProfileRoute: typeof DashboardProfileRoute
   DashboardSettingsRoute: typeof DashboardSettingsRoute
   DashboardTeamRoute: typeof DashboardTeamRoute
@@ -238,6 +258,7 @@ interface DashboardRouteRouteChildren {
 
 const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
   DashboardAnalyticsRoute: DashboardAnalyticsRoute,
+  DashboardItemsRoute: DashboardItemsRoute,
   DashboardProfileRoute: DashboardProfileRoute,
   DashboardSettingsRoute: DashboardSettingsRoute,
   DashboardTeamRoute: DashboardTeamRoute,

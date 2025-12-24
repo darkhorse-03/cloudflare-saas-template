@@ -2,31 +2,46 @@ import type { IncomingRequestCfProperties } from '@cloudflare/workers-types'
 import { config } from '@repo/config'
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
-import { createAuth } from './auth'
-import type { AppContext } from './env'
-import { demoTodosRoutes } from './routes/demo-todos'
+import { createAuth } from '@/auth'
+import type { AppContext } from '@/env'
+import { authMiddleware } from '@/middleware/auth'
+import { itemsRoutes } from '@/routes/demo/items'
+import { preferencesRoutes } from '@/routes/demo/preferences'
+import { todosRoutes } from '@/routes/demo/todos'
 
 const app = new Hono<AppContext>()
 
+// CORS middleware
 app.use(
   '/*',
   cors({
     origin: (origin) => origin, // Allow all origins (return the requesting origin)
     credentials: true,
-    allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowMethods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowHeaders: ['Content-Type', 'Authorization'],
     exposeHeaders: ['Content-Length', 'X-Request-Id'],
     maxAge: 600,
   }),
 )
 
+// Create auth instance and attach to context
+app.use('/*', async (c, next) => {
+  const auth = createAuth(c.env, c.req.raw.cf as IncomingRequestCfProperties)
+  c.set('auth', auth)
+  await next()
+})
+
+// Extract session globally - sets user/session in context
+app.use('/*', authMiddleware)
+
 // Auth routes - handle all Better Auth endpoints
 // Note: /api prefix is stripped by the web worker before reaching here
 app.on(['POST', 'GET'], '/auth/**', (c) => {
-  const auth = createAuth(c.env, c.req.raw.cf as IncomingRequestCfProperties)
+  const auth = c.get('auth')
   return auth.handler(c.req.raw)
 })
 
+// API routes
 const routes = app
   .get('/', (c) =>
     c.json({
@@ -47,7 +62,10 @@ const routes = app
       uuid: crypto.randomUUID(),
     }),
   )
-  .route('/demo/todos', demoTodosRoutes)
+  // Demo routes - delete this when building your app
+  .route('/demo/todos', todosRoutes)
+  .route('/demo/items', itemsRoutes)
+  .route('/demo/preferences', preferencesRoutes)
 
 export type AppType = typeof routes
 export default app

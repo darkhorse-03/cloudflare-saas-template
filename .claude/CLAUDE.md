@@ -22,6 +22,8 @@
 ## File Placement
 - **Shared constants/types** → `packages/config/`
 - **API routes** → `apps/api/src/routes/`
+- **Database schemas** → `apps/api/src/db/schema/`
+- **Validation schemas** → `packages/shared/src/[feature]/`
 - **React pages** → `apps/web/src/routes/` (file-based routing)
 - **Reusable components** → `apps/web/src/components/`
 - **shadcn/ui components** → `apps/web/src/components/ui/`
@@ -56,3 +58,4 @@ Focus on architecture, business logic, and UX - formatting is handled automatica
 - Export API types for RPC type safety
 - Use service bindings for worker-to-worker communication
 - Handle loading and error states explicitly
+- **Always scope user data** - Check `userId` in database queries to prevent unauthorized access
