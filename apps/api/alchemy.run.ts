@@ -13,6 +13,7 @@ const db = await D1Database('db', {
 
 const kv = await KVNamespace('kv', {
   title: `${config.appName}-sessions`,
+  adopt: true,
 })
 
 export const api = await Worker('worker', {

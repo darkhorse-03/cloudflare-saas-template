@@ -16,6 +16,7 @@
     "dev": "bun run scripts/alchemy-dev.ts",
     "deploy": "bun run scripts/alchemy-deploy.ts",
     "destroy": "bun run scripts/alchemy-destroy.ts",
+    "db:generate": "drizzle-kit generate",
     "check-types": "tsc --noEmit",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings"
   },

@@ -2,15 +2,14 @@ import type { D1Database, IncomingRequestCfProperties } from '@cloudflare/worker
 import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import { withCloudflare } from 'better-auth-cloudflare'
-import { drizzle } from 'drizzle-orm/d1'
-import { schema } from '../db/schema'
+import { getDb } from '@/db'
 import type { Env } from '../env'
 
 // Single auth configuration that handles both CLI and runtime scenarios
 function createAuth(env?: Env, cf?: IncomingRequestCfProperties) {
   // Use actual DB for runtime, empty object for CLI schema generation
   // biome-ignore lint: false positive
-  const db = env ? drizzle(env.DB, { schema, logger: true }) : ({} as any)
+  const db = env ? getDb(env.DB) : ({} as any)
 
   return betterAuth({
     basePath: '/auth', // Web worker strips /api, so we get /auth here

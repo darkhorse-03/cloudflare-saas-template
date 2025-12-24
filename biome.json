@@ -32,6 +32,16 @@
       "linter": {
         "enabled": false
       }
+    },
+    {
+      "includes": ["apps/api/src/db/**"],
+      "linter": {
+        "rules": {
+          "performance": {
+            "noNamespaceImport": "off"
+          }
+        }
+      }
     }
   ],
   "formatter": {

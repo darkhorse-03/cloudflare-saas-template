@@ -21,11 +21,11 @@
       "dependsOn": ["^deploy"],
       "cache": false
     },
-    "@repo/api#destroy": {
-      "dependsOn": ["@repo/web#destroy"],
+    "destroy": {
       "cache": false
     },
     "@repo/web#destroy": {
+      "dependsOn": ["@repo/api#destroy"],
       "cache": false
     }
   }
