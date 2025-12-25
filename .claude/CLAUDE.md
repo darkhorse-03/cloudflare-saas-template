@@ -1,4 +1,4 @@
-# Underdog - Cloudflare Workers Fullstack Template
+# Zynth - Cloudflare Workers Fullstack Template
 
 ## Stack
 - **Backend**: Hono API (Cloudflare Worker)

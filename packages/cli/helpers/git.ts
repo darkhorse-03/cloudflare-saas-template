@@ -9,7 +9,7 @@ export function initGit(projectName: string): void {
   try {
     execSync('git init', { cwd: projectName, stdio: 'ignore' })
     execSync('git add .', { cwd: projectName, stdio: 'ignore' })
-    execSync('git commit -m "Initial commit from create-underdog-app"', {
+    execSync('git commit -m "Initial commit from create-zynth-app"', {
       cwd: projectName,
       stdio: 'ignore',
     })

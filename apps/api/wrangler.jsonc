@@ -1,13 +1,13 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "underdog-api",
+  "name": "zynth-api",
   "main": "src/index.ts",
   "compatibility_date": "2025-11-30",
   "compatibility_flags": ["nodejs_compat"],
   "d1_databases": [
     {
       "binding": "DB",
-      "database_name": "underdog-db",
+      "database_name": "zynth-db",
       "database_id": ""
     }
   ]

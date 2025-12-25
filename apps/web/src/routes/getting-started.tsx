@@ -25,13 +25,13 @@ function GettingStartedPage() {
               Run this command to create a new project with our interactive CLI:
             </p>
             <div className="not-prose mb-4 rounded-lg bg-muted/50 p-4 font-mono text-sm">
-              bunx create-underdog-app
+              bunx create-zynth-app
             </div>
             <p className="mb-4 text-muted-foreground text-sm leading-relaxed">
               Or specify a project name directly:
             </p>
             <div className="not-prose rounded-lg bg-muted/50 p-4 font-mono text-sm">
-              bunx create-underdog-app my-awesome-app
+              bunx create-zynth-app my-awesome-app
             </div>
           </section>
 

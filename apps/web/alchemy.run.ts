@@ -16,7 +16,7 @@ export const web = await Vite('web', {
   assets: {
     run_worker_first: ['/api/*'],
   },
-  domains: ['underdog.sarimahmed.net'],
+  domains: ['template.zynth.dev'],
   placement: {
     mode: 'smart',
   },

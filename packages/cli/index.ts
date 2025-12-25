@@ -10,14 +10,14 @@ import { installDependencies } from './helpers/install.js'
 import { getProjectConfig } from './helpers/prompts.js'
 
 program
-  .name('create-underdog-app')
-  .description('Create a new Underdog fullstack app')
+  .name('create-zynth-app')
+  .description('Create a new Zynth fullstack app')
   .version('0.0.1')
   .argument('[project-name]', 'Name of your project')
   .action(async (projectName?: string) => {
     console.clear()
 
-    intro(pc.bgCyan(pc.black(' create-underdog-app ')))
+    intro(pc.bgCyan(pc.black(' create-zynth-app ')))
 
     const config = await getProjectConfig(projectName)
 

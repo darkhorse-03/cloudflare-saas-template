@@ -5,12 +5,12 @@ import pc from 'picocolors'
 import type { ProjectConfig } from './prompts.js'
 
 // Regex patterns
-const APP_NAME_REGEX = /appName: ['"]underdog['"]/
+const APP_NAME_REGEX = /appName: ['"]zynth['"]/
 const DESCRIPTION_REGEX = /description: ['"].*?['"]/
 const TAGLINE_REGEX = /tagline: ['"].*?['"]/
 const URL_REGEX = /url: ['"]https:\/\/your-domain\.com['"]/
 const OG_IMAGE_REGEX = /ogImage: ['"]https:\/\/your-domain\.com\/og-image\.png['"]/
-const GITHUB_URL_REGEX = /https:\/\/github\.com\/yourusername\/underdog/g
+const GITHUB_URL_REGEX = /https:\/\/github\.com\/yourusername\/your-repo/g
 const TWITTER_REGEX = /twitter: ['"']['"]/
 
 export async function updateConfig(config: ProjectConfig): Promise<void> {

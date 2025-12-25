@@ -8,14 +8,14 @@
  */
 
 export const config = {
-  appName: 'underdog',
+  appName: 'zynth',
   tagline: 'Ship in 60 Seconds, Not 3 Days',
   description:
     'Skip the setup hell. Auth, database, and type-safe APIs pre-configured. Optimized for AI-assisted development with Claude Code. Built for indie hackers who ship fast.',
 
   // SEO & Open Graph
   seo: {
-    title: 'Underdog - Ship Your SaaS This Weekend',
+    title: 'Zynth - Ship Your SaaS This Weekend',
     description:
       'Deploy in 60 seconds. Skip 3 days of setup. Cloudflare Workers template with auth, database, and type-safe APIs. Optimized for AI-assisted development with Claude Code.',
     url: 'https://your-domain.com',
@@ -40,13 +40,13 @@ export const config = {
   footer: {
     links: [
       { label: 'Documentation', href: '/getting-started' },
-      { label: 'GitHub', href: 'https://github.com/yourusername/underdog' },
+      { label: 'GitHub', href: 'https://github.com/yourusername/your-repo' },
     ],
   },
 
   // Social links (optional)
   social: {
-    github: 'https://github.com/yourusername/underdog',
+    github: 'https://github.com/yourusername/your-repo',
     twitter: '',
   },
 
@@ -57,7 +57,7 @@ export const config = {
       subheadline: 'Not Next Quarter',
       description:
         'Skip the setup hell. Pre-configured auth, database, and type-safe APIs. Optimized for Claude Code.',
-      cliCommand: 'bunx create-underdog-app',
+      cliCommand: 'bunx create-zynth-app',
       trustSignal: 'Built for indie hackers who ship fast with AI',
     },
 
@@ -166,7 +166,7 @@ export const config = {
       subtitle: 'Deploy in 60 seconds. Skip 3 days of setup.',
       primaryAction: 'Get Started',
       secondaryActions: [
-        { label: 'View on GitHub', href: 'https://github.com/yourusername/underdog' },
+        { label: 'View on GitHub', href: 'https://github.com/yourusername/your-repo' },
         { label: 'Read Docs', href: '/getting-started' },
       ],
     },

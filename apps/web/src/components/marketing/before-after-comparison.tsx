@@ -46,13 +46,11 @@ export function BeforeAfterComparison() {
               </CardHeader>
               <CardContent>
                 <div className="grid gap-6 sm:grid-cols-2">
-                  {/* WITHOUT Underdog */}
+                  {/* WITHOUT Zynth */}
                   <div className="space-y-3">
                     <div className="mb-3 flex items-center gap-2">
                       <X className="size-5 text-destructive" />
-                      <span className="font-semibold text-sm text-destructive">
-                        Without Underdog
-                      </span>
+                      <span className="font-semibold text-sm text-destructive">Without Zynth</span>
                     </div>
                     <div className="mb-2 rounded bg-destructive/10 px-3 py-1 font-mono text-destructive text-xs">
                       {point.timeWithout}
@@ -70,12 +68,12 @@ export function BeforeAfterComparison() {
                     </div>
                   </div>
 
-                  {/* WITH Underdog */}
+                  {/* WITH Zynth */}
                   <div className="space-y-3">
                     <div className="mb-3 flex items-center gap-2">
                       <Check className="size-5 text-green-500" />
                       <span className="font-semibold text-sm text-green-600 dark:text-green-400">
-                        With Underdog
+                        With Zynth
                       </span>
                     </div>
                     <div className="mb-2 rounded bg-green-500/10 px-3 py-1 font-mono text-green-600 text-xs dark:text-green-400">

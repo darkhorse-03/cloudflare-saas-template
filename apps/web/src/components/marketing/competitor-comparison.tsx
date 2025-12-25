@@ -12,48 +12,60 @@ import {
 export function CompetitorComparison() {
   const features = [
     {
+      name: 'Price',
+      shipfast: '$249',
+      indiekit: '$79',
+      zynth: 'Free',
+    },
+    {
       name: 'Pre-built Auth',
-      nextjs: false,
-      remix: false,
-      underdog: true,
+      shipfast: true,
+      indiekit: true,
+      zynth: true,
     },
     {
-      name: 'Database Configured',
-      nextjs: false,
-      remix: false,
-      underdog: true,
-    },
-    {
-      name: 'One-Command Deploy',
-      nextjs: 'Complex',
-      remix: 'Complex',
-      underdog: true,
+      name: 'Database Setup',
+      shipfast: true,
+      indiekit: true,
+      zynth: true,
     },
     {
       name: 'Edge Runtime',
-      nextjs: 'Paid',
-      remix: 'Paid',
-      underdog: 'Included',
+      shipfast: false,
+      indiekit: false,
+      zynth: 'Included',
     },
     {
-      name: 'Learning Curve',
-      nextjs: 'Steep',
-      remix: 'Steep',
-      underdog: 'Minimal',
+      name: 'AI-Optimized',
+      shipfast: false,
+      indiekit: true,
+      zynth: 'Built-in',
+    },
+    {
+      name: 'One-Command Deploy',
+      shipfast: 'Manual',
+      indiekit: 'Manual',
+      zynth: true,
+    },
+    {
+      name: 'Open Source',
+      shipfast: false,
+      indiekit: false,
+      zynth: true,
     },
   ]
 
-  const renderCell = (value: boolean | string, isUnderdog = false) => {
+  const renderCell = (value: boolean | string, isZynth = false) => {
     if (typeof value === 'boolean') {
       return value ? (
-        <Check className={`size-5 ${isUnderdog ? 'text-green-500' : 'text-green-600'}`} />
+        <Check className={`size-5 ${isZynth ? 'text-green-500' : 'text-green-600'}`} />
       ) : (
         <X className="size-5 text-destructive" />
       )
     }
     return (
       <span
-        className={`text-sm ${isUnderdog ? 'font-semibold text-green-600 dark:text-green-400' : 'text-muted-foreground'}`}
+        className={`text-sm ${isZynth ? 'font-semibold text-green-600 dark:text-green-400' : 'text-muted-foreground'}`}
       >
         {value}
       </span>
@@ -65,9 +77,10 @@ export function CompetitorComparison() {
       <div className="container mx-auto max-w-6xl px-4">
         {/* Section Header */}
         <div className="mb-12 text-center">
-          <h2 className="mb-4 font-bold text-4xl tracking-tight">Why Underdog?</h2>
+          <h2 className="mb-4 font-bold text-4xl tracking-tight">Why Zynth?</h2>
           <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
-            Because you ship, not configure. Here's how we compare to the usual suspects.
+            Free, open-source, and optimized for Claude Code. Here's how we compare to paid
+            boilerplates.
           </p>
         </div>
 
@@ -77,10 +90,10 @@ export function CompetitorComparison() {
             <TableHeader>
               <TableRow className="bg-muted/50">
                 <TableHead className="w-[200px] font-bold">Feature</TableHead>
-                <TableHead className="text-center">Next.js</TableHead>
-                <TableHead className="text-center">Remix</TableHead>
+                <TableHead className="text-center">Shipfast</TableHead>
+                <TableHead className="text-center">Indie Kit</TableHead>
                 <TableHead className="bg-primary/10 text-center font-bold text-primary">
-                  Underdog
+                  Zynth
                 </TableHead>
               </TableRow>
             </TableHeader>
@@ -90,17 +103,17 @@ export function CompetitorComparison() {
                   <TableCell className="font-medium">{feature.name}</TableCell>
                   <TableCell className="text-center">
                     <div className="flex items-center justify-center">
-                      {renderCell(feature.nextjs)}
+                      {renderCell(feature.shipfast)}
                     </div>
                   </TableCell>
                   <TableCell className="text-center">
                     <div className="flex items-center justify-center">
-                      {renderCell(feature.remix)}
+                      {renderCell(feature.indiekit)}
                     </div>
                   </TableCell>
                   <TableCell className="bg-primary/5 text-center">
                     <div className="flex items-center justify-center">
-                      {renderCell(feature.underdog, true)}
+                      {renderCell(feature.zynth, true)}
                     </div>
                   </TableCell>
                 </TableRow>
@@ -112,7 +125,7 @@ export function CompetitorComparison() {
         {/* Bottom Message */}
         <div className="mt-8 text-center">
           <p className="text-lg text-muted-foreground">
-            Underdog is for builders who{' '}
+            Zynth is for builders who{' '}
             <span className="font-semibold text-foreground">ship, not configure</span>.
           </p>
         </div>

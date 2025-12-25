@@ -55,7 +55,7 @@ function HomePage() {
         </div>
       </section>
 
-      {/* 5. Why Underdog? - Competitor comparison */}
+      {/* 5. Why Zynth? - Competitor comparison */}
       <CompetitorComparison />
 
       {/* 6. Final CTA */}

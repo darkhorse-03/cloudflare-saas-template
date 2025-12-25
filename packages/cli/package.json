@@ -1,11 +1,11 @@
 {
-  "name": "create-underdog-app",
+  "name": "create-zynth-app",
   "version": "0.0.1",
-  "description": "Create a new Underdog fullstack app",
+  "description": "Create a new Zynth fullstack app",
   "module": "index.ts",
   "type": "module",
   "bin": {
-    "create-underdog-app": "./dist/index.js"
+    "create-zynth-app": "./dist/index.js"
   },
   "files": [
     "dist"

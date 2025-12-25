@@ -1,6 +1,6 @@
 <div align="center">
 
-# underdog template
+# zynth template
 
 **Fullstack Cloudflare Workers template with service bindings**
 
@@ -9,7 +9,7 @@
 [![React](https://img.shields.io/badge/React-61DAFB?logo=react&logoColor=black)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 
-[Live Demo](https://underdog.sarimahmed.net) · [Getting Started](#-getting-started) · [Stack](#-stack)
+[Getting Started](#-getting-started) · [Stack](#-stack)
 
 ![](docs/screenshot.png)
 
