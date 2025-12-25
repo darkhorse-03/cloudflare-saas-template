@@ -13,13 +13,16 @@ export const config = {
   description:
     'Skip the setup hell. Auth, database, and type-safe APIs pre-configured. Optimized for AI-assisted development with Claude Code. Built for indie hackers who ship fast.',
 
+  // Deployment configuration
+  domains: ['template.zynth.dev'],
+
   // SEO & Open Graph
   seo: {
     title: 'Zynth - Ship Your SaaS This Weekend',
     description:
       'Deploy in 60 seconds. Skip 3 days of setup. Cloudflare Workers template with auth, database, and type-safe APIs. Optimized for AI-assisted development with Claude Code.',
-    url: 'https://your-domain.com',
-    ogImage: 'https://your-domain.com/og-image.png',
+    url: 'https://template.zynth.dev',
+    ogImage: 'https://template.zynth.dev/og-image.png',
   },
 
   // Development tools configuration
