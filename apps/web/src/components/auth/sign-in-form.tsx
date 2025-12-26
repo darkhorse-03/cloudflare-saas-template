@@ -64,11 +64,11 @@ export function SignInForm() {
       >
         {(field) => (
           <div className="space-y-2">
-            <Label htmlFor={field.name}>Email</Label>
+            <Label htmlFor={`signin-${field.name}`}>Email</Label>
             <Input
               autoComplete="email"
               disabled={isPending}
-              id={field.name}
+              id={`signin-${field.name}`}
               name={field.name}
               onBlur={field.handleBlur}
               onChange={(e) => field.handleChange(e.target.value)}
@@ -93,11 +93,11 @@ export function SignInForm() {
       >
         {(field) => (
           <div className="space-y-2">
-            <Label htmlFor={field.name}>Password</Label>
+            <Label htmlFor={`signin-${field.name}`}>Password</Label>
             <Input
               autoComplete="current-password"
               disabled={isPending}
-              id={field.name}
+              id={`signin-${field.name}`}
               name={field.name}
               onBlur={field.handleBlur}
               onChange={(e) => field.handleChange(e.target.value)}

@@ -1,21 +1,15 @@
 import { useForm } from '@tanstack/react-form'
-import { useNavigate, useRouter } from '@tanstack/react-router'
 import { useState } from 'react'
+import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { signUp, useSession } from '@/lib/auth-client'
+import { signUp } from '@/lib/auth-client'
 import { signUpSchema } from '@/schemas/auth'
-import { useAuthDialog } from './auth-dialog'
 
 export function SignUpForm() {
-  const { closeDialog } = useAuthDialog()
   const [error, setError] = useState<string | null>(null)
   const [isPending, setIsPending] = useState(false)
-
-  const navigate = useNavigate()
-  const router = useRouter()
-  const session = useSession()
 
   const form = useForm({
     defaultValues: {
@@ -27,7 +21,7 @@ export function SignUpForm() {
       setIsPending(true)
       setError(null)
 
-      const { data, error: signUpError } = await signUp.email({
+      const { error: signUpError } = await signUp.email({
         email: value.email,
         password: value.password,
         name: value.name,
@@ -39,12 +33,11 @@ export function SignUpForm() {
         return
       }
 
-      if (data) {
-        closeDialog()
-        await session.refetch()
-        await router.invalidate()
-        navigate({ to: '/dashboard' })
-      }
+      toast.success('Account created! Please check your email to verify your account.', {
+        duration: 10_000,
+        description: `We sent a verification link to ${value.email}`,
+        icon: '📧',
+      })
 
       setIsPending(false)
     },
@@ -67,11 +60,11 @@ export function SignUpForm() {
       >
         {(field) => (
           <div className="space-y-2">
-            <Label htmlFor={field.name}>Name</Label>
+            <Label htmlFor={`signup-${field.name}`}>Name</Label>
             <Input
               autoComplete="name"
               disabled={isPending}
-              id={field.name}
+              id={`signup-${field.name}`}
               name={field.name}
               onBlur={field.handleBlur}
               onChange={(e) => field.handleChange(e.target.value)}
@@ -96,11 +89,11 @@ export function SignUpForm() {
       >
         {(field) => (
           <div className="space-y-2">
-            <Label htmlFor={field.name}>Email</Label>
+            <Label htmlFor={`signup-${field.name}`}>Email</Label>
             <Input
               autoComplete="email"
               disabled={isPending}
-              id={field.name}
+              id={`signup-${field.name}`}
               name={field.name}
               onBlur={field.handleBlur}
               onChange={(e) => field.handleChange(e.target.value)}
@@ -125,11 +118,11 @@ export function SignUpForm() {
       >
         {(field) => (
           <div className="space-y-2">
-            <Label htmlFor={field.name}>Password</Label>
+            <Label htmlFor={`signup-${field.name}`}>Password</Label>
             <Input
               autoComplete="new-password"
               disabled={isPending}
-              id={field.name}
+              id={`signup-${field.name}`}
               name={field.name}
               onBlur={field.handleBlur}
               onChange={(e) => field.handleChange(e.target.value)}

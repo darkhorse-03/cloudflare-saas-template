@@ -1,7 +1,8 @@
 import { createRouter, RouterProvider } from '@tanstack/react-router'
-import { lazy, StrictMode, Suspense } from 'react'
+import { lazy, StrictMode, Suspense, useRef } from 'react'
 import ReactDOM from 'react-dom/client'
 import { AuthDialogProvider } from './components/auth/auth-dialog'
+import { Toaster } from './components/ui/sonner'
 // biome-ignore lint: false positive
 import * as TanStackQueryProvider from './integrations/tanstack-query/root-provider'
 import { useSession } from './lib/auth-client'
@@ -47,8 +48,24 @@ declare module '@tanstack/react-router' {
 function InnerApp() {
   const session = useSession()
 
-  // Show loading screen while checking session
-  if (session.isPending) {
+  // Show loading screen ONLY on initial load, not on refetches
+  // isPending = no cached data, isFetching = any fetch happening
+  // We only want to show loading when there's no data at all (initial load)
+  const isInitialLoading = session.isPending && session.data === undefined
+
+  // Use ref to create stable auth context that only changes when user ID changes
+  // This prevents router re-renders when session refetches with same data
+  const user = session.data?.user ?? null
+  const authRef = useRef({ isAuthenticated: false, user: null as typeof user })
+
+  // Only update auth ref when user ID actually changes (login/logout)
+  if (authRef.current.user?.id !== user?.id) {
+    authRef.current = { isAuthenticated: !!user, user }
+  }
+
+  const auth = authRef.current
+
+  if (isInitialLoading) {
     return (
       <div className="flex h-screen items-center justify-center bg-background">
         <div className="text-center">
@@ -60,16 +77,8 @@ function InnerApp() {
 
   return (
     <>
-      <RouterProvider
-        context={{
-          ...TanStackQueryProviderContext,
-          auth: {
-            isAuthenticated: !!session.data?.user,
-            user: session.data?.user ?? null,
-          },
-        }}
-        router={router}
-      />
+      <RouterProvider context={{ ...TanStackQueryProviderContext, auth }} router={router} />
+      <Toaster />
       <Suspense fallback={null}>
         <TanStackDevtools
           plugins={[

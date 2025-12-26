@@ -1,4 +1,4 @@
-import { createContext, type ReactNode, useContext, useState } from 'react'
+import { Activity, createContext, type ReactNode, useContext, useState } from 'react'
 import {
   Dialog,
   DialogContent,
@@ -6,7 +6,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { SignInForm } from './sign-in-form'
 import { SignUpForm } from './sign-up-form'
 
@@ -41,28 +41,45 @@ export function AuthDialogProvider({ children }: { children: ReactNode }) {
 
 export function AuthDialog() {
   const { isOpen, closeDialog } = useAuthDialog()
+  const [activeTab, setActiveTab] = useState('signin')
+
+  // Reset to signin tab when dialog closes
+  const handleOpenChange = (open: boolean) => {
+    if (!open) {
+      setActiveTab('signin')
+      closeDialog()
+    }
+  }
 
   return (
-    <Dialog onOpenChange={closeDialog} open={isOpen}>
+    <Dialog onOpenChange={handleOpenChange} open={isOpen}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Welcome</DialogTitle>
           <DialogDescription>Sign in to your account or create a new one</DialogDescription>
         </DialogHeader>
 
-        <Tabs className="w-full" defaultValue="signin">
+        <Tabs
+          className="w-full"
+          defaultValue="signin"
+          onValueChange={setActiveTab}
+          value={activeTab}
+        >
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="signin">Sign In</TabsTrigger>
             <TabsTrigger value="signup">Sign Up</TabsTrigger>
           </TabsList>
 
-          <TabsContent className="mt-4" value="signin">
-            <SignInForm />
-          </TabsContent>
+          {/* Both forms are always mounted, but hidden when not active */}
+          <div className="mt-4">
+            <Activity mode={activeTab === 'signin' ? 'visible' : 'hidden'}>
+              <SignInForm />
+            </Activity>
 
-          <TabsContent className="mt-4" value="signup">
-            <SignUpForm />
-          </TabsContent>
+            <Activity mode={activeTab === 'signup' ? 'visible' : 'hidden'}>
+              <SignUpForm />
+            </Activity>
+          </div>
         </Tabs>
       </DialogContent>
     </Dialog>
