@@ -93,6 +93,7 @@ Focus on architecture, business logic, and UX - formatting is handled automatica
 - **Always scope user data** - Check `userId` in database queries to prevent unauthorized access
 - **Feature-based organization** - Group related code by feature, not by type
 - **Separate data fetching** - Use custom hooks in `hooks/[feature]/` for React Query operations
+- **Use `<Activity>` for state preservation** - Wrap components that should preserve state when hidden (tabs, dialogs, wizards)
 
 ## Navigation Structure
 
@@ -148,6 +149,22 @@ const navItems = [
 ```
 
 > **Note:** Dashboard navigation is separate from public navigation in `config.ts` because dashboard pages are authenticated and have different navigation patterns.
+
+## React 19 Features
+
+### Activity API
+Use `<Activity>` to preserve state when hiding components (React 19+):
+
+```tsx
+import { Activity } from 'react'
+
+// Tab interface - preserves form state when switching
+<Activity mode={activeTab === 'signin' ? 'visible' : 'hidden'}>
+  <SignInForm />
+</Activity>
+```
+
+**Example:** `apps/web/src/components/auth/auth-dialog.tsx` - Auth tabs preserve form input when switching between sign-in/sign-up.
 
 ## Claude Commands
 

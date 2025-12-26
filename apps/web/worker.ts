@@ -17,6 +17,13 @@ export default {
       return env.api.fetch(new Request(apiUrl, request))
     }
 
+    if (url.pathname.startsWith('/auth/')) {
+      // Strip /api prefix before forwarding to api service
+      const apiUrl = new URL(request.url)
+
+      return env.api.fetch(new Request(apiUrl, request))
+    }
+
     // Serve static assets for all other requests
     return env.ASSETS.fetch(request)
   },

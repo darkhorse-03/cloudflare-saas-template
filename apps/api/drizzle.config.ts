@@ -5,6 +5,6 @@ export default defineConfig({
   out: './drizzle',
   dialect: 'sqlite',
   dbCredentials: {
-    url: '.wrangler/state/v3/d1/miniflare-D1DatabaseObject/zynth-db.sqlite',
+    url: '../../.alchemy/miniflare/v3/d1/miniflare-D1DatabaseObject/521c0713e9679c1d16286111067cbe17d24e2af8fe74fc402869b8811a3b99ae.sqlite',
   },
 })

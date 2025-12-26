@@ -3,7 +3,9 @@ import { config } from '@repo/config'
 import alchemy from 'alchemy'
 import { D1Database, KVNamespace, Worker } from 'alchemy/cloudflare'
 
-const app = await alchemy(`${config.appName}-api`)
+const app = await alchemy(`${config.appName}-api`, {
+  password: process.env.ALCHEMY_PASSWORD,
+})
 
 const db = await D1Database('db', {
   name: `${config.appName}-db`,
@@ -22,6 +24,8 @@ export const api = await Worker('worker', {
   bindings: {
     DB: db,
     KV: kv,
+    RESEND_API_KEY: alchemy.secret('RESEND_API_KEY'),
+    FROM_EMAIL: alchemy.secret('FROM_EMAIL'),
   },
   compatibilityFlags: ['nodejs_compat'],
   url: false,

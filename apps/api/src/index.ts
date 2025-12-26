@@ -4,6 +4,7 @@ import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { createAuth } from '@/auth'
 import type { AppContext } from '@/env'
+import { createEmailService } from '@/lib/email'
 import { authMiddleware } from '@/middleware/auth'
 import { itemsRoutes } from '@/routes/demo/items'
 import { preferencesRoutes } from '@/routes/demo/preferences'
@@ -28,6 +29,15 @@ app.use(
 app.use('/*', async (c, next) => {
   const auth = createAuth(c.env, c.req.raw.cf as IncomingRequestCfProperties)
   c.set('auth', auth)
+  await next()
+})
+
+// Create email service instance and attach to context (optional)
+app.use('/*', async (c, next) => {
+  const emailService = createEmailService(c.env)
+  if (emailService) {
+    c.set('emailService', emailService)
+  }
   await next()
 })
 

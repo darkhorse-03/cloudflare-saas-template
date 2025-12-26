@@ -32,5 +32,15 @@
   "editor.formatOnSave": true,
   "editor.formatOnPaste": true,
   "emmet.showExpandedAbbreviation": "never",
-  "explorer.excludeGitIgnore": true
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true,
+    "**/node_modules": true,
+    "**/.turbo": true,
+    "**/.wrangler": true,
+    "**/.tanstack": true
+  }
 }

@@ -17,11 +17,13 @@
     "deploy": "bun run scripts/alchemy-deploy.ts",
     "destroy": "bun run scripts/alchemy-destroy.ts",
     "db:generate": "drizzle-kit generate",
+    "db:studio": "drizzle-kit studio",
     "check-types": "tsc --noEmit",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings"
   },
   "dependencies": {
     "@hono/zod-validator": "^0.7.6",
+    "@react-email/components": "^1.0.2",
     "@repo/config": "*",
     "@repo/shared": "*",
     "alchemy": "^0.82.1",
@@ -29,12 +31,16 @@
     "better-auth-cloudflare": "^0.2.9",
     "drizzle-orm": "^0.45.1",
     "hono": "^4.11.1",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
     "resend": "^6.6.0"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20251223.0",
     "@types/better-sqlite3": "^7.6.13",
     "@types/bun": "latest",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
     "better-sqlite3": "^12.5.0",
     "drizzle-kit": "^0.31.8",
     "typescript": "^5.9.3"

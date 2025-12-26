@@ -112,5 +112,4 @@ export const accountsRelations = relations(accounts, ({ one }) => ({
   }),
 }))
 
-export default users
-export { sessions, accounts, verifications }
+export { users, sessions, accounts, verifications }

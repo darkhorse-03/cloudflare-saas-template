@@ -1,5 +1,5 @@
-export { default as users } from './auth'
 export {
+  users,
   accounts,
   accountsRelations,
   sessions,
@@ -10,3 +10,5 @@ export {
 
 export { default as demoItems } from './demo'
 export { demoPreferences } from './demo'
+
+export { emailLogs } from './email'

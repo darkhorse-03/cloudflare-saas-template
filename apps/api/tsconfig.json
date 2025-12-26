@@ -8,7 +8,7 @@
     "lib": ["ESNext"],
     "types": ["@types/bun"],
     "jsx": "react-jsx",
-    "jsxImportSource": "hono/jsx",
+    "jsxImportSource": "react",
     "strictNullChecks": true,
     "baseUrl": ".",
     "paths": {
