@@ -34,8 +34,16 @@ export const api = await Worker('worker', {
     KV: kv,
     // Secrets (sensitive - use alchemy.secret)
     RESEND_API_KEY: alchemy.secret(process.env.RESEND_API_KEY),
-    // Environment variables (non-sensitive - plain strings)
     FROM_EMAIL: alchemy.secret(process.env.FROM_EMAIL ?? ''),
+    // OAuth providers (optional)
+    ...(process.env.GOOGLE_CLIENT_ID && {
+      GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+      GOOGLE_CLIENT_SECRET: alchemy.secret(process.env.GOOGLE_CLIENT_SECRET ?? ''),
+    }),
+    ...(process.env.GITHUB_CLIENT_ID && {
+      GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
+      GITHUB_CLIENT_SECRET: alchemy.secret(process.env.GITHUB_CLIENT_SECRET ?? ''),
+    }),
   },
   compatibilityFlags: ['nodejs_compat'],
   url: false,

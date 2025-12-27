@@ -13,6 +13,8 @@ const OG_IMAGE_REGEX = /ogImage: ['"]https:\/\/your-domain\.com\/og-image\.png['
 const GITHUB_URL_REGEX = /https:\/\/github\.com\/yourusername\/your-repo/g
 const TWITTER_REGEX = /twitter: ['"']['"]/
 const MAGIC_LINK_REGEX = /enableMagicLink: (true|false)/
+const GOOGLE_OAUTH_REGEX = /enableGoogleOAuth: (true|false)/
+const GITHUB_OAUTH_REGEX = /enableGitHubOAuth: (true|false)/
 
 export async function updateConfig(config: ProjectConfig): Promise<void> {
   const s = spinner()
@@ -58,6 +60,14 @@ export async function updateConfig(config: ProjectConfig): Promise<void> {
     configContent = configContent.replace(
       MAGIC_LINK_REGEX,
       `enableMagicLink: ${config.enableMagicLink}`,
+    )
+    configContent = configContent.replace(
+      GOOGLE_OAUTH_REGEX,
+      `enableGoogleOAuth: ${config.enableGoogleOAuth}`,
+    )
+    configContent = configContent.replace(
+      GITHUB_OAUTH_REGEX,
+      `enableGitHubOAuth: ${config.enableGitHubOAuth}`,
     )
 
     await writeFile(configPath, configContent, 'utf-8')

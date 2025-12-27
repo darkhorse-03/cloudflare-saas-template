@@ -9,6 +9,8 @@ export interface ProjectConfig {
   githubUrl: string
   twitterHandle: string
   enableMagicLink: boolean
+  enableGoogleOAuth: boolean
+  enableGitHubOAuth: boolean
   shouldInitGit: boolean
   shouldInstall: boolean
 }
@@ -88,6 +90,26 @@ export async function getProjectConfig(projectName?: string): Promise<ProjectCon
     process.exit(0)
   }
 
+  const enableGoogleOAuth = await confirm({
+    message: 'Enable Google OAuth login?',
+    initialValue: false,
+  })
+
+  if (isCancel(enableGoogleOAuth)) {
+    outro(pc.red('Operation cancelled'))
+    process.exit(0)
+  }
+
+  const enableGitHubOAuth = await confirm({
+    message: 'Enable GitHub OAuth login?',
+    initialValue: false,
+  })
+
+  if (isCancel(enableGitHubOAuth)) {
+    outro(pc.red('Operation cancelled'))
+    process.exit(0)
+  }
+
   const shouldInitGit = await confirm({
     message: 'Initialize git repository?',
     initialValue: true,
@@ -116,6 +138,8 @@ export async function getProjectConfig(projectName?: string): Promise<ProjectCon
     githubUrl: githubUrl as string,
     twitterHandle: twitterHandle as string,
     enableMagicLink: enableMagicLink as boolean,
+    enableGoogleOAuth: enableGoogleOAuth as boolean,
+    enableGitHubOAuth: enableGitHubOAuth as boolean,
     shouldInitGit: shouldInitGit as boolean,
     shouldInstall: shouldInstall as boolean,
   }

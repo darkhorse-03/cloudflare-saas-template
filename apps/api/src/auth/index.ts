@@ -34,6 +34,25 @@ function createAuth(env?: Env, cf?: IncomingRequestCfProperties) {
       expiresIn: 60 * 60 * 24 * 7, // 7 days (in seconds)
       updateAge: 60 * 60 * 24, // Update session if older than 1 day
     },
+    // OAuth providers (enabled via config + credentials from env)
+    socialProviders: {
+      ...(config.auth.enableGoogleOAuth && env?.GOOGLE_CLIENT_ID
+        ? {
+            google: {
+              clientId: env.GOOGLE_CLIENT_ID,
+              clientSecret: env.GOOGLE_CLIENT_SECRET,
+            },
+          }
+        : {}),
+      ...(config.auth.enableGitHubOAuth && env?.GITHUB_CLIENT_ID
+        ? {
+            github: {
+              clientId: env.GITHUB_CLIENT_ID,
+              clientSecret: env.GITHUB_CLIENT_SECRET,
+            },
+          }
+        : {}),
+    },
     ...withCloudflare(
       {
         autoDetectIpAddress: true,

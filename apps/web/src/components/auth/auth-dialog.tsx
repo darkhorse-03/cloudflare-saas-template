@@ -9,6 +9,7 @@ import {
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ForgotPasswordForm } from './forgot-password-form'
 import { MagicLinkForm } from './magic-link-form'
+import { OAuthSection } from './oauth-section'
 import { ResetPasswordForm } from './reset-password-form'
 import { SignInForm } from './sign-in-form'
 import { SignUpForm } from './sign-up-form'
@@ -103,16 +104,22 @@ export function AuthDialog() {
             {/* Both forms are always mounted, but hidden when not active */}
             <div className="mt-4">
               <Activity mode={view === 'signin' ? 'visible' : 'hidden'}>
-                <SignInForm
-                  onForgotPassword={() => setView('forgot-password')}
-                  onMagicLink={
-                    config.auth.enableMagicLink ? () => setView('magic-link') : undefined
-                  }
-                />
+                <div className="space-y-4">
+                  <OAuthSection mode="signin" />
+                  <SignInForm
+                    onForgotPassword={() => setView('forgot-password')}
+                    onMagicLink={
+                      config.auth.enableMagicLink ? () => setView('magic-link') : undefined
+                    }
+                  />
+                </div>
               </Activity>
 
               <Activity mode={view === 'signup' ? 'visible' : 'hidden'}>
-                <SignUpForm />
+                <div className="space-y-4">
+                  <OAuthSection mode="signup" />
+                  <SignUpForm />
+                </div>
               </Activity>
             </div>
           </Tabs>

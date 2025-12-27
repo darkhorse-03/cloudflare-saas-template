@@ -9,6 +9,7 @@ import { authMiddleware } from '@/middleware/auth'
 import { itemsRoutes } from '@/routes/demo/items'
 import { preferencesRoutes } from '@/routes/demo/preferences'
 import { todosRoutes } from '@/routes/demo/todos'
+import { logger } from 'hono/logger'
 
 const app = new Hono<AppContext>()
 
@@ -24,6 +25,8 @@ app.use(
     maxAge: 600,
   }),
 )
+
+app.use(logger())
 
 // Create auth instance and attach to context
 app.use('/*', async (c, next) => {

@@ -40,13 +40,6 @@
 - [X] Email environment variables in `.env.example`
 - [X] Magic link login (better-auth magicLink plugin)
 
-### 2. Testing Infrastructure
-- [ ] Add Vitest for unit/integration tests
-- [ ] API route testing examples
-- [ ] React component testing setup (Testing Library)
-- [ ] E2E testing framework (Playwright?)
-- [ ] Test database setup/teardown utilities
-- [ ] CI/CD pipeline (GitHub Actions)
 
 ### 3. Environment & Security
 - [ ] Create `.env.example` with all required vars
@@ -58,10 +51,10 @@
 - [ ] API key/token management system
 
 ### 4. Social Authentication
-- [ ] Google OAuth integration
-- [ ] GitHub OAuth integration
-- [ ] OAuth provider configuration docs
-- [ ] Better Auth social provider setup
+- [X] Google OAuth integration
+- [X] GitHub OAuth integration
+- [X] OAuth provider configuration docs (in .env.example)
+- [X] Better Auth social provider setup
 - [ ] Social account linking
 
 ---

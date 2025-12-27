@@ -32,7 +32,9 @@ export const config = {
 
   // Auth feature flags
   auth: {
-    enableMagicLink: false,
+    enableMagicLink: true,
+    enableGoogleOAuth: true,
+    enableGitHubOAuth: false,
   },
 
   // Public/Marketing navigation links (Header component only)
