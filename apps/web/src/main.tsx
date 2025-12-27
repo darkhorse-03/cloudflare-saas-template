@@ -1,5 +1,5 @@
 import { createRouter, RouterProvider } from '@tanstack/react-router'
-import { lazy, StrictMode, Suspense, useRef } from 'react'
+import { Activity, lazy, StrictMode, Suspense, useRef } from 'react'
 import ReactDOM from 'react-dom/client'
 import { AuthDialogProvider } from './components/auth/auth-dialog'
 import { Toaster } from './components/ui/sonner'
@@ -9,6 +9,7 @@ import { useSession } from './lib/auth-client'
 
 import { routeTree } from './routeTree.gen'
 import './styles.css'
+import { config } from '@repo/config'
 
 // Lazy load devtools only when needed
 const TanStackDevtools = lazy(() =>
@@ -79,22 +80,24 @@ function InnerApp() {
     <>
       <RouterProvider context={{ ...TanStackQueryProviderContext, auth }} router={router} />
       <Toaster />
-      <Suspense fallback={null}>
-        <TanStackDevtools
-          plugins={[
-            {
-              name: 'TanStack Query',
-              render: <ReactQueryDevtoolsPanel />,
-              defaultOpen: false,
-            },
-            {
-              name: 'TanStack Router',
-              render: <TanStackRouterDevtoolsPanel router={router} />,
-              defaultOpen: false,
-            },
-          ]}
-        />
-      </Suspense>
+      <Activity mode={config.devtools.enabled ? 'visible' : 'hidden'}>
+        <Suspense fallback={null}>
+          <TanStackDevtools
+            plugins={[
+              {
+                name: 'TanStack Query',
+                render: <ReactQueryDevtoolsPanel />,
+                defaultOpen: false,
+              },
+              {
+                name: 'TanStack Router',
+                render: <TanStackRouterDevtoolsPanel router={router} />,
+                defaultOpen: false,
+              },
+            ]}
+          />
+        </Suspense>
+      </Activity>
     </>
   )
 }

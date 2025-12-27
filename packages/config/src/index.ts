@@ -27,7 +27,7 @@ export const config = {
 
   // Development tools configuration
   devtools: {
-    enabled: true,
+    enabled: false,
   },
 
   // Auth feature flags
