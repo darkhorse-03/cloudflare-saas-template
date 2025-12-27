@@ -2,8 +2,9 @@ import { config } from '@repo/config'
 import { siGithub, siGoogle } from 'simple-icons'
 import { Activity, useState } from 'react'
 import { toast } from 'sonner'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { signIn } from '@/lib/auth-client'
+import { authClient, signIn } from '@/lib/auth-client'
 
 interface SimpleIconProps {
   icon: { path: string; hex: string }
@@ -14,10 +15,10 @@ interface SimpleIconProps {
 function SimpleIcon({ icon, className, useOriginalColor = true }: SimpleIconProps) {
   return (
     <svg
+      aria-label={icon.path}
       className={className}
       fill={useOriginalColor ? `#${icon.hex}` : 'currentColor'}
       role="img"
-      aria-label={icon.path}
       viewBox="0 0 24 24"
     >
       <path d={icon.path} />
@@ -34,6 +35,7 @@ export function SocialLoginButtons({ mode = 'signin' }: SocialLoginButtonsProps)
   const [isGitHubLoading, setIsGitHubLoading] = useState(false)
 
   const { enableGoogleOAuth, enableGitHubOAuth } = config.auth
+  const lastMethod = authClient.getLastUsedLoginMethod()
 
   const handleGoogleSignIn = async () => {
     setIsGoogleLoading(true)
@@ -67,29 +69,43 @@ export function SocialLoginButtons({ mode = 'signin' }: SocialLoginButtonsProps)
   return (
     <div className="space-y-2">
       <Activity mode={enableGoogleOAuth ? 'visible' : 'hidden'}>
-        <Button
-          className="w-full"
-          disabled={isLoading}
-          onClick={handleGoogleSignIn}
-          type="button"
-          variant="outline"
-        >
-          <SimpleIcon className="mr-2 h-4 w-4" icon={siGoogle} />
-          {isGoogleLoading ? 'Redirecting...' : `${actionText} with Google`}
-        </Button>
+        <div className="relative">
+          <Button
+            className="w-full"
+            disabled={isLoading}
+            onClick={handleGoogleSignIn}
+            type="button"
+            variant={lastMethod === 'google' ? 'default' : 'outline'}
+          >
+            <SimpleIcon className="mr-2 h-4 w-4" icon={siGoogle} />
+            {isGoogleLoading ? 'Redirecting...' : `${actionText} with Google`}
+          </Button>
+          {mode === 'signin' && lastMethod === 'google' && (
+            <Badge className="absolute -top-2 -right-2" variant="secondary">
+              Last used
+            </Badge>
+          )}
+        </div>
       </Activity>
 
       <Activity mode={enableGitHubOAuth ? 'visible' : 'hidden'}>
-        <Button
-          className="w-full"
-          disabled={isLoading}
-          onClick={handleGitHubSignIn}
-          type="button"
-          variant="outline"
-        >
-          <SimpleIcon className="mr-2 h-4 w-4" icon={siGithub} useOriginalColor={false} />
-          {isGitHubLoading ? 'Redirecting...' : `${actionText} with GitHub`}
-        </Button>
+        <div className="relative">
+          <Button
+            className="w-full"
+            disabled={isLoading}
+            onClick={handleGitHubSignIn}
+            type="button"
+            variant={lastMethod === 'github' ? 'default' : 'outline'}
+          >
+            <SimpleIcon className="mr-2 h-4 w-4" icon={siGithub} useOriginalColor={false} />
+            {isGitHubLoading ? 'Redirecting...' : `${actionText} with GitHub`}
+          </Button>
+          {lastMethod === 'github' && (
+            <Badge className="absolute -top-2 -right-2" variant="secondary">
+              Last used
+            </Badge>
+          )}
+        </div>
       </Activity>
     </div>
   )

@@ -34,7 +34,7 @@ export const config = {
   auth: {
     enableMagicLink: true,
     enableGoogleOAuth: true,
-    enableGitHubOAuth: false,
+    enableGitHubOAuth: true,
   },
 
   // Public/Marketing navigation links (Header component only)

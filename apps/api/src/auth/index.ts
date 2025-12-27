@@ -6,7 +6,7 @@ import type {
 import { config } from '@repo/config'
 import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
-import { emailOTP, magicLink } from 'better-auth/plugins'
+import { emailOTP, lastLoginMethod, magicLink } from 'better-auth/plugins'
 import { withCloudflare } from 'better-auth-cloudflare'
 import { getDb } from '@/db'
 import { createEmailService } from '@/lib/email'
@@ -115,49 +115,52 @@ function createAuth(env?: Env, cf?: IncomingRequestCfProperties) {
           },
         }
       : undefined,
-    plugins: emailService
-      ? [
-          emailOTP({
-            otpLength: 6,
-            expiresIn: 300, // 5 minutes
-            async sendVerificationOTP({ email, otp, type }) {
-              const subjectByType: Record<string, string> = {
-                'forget-password': 'Reset your password',
-                'email-verification': 'Verify your email',
-              }
-              await emailService.send({
-                to: { email },
-                subject: subjectByType[type] ?? 'Your sign-in code',
-                react: OtpEmail({
-                  userName: email.split('@')[0],
-                  otp,
-                  type,
-                  expiresInMinutes: 5,
-                }),
-                emailType: type === 'forget-password' ? 'password_reset' : 'verification',
-              })
-            },
-          }),
-          ...(enableMagicLink
-            ? [
-                magicLink({
-                  async sendMagicLink({ email, url }) {
-                    await emailService.send({
-                      to: { email },
-                      subject: 'Sign in to your account',
-                      react: MagicLinkEmail({
-                        userName: email.split('@')[0],
-                        magicLink: url,
-                        expiresInMinutes: 10,
-                      }),
-                      emailType: 'magic_link',
-                    })
-                  },
-                }),
-              ]
-            : []),
-        ]
-      : [],
+    plugins: [
+      lastLoginMethod(),
+      ...(emailService
+        ? [
+            emailOTP({
+              otpLength: 6,
+              expiresIn: 300, // 5 minutes
+              async sendVerificationOTP({ email, otp, type }) {
+                const subjectByType: Record<string, string> = {
+                  'forget-password': 'Reset your password',
+                  'email-verification': 'Verify your email',
+                }
+                await emailService.send({
+                  to: { email },
+                  subject: subjectByType[type] ?? 'Your sign-in code',
+                  react: OtpEmail({
+                    userName: email.split('@')[0],
+                    otp,
+                    type,
+                    expiresInMinutes: 5,
+                  }),
+                  emailType: type === 'forget-password' ? 'password_reset' : 'verification',
+                })
+              },
+            }),
+            ...(enableMagicLink
+              ? [
+                  magicLink({
+                    async sendMagicLink({ email, url }) {
+                      await emailService.send({
+                        to: { email },
+                        subject: 'Sign in to your account',
+                        react: MagicLinkEmail({
+                          userName: email.split('@')[0],
+                          magicLink: url,
+                          expiresInMinutes: 10,
+                        }),
+                        emailType: 'magic_link',
+                      })
+                    },
+                  }),
+                ]
+              : []),
+          ]
+        : []),
+    ],
     // Only add database adapter for CLI schema generation
     ...(env
       ? {}

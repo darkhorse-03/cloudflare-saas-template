@@ -1,10 +1,11 @@
 import { useForm } from '@tanstack/react-form'
 import { useNavigate, useRouter } from '@tanstack/react-router'
 import { useState } from 'react'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { signIn, useSession } from '@/lib/auth-client'
+import { authClient, signIn, useSession } from '@/lib/auth-client'
 import { signInSchema } from '@/schemas/auth'
 import { useAuthDialog } from './auth-dialog'
 
@@ -21,6 +22,7 @@ export function SignInForm({ onForgotPassword, onMagicLink }: SignInFormProps) {
   const navigate = useNavigate()
   const router = useRouter()
   const session = useSession()
+  const lastMethod = authClient.getLastUsedLoginMethod()
   const form = useForm({
     defaultValues: {
       email: '',
@@ -123,9 +125,16 @@ export function SignInForm({ onForgotPassword, onMagicLink }: SignInFormProps) {
 
       <form.Subscribe selector={(state) => [state.canSubmit, state.isSubmitting]}>
         {([canSubmit]) => (
-          <Button className="w-full" disabled={!canSubmit || isPending} type="submit">
-            {isPending ? 'Signing in...' : 'Sign In'}
-          </Button>
+          <div className="relative">
+            <Button className="w-full" disabled={!canSubmit || isPending} type="submit">
+              {isPending ? 'Signing in...' : 'Sign In'}
+            </Button>
+            {lastMethod === 'credential' && (
+              <Badge className="absolute -top-2 -right-2" variant="secondary">
+                Last used
+              </Badge>
+            )}
+          </div>
         )}
       </form.Subscribe>
 
@@ -141,9 +150,21 @@ export function SignInForm({ onForgotPassword, onMagicLink }: SignInFormProps) {
           </Button>
         )}
         {onMagicLink && (
-          <Button className="h-auto p-0 text-sm" onClick={onMagicLink} type="button" variant="link">
-            Sign in with magic link
-          </Button>
+          <div className="relative">
+            <Button
+              className="h-auto p-0 text-sm"
+              onClick={onMagicLink}
+              type="button"
+              variant="link"
+            >
+              Sign in with magic link
+            </Button>
+            {lastMethod === 'magic-link' && (
+              <Badge className="absolute -top-2 -right-12" variant="secondary">
+                Last used
+              </Badge>
+            )}
+          </div>
         )}
       </div>
     </form>
