@@ -100,7 +100,7 @@ export function SocialLoginButtons({ mode = 'signin' }: SocialLoginButtonsProps)
             <SimpleIcon className="mr-2 h-4 w-4" icon={siGithub} useOriginalColor={false} />
             {isGitHubLoading ? 'Redirecting...' : `${actionText} with GitHub`}
           </Button>
-          {lastMethod === 'github' && (
+          {mode === 'signin' && lastMethod === 'github' && (
             <Badge className="absolute -top-2 -right-2" variant="secondary">
               Last used
             </Badge>
