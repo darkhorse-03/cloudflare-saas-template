@@ -1,6 +1,6 @@
 import { sql } from 'drizzle-orm'
 import { index, integer, sqliteTable, text } from 'drizzle-orm/sqlite-core'
-import users from './auth'
+import { users } from './auth'
 
 // Demo items table - example of user-scoped data
 const demoItems = sqliteTable(

@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as GettingStartedRouteImport } from './routes/getting-started'
 import { Route as FeaturesRouteImport } from './routes/features'
 import { Route as AboutRouteImport } from './routes/about'
@@ -21,6 +22,11 @@ import { Route as DashboardProfileRouteImport } from './routes/dashboard/profile
 import { Route as DashboardItemsRouteImport } from './routes/dashboard/items'
 import { Route as DashboardAnalyticsRouteImport } from './routes/dashboard/analytics'
 
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const GettingStartedRoute = GettingStartedRouteImport.update({
   id: '/getting-started',
   path: '/getting-started',
@@ -83,6 +89,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/features': typeof FeaturesRoute
   '/getting-started': typeof GettingStartedRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/dashboard/analytics': typeof DashboardAnalyticsRoute
   '/dashboard/items': typeof DashboardItemsRoute
   '/dashboard/profile': typeof DashboardProfileRoute
@@ -95,6 +102,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/features': typeof FeaturesRoute
   '/getting-started': typeof GettingStartedRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/dashboard/analytics': typeof DashboardAnalyticsRoute
   '/dashboard/items': typeof DashboardItemsRoute
   '/dashboard/profile': typeof DashboardProfileRoute
@@ -109,6 +117,7 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/features': typeof FeaturesRoute
   '/getting-started': typeof GettingStartedRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/dashboard/analytics': typeof DashboardAnalyticsRoute
   '/dashboard/items': typeof DashboardItemsRoute
   '/dashboard/profile': typeof DashboardProfileRoute
@@ -124,6 +133,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/features'
     | '/getting-started'
+    | '/reset-password'
     | '/dashboard/analytics'
     | '/dashboard/items'
     | '/dashboard/profile'
@@ -136,6 +146,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/features'
     | '/getting-started'
+    | '/reset-password'
     | '/dashboard/analytics'
     | '/dashboard/items'
     | '/dashboard/profile'
@@ -149,6 +160,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/features'
     | '/getting-started'
+    | '/reset-password'
     | '/dashboard/analytics'
     | '/dashboard/items'
     | '/dashboard/profile'
@@ -163,10 +175,18 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   FeaturesRoute: typeof FeaturesRoute
   GettingStartedRoute: typeof GettingStartedRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/getting-started': {
       id: '/getting-started'
       path: '/getting-started'
@@ -275,6 +295,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   FeaturesRoute: FeaturesRoute,
   GettingStartedRoute: GettingStartedRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

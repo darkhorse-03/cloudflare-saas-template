@@ -8,7 +8,12 @@ import { signIn, useSession } from '@/lib/auth-client'
 import { signInSchema } from '@/schemas/auth'
 import { useAuthDialog } from './auth-dialog'
 
-export function SignInForm() {
+interface SignInFormProps {
+  onForgotPassword?: () => void
+  onMagicLink?: () => void
+}
+
+export function SignInForm({ onForgotPassword, onMagicLink }: SignInFormProps) {
   const { closeDialog } = useAuthDialog()
   const [error, setError] = useState<string | null>(null)
   const [isPending, setIsPending] = useState(false)
@@ -123,6 +128,24 @@ export function SignInForm() {
           </Button>
         )}
       </form.Subscribe>
+
+      <div className="flex items-center justify-between">
+        {onForgotPassword && (
+          <Button
+            className="h-auto p-0 text-sm"
+            onClick={onForgotPassword}
+            type="button"
+            variant="link"
+          >
+            Forgot password?
+          </Button>
+        )}
+        {onMagicLink && (
+          <Button className="h-auto p-0 text-sm" onClick={onMagicLink} type="button" variant="link">
+            Sign in with magic link
+          </Button>
+        )}
+      </div>
     </form>
   )
 }

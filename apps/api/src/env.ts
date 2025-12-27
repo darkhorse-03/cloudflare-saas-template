@@ -1,17 +1,13 @@
-import type { D1Database, KVNamespace } from '@cloudflare/workers-types'
 import type { Session, User } from 'better-auth'
 import type { createAuth } from './auth'
+import type { WorkerEnv } from './env.d'
 import type { EmailService } from './lib/email'
 
 export type Auth = ReturnType<typeof createAuth>
 
+// Bindings are inferred from alchemy.run.ts for type safety
 export interface AppContext {
-  Bindings: {
-    DB: D1Database
-    KV: KVNamespace
-    RESEND_API_KEY?: string
-    FROM_EMAIL?: string
-  }
+  Bindings: WorkerEnv
   Variables: {
     auth: Auth
     user: User | null
@@ -21,4 +17,4 @@ export interface AppContext {
 }
 
 // Simpler type alias for places that only need bindings
-export type Env = AppContext['Bindings']
+export type Env = WorkerEnv

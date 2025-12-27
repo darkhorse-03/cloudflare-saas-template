@@ -8,6 +8,7 @@ export interface ProjectConfig {
   url: string
   githubUrl: string
   twitterHandle: string
+  enableMagicLink: boolean
   shouldInitGit: boolean
   shouldInstall: boolean
 }
@@ -77,6 +78,16 @@ export async function getProjectConfig(projectName?: string): Promise<ProjectCon
     process.exit(0)
   }
 
+  const enableMagicLink = await confirm({
+    message: 'Enable magic link (passwordless) login?',
+    initialValue: false,
+  })
+
+  if (isCancel(enableMagicLink)) {
+    outro(pc.red('Operation cancelled'))
+    process.exit(0)
+  }
+
   const shouldInitGit = await confirm({
     message: 'Initialize git repository?',
     initialValue: true,
@@ -104,6 +115,7 @@ export async function getProjectConfig(projectName?: string): Promise<ProjectCon
     url: url as string,
     githubUrl: githubUrl as string,
     twitterHandle: twitterHandle as string,
+    enableMagicLink: enableMagicLink as boolean,
     shouldInitGit: shouldInitGit as boolean,
     shouldInstall: shouldInstall as boolean,
   }

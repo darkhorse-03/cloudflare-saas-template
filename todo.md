@@ -25,15 +25,20 @@
 
 ---
 
+
+
 ## 🚨 Critical (Production Blockers)
 
+- [X] CRITICAL - No custom backend call from url (we do service bindings) we will always use rpc calls, or workers.ts to route to the correct endpoint. add instructions to CLAUDE.md CLAUDE.md
+
 ### 1. Email Setup
-- [ ] Choose provider: Resend (easy) OR Cloudflare Email Routing (free, needs domain)
-- [ ] Email verification flow for Better Auth
-- [ ] Password reset emails
-- [ ] Welcome email on signup
-- [ ] Email templates (React Email)
-- [ ] Email environment variables in `.env.example`
+- [X] Choose provider: Resend (easy) OR Cloudflare Email Routing (free, needs domain) (We went with resend)
+- [X] Email verification flow for Better Auth
+- [X] Welcome email on signup
+- [X] Password reset emails (OTP-based via better-auth emailOTP plugin)
+- [X] Email templates (React Email) - OTP, Magic Link, Verification, Welcome, Password Reset
+- [X] Email environment variables in `.env.example`
+- [X] Magic link login (better-auth magicLink plugin)
 
 ### 2. Testing Infrastructure
 - [ ] Add Vitest for unit/integration tests

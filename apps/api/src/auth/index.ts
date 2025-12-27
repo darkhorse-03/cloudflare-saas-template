@@ -1,11 +1,17 @@
-import type { D1Database, IncomingRequestCfProperties } from '@cloudflare/workers-types'
+import type {
+  D1Database,
+  IncomingRequestCfProperties,
+  KVNamespace,
+} from '@cloudflare/workers-types'
 import { config } from '@repo/config'
-import { betterAuth, type User } from 'better-auth'
+import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
+import { emailOTP, magicLink } from 'better-auth/plugins'
 import { withCloudflare } from 'better-auth-cloudflare'
 import { getDb } from '@/db'
 import { createEmailService } from '@/lib/email'
-import { PasswordResetEmail } from '@/lib/email/templates/password-reset-email'
+import { MagicLinkEmail } from '@/lib/email/templates/magic-link-email'
+import { OtpEmail } from '@/lib/email/templates/otp-email'
 import { VerificationEmail } from '@/lib/email/templates/verification-email'
 import { WelcomeEmail } from '@/lib/email/templates/welcome-email'
 import type { Env } from '../env'
@@ -18,6 +24,9 @@ function createAuth(env?: Env, cf?: IncomingRequestCfProperties) {
 
   // Create email service if environment is available
   const emailService = env ? createEmailService(env) : null
+
+  // Feature flags from shared config
+  const enableMagicLink = config.auth.enableMagicLink
 
   return betterAuth({
     basePath: '/auth', // Web worker strips /api, so we get /auth here
@@ -39,22 +48,13 @@ function createAuth(env?: Env, cf?: IncomingRequestCfProperties) {
               },
             }
           : undefined,
-        kv: env?.KV,
+        kv: env?.KV as KVNamespace | undefined,
       },
       {
         emailAndPassword: {
           enabled: true,
           autoSignIn: false, // Don't auto sign-in when email verification is required
           requireEmailVerification: !!emailService,
-          sendResetPassword: emailService
-            ? async ({ user, url }: { user: User; url: string }) => {
-                await emailService.send({
-                  to: { email: user.email },
-                  subject: 'Reset your password',
-                  react: PasswordResetEmail({ userName: user.name || 'there', resetUrl: url }),
-                })
-              }
-            : undefined,
         },
         rateLimit: {
           enabled: true,
@@ -96,6 +96,49 @@ function createAuth(env?: Env, cf?: IncomingRequestCfProperties) {
           },
         }
       : undefined,
+    plugins: emailService
+      ? [
+          emailOTP({
+            otpLength: 6,
+            expiresIn: 300, // 5 minutes
+            async sendVerificationOTP({ email, otp, type }) {
+              const subjectByType: Record<string, string> = {
+                'forget-password': 'Reset your password',
+                'email-verification': 'Verify your email',
+              }
+              await emailService.send({
+                to: { email },
+                subject: subjectByType[type] ?? 'Your sign-in code',
+                react: OtpEmail({
+                  userName: email.split('@')[0],
+                  otp,
+                  type,
+                  expiresInMinutes: 5,
+                }),
+                emailType: type === 'forget-password' ? 'password_reset' : 'verification',
+              })
+            },
+          }),
+          ...(enableMagicLink
+            ? [
+                magicLink({
+                  async sendMagicLink({ email, url }) {
+                    await emailService.send({
+                      to: { email },
+                      subject: 'Sign in to your account',
+                      react: MagicLinkEmail({
+                        userName: email.split('@')[0],
+                        magicLink: url,
+                        expiresInMinutes: 10,
+                      }),
+                      emailType: 'magic_link',
+                    })
+                  },
+                }),
+              ]
+            : []),
+        ]
+      : [],
     // Only add database adapter for CLI schema generation
     ...(env
       ? {}

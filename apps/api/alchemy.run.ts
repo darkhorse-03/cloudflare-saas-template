@@ -3,6 +3,14 @@ import { config } from '@repo/config'
 import alchemy from 'alchemy'
 import { D1Database, KVNamespace, Worker } from 'alchemy/cloudflare'
 
+if (!process.env.RESEND_API_KEY) {
+  throw new Error('RESEND_API_KEY is not set')
+}
+
+if (!process.env.ALCHEMY_PASSWORD) {
+  throw new Error('ALCHEMY_PASSWORD is not set')
+}
+
 const app = await alchemy(`${config.appName}-api`, {
   password: process.env.ALCHEMY_PASSWORD,
 })
@@ -24,8 +32,10 @@ export const api = await Worker('worker', {
   bindings: {
     DB: db,
     KV: kv,
-    RESEND_API_KEY: alchemy.secret('RESEND_API_KEY'),
-    FROM_EMAIL: alchemy.secret('FROM_EMAIL'),
+    // Secrets (sensitive - use alchemy.secret)
+    RESEND_API_KEY: alchemy.secret(process.env.RESEND_API_KEY),
+    // Environment variables (non-sensitive - plain strings)
+    FROM_EMAIL: alchemy.secret(process.env.FROM_EMAIL ?? ''),
   },
   compatibilityFlags: ['nodejs_compat'],
   url: false,

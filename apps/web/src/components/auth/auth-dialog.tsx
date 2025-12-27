@@ -7,8 +7,14 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { ForgotPasswordForm } from './forgot-password-form'
+import { MagicLinkForm } from './magic-link-form'
+import { ResetPasswordForm } from './reset-password-form'
 import { SignInForm } from './sign-in-form'
 import { SignUpForm } from './sign-up-form'
+import { config } from '@repo/config'
+
+type AuthView = 'signin' | 'signup' | 'forgot-password' | 'reset-password' | 'magic-link'
 
 interface AuthDialogContextType {
   isOpen: boolean
@@ -39,48 +45,97 @@ export function AuthDialogProvider({ children }: { children: ReactNode }) {
   )
 }
 
+const viewTitles: Record<AuthView, { title: string; description: string }> = {
+  signin: { title: 'Welcome', description: 'Sign in to your account or create a new one' },
+  signup: { title: 'Welcome', description: 'Sign in to your account or create a new one' },
+  'forgot-password': { title: 'Forgot Password', description: 'Reset your password via email' },
+  'reset-password': { title: 'Reset Password', description: 'Enter your new password' },
+  'magic-link': { title: 'Magic Link', description: 'Sign in without a password' },
+}
+
 export function AuthDialog() {
   const { isOpen, closeDialog } = useAuthDialog()
-  const [activeTab, setActiveTab] = useState('signin')
+  const [view, setView] = useState<AuthView>('signin')
+  const [resetEmail, setResetEmail] = useState('')
 
-  // Reset to signin tab when dialog closes
+  // Reset to signin view when dialog closes
   const handleOpenChange = (open: boolean) => {
     if (!open) {
-      setActiveTab('signin')
+      setView('signin')
+      setResetEmail('')
       closeDialog()
     }
   }
+
+  const handleForgotPasswordSuccess = (email: string) => {
+    setResetEmail(email)
+    setView('reset-password')
+  }
+
+  const handleResetPasswordSuccess = () => {
+    setView('signin')
+    setResetEmail('')
+  }
+
+  const showTabs = view === 'signin' || view === 'signup'
+  const { title, description } = viewTitles[view]
 
   return (
     <Dialog onOpenChange={handleOpenChange} open={isOpen}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Welcome</DialogTitle>
-          <DialogDescription>Sign in to your account or create a new one</DialogDescription>
+          <DialogTitle>{title}</DialogTitle>
+          <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
 
-        <Tabs
-          className="w-full"
-          defaultValue="signin"
-          onValueChange={setActiveTab}
-          value={activeTab}
-        >
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="signin">Sign In</TabsTrigger>
-            <TabsTrigger value="signup">Sign Up</TabsTrigger>
-          </TabsList>
+        {showTabs ? (
+          <Tabs
+            className="w-full"
+            defaultValue="signin"
+            onValueChange={(v) => setView(v as AuthView)}
+            value={view}
+          >
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="signin">Sign In</TabsTrigger>
+              <TabsTrigger value="signup">Sign Up</TabsTrigger>
+            </TabsList>
 
-          {/* Both forms are always mounted, but hidden when not active */}
+            {/* Both forms are always mounted, but hidden when not active */}
+            <div className="mt-4">
+              <Activity mode={view === 'signin' ? 'visible' : 'hidden'}>
+                <SignInForm
+                  onForgotPassword={() => setView('forgot-password')}
+                  onMagicLink={
+                    config.auth.enableMagicLink ? () => setView('magic-link') : undefined
+                  }
+                />
+              </Activity>
+
+              <Activity mode={view === 'signup' ? 'visible' : 'hidden'}>
+                <SignUpForm />
+              </Activity>
+            </div>
+          </Tabs>
+        ) : (
           <div className="mt-4">
-            <Activity mode={activeTab === 'signin' ? 'visible' : 'hidden'}>
-              <SignInForm />
-            </Activity>
+            {view === 'forgot-password' && (
+              <ForgotPasswordForm
+                onBack={() => setView('signin')}
+                onSuccess={handleForgotPasswordSuccess}
+              />
+            )}
 
-            <Activity mode={activeTab === 'signup' ? 'visible' : 'hidden'}>
-              <SignUpForm />
-            </Activity>
+            {view === 'reset-password' && (
+              <ResetPasswordForm
+                email={resetEmail}
+                onBack={() => setView('forgot-password')}
+                onSuccess={handleResetPasswordSuccess}
+              />
+            )}
+
+            {view === 'magic-link' && <MagicLinkForm onBack={() => setView('signin')} />}
           </div>
-        </Tabs>
+        )}
       </DialogContent>
     </Dialog>
   )

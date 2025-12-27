@@ -6,7 +6,7 @@
     "strict": true,
     "skipLibCheck": true,
     "lib": ["ESNext"],
-    "types": ["@types/bun"],
+    "types": ["@types/bun", "./src/env.d.ts"],
     "jsx": "react-jsx",
     "jsxImportSource": "react",
     "strictNullChecks": true,

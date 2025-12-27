@@ -30,6 +30,11 @@ export const config = {
     enabled: true,
   },
 
+  // Auth feature flags
+  auth: {
+    enableMagicLink: false,
+  },
+
   // Public/Marketing navigation links (Header component only)
   // Note: Dashboard sidebar navigation is defined separately in dashboard-sidebar.tsx
   nav: [

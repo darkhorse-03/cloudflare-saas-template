@@ -12,6 +12,7 @@ const URL_REGEX = /url: ['"]https:\/\/your-domain\.com['"]/
 const OG_IMAGE_REGEX = /ogImage: ['"]https:\/\/your-domain\.com\/og-image\.png['"]/
 const GITHUB_URL_REGEX = /https:\/\/github\.com\/yourusername\/your-repo/g
 const TWITTER_REGEX = /twitter: ['"']['"]/
+const MAGIC_LINK_REGEX = /enableMagicLink: (true|false)/
 
 export async function updateConfig(config: ProjectConfig): Promise<void> {
   const s = spinner()
@@ -52,6 +53,12 @@ export async function updateConfig(config: ProjectConfig): Promise<void> {
     if (config.twitterHandle) {
       configContent = configContent.replace(TWITTER_REGEX, `twitter: '${config.twitterHandle}'`)
     }
+
+    // Update auth settings
+    configContent = configContent.replace(
+      MAGIC_LINK_REGEX,
+      `enableMagicLink: ${config.enableMagicLink}`,
+    )
 
     await writeFile(configPath, configContent, 'utf-8')
 

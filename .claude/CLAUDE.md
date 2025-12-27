@@ -95,6 +95,58 @@ Focus on architecture, business logic, and UX - formatting is handled automatica
 - **Separate data fetching** - Use custom hooks in `hooks/[feature]/` for React Query operations
 - **Use `<Activity>` for state preservation** - Wrap components that should preserve state when hidden (tabs, dialogs, wizards)
 
+## API Communication (CRITICAL)
+
+**NEVER use custom fetch calls with URL strings.** This project uses Hono RPC for type-safe API calls.
+
+```ts
+// ❌ WRONG - Never do this
+const res = await fetch('/api/demo/items')
+const res = await fetch(`/api/demo/items/${id}`)
+
+// ✅ CORRECT - Always use the RPC client
+import { api } from '@/lib/api'
+
+const res = await api.demo.items.$get()
+const res = await api.demo.items[':id'].$get({ param: { id } })
+const res = await api.demo.items.$post({ json: data })
+const res = await api.demo.items[':id'].$patch({ param: { id }, json: data })
+const res = await api.demo.items[':id'].$delete({ param: { id } })
+```
+
+**Why RPC?**
+- Full type safety from API to frontend
+- Compile-time errors for invalid routes or payloads
+- Service bindings for worker-to-worker communication
+
+**Pattern:** `api.[route].$[method]({ json?, param?, query? })`
+
+## Authentication (CRITICAL)
+
+**NEVER use custom fetch calls for auth.** Use Better Auth's client methods.
+
+```ts
+// ❌ WRONG - Never do this
+await fetch('/api/auth/sign-in', { method: 'POST', body: JSON.stringify({ email, password }) })
+
+// ✅ CORRECT - Use auth client
+import { signIn, signUp, signOut, useSession } from '@/lib/auth-client'
+
+// Sign in
+const { data, error } = await signIn.email({ email, password })
+
+// Sign up
+const { data, error } = await signUp.email({ email, password, name })
+
+// Sign out
+await signOut()
+
+// Get session (React hook)
+const { data: session, isPending } = useSession()
+```
+
+**Auth client location:** `apps/web/src/lib/auth-client.ts`
+
 ## Navigation Structure
 
 This template has **two navigation systems**:
