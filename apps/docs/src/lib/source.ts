@@ -1,6 +1,7 @@
 import { loader } from 'fumadocs-core/source'
+import { createElement } from 'react'
 // biome-ignore lint/performance/noNamespaceImport: need all icons
-import * as icons from 'lucide-static'
+import * as icons from 'lucide-react'
 import { docs } from 'fumadocs-mdx:collections/server'
 
 export const source = loader({
@@ -13,7 +14,7 @@ export const source = loader({
 
     if (icon in icons) {
       // biome-ignore lint/performance/noDynamicNamespaceImportAccess: access all icons dynamically
-      return icons[icon as keyof typeof icons]
+      return createElement(icons[icon as keyof typeof icons] as React.ElementType)
     }
   },
 })

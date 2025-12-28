@@ -25,6 +25,4 @@ export const web = await Vite('web', {
   },
 })
 
-console.log({ url: web.url })
-
 await app.finalize()

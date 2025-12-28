@@ -10,6 +10,7 @@ import { useSession } from './lib/auth-client'
 import { routeTree } from './routeTree.gen'
 import './styles.css'
 import { config } from '@repo/config'
+import { NotFound } from './components/not-found'
 
 // Lazy load devtools only when needed
 const TanStackDevtools = lazy(() =>
@@ -38,6 +39,7 @@ const router = createRouter({
   scrollRestoration: true,
   defaultStructuralSharing: true,
   defaultPreloadStaleTime: 0,
+  defaultNotFoundComponent: NotFound,
 })
 
 declare module '@tanstack/react-router' {
