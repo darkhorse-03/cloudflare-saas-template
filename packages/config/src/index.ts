@@ -14,7 +14,11 @@ export const config = {
     'Skip the setup hell. Auth, database, and type-safe APIs pre-configured. Optimized for AI-assisted development with Claude Code. Built for indie hackers who ship fast.',
 
   // Deployment configuration
-  domains: ['template.zynth.dev'],
+  domains: {
+    web: 'template.zynth.dev',
+    docs: 'docs.zynth.dev',
+  },
+  webUrl: 'https://template.zynth.dev',
 
   // SEO & Open Graph
   seo: {

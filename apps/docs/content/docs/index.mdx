@@ -1,0 +1,68 @@
+---
+title: Introduction
+description: Cloudflare Workers fullstack template with auth, database, and type-safe APIs
+---
+
+Zynth is a production-ready template for building fullstack applications on Cloudflare Workers. It combines Hono, React, Drizzle ORM, and Better Auth into a cohesive monorepo structure.
+
+## Quick Start
+
+```bash
+bunx create-zynth-app my-app
+cd my-app
+bun dev
+```
+
+Your app runs at `http://localhost:5173` with the API at `http://localhost:8787`.
+
+## What's Included
+
+| Component | Technology |
+|-----------|------------|
+| API | Hono on Cloudflare Workers |
+| Frontend | React + TanStack Router |
+| Database | Drizzle ORM + D1 (SQLite) |
+| Auth | Better Auth with sessions |
+| UI | Tailwind CSS + shadcn/ui |
+| Build | Turborepo + Bun |
+
+## Key Patterns
+
+### Type-Safe API Calls
+
+```ts
+import { api } from '@/lib/api'
+
+// Full autocomplete and type checking
+const res = await api.demo.items.$get()
+const { items } = await res.json()
+```
+
+### Protected Routes
+
+```ts
+import { requireAuth, getAuthUser } from '@/middleware/auth'
+
+app.get('/protected', requireAuth, async (c) => {
+  const user = getAuthUser(c)
+  return c.json({ userId: user.id })
+})
+```
+
+### React Query Hooks
+
+```ts
+import { useItems } from '@/hooks/demo/use-items'
+
+function ItemList() {
+  const { items, isLoading, createItem } = useItems()
+  // ...
+}
+```
+
+<Cards>
+  <Card title="Installation" href="/installation" />
+  <Card title="API Routes" href="/guides/api-routes" />
+  <Card title="Database" href="/guides/database" />
+  <Card title="Authentication" href="/guides/auth" />
+</Cards>

@@ -116,7 +116,19 @@ function createAuth(env?: Env, cf?: IncomingRequestCfProperties) {
         }
       : undefined,
     plugins: [
-      lastLoginMethod(),
+      lastLoginMethod({
+        customResolveMethod: (ctx) => {
+          // Track magic link authentication
+          if (ctx.path === '/magic-link/verify') {
+            return 'magic-link'
+          }
+          // Track email OTP authentication
+          if (ctx.path === '/email-otp/verify-email') {
+            return 'email-otp'
+          }
+          return null
+        },
+      }),
       ...(emailService
         ? [
             emailOTP({

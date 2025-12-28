@@ -19,7 +19,7 @@ export const web = await Vite('web', {
     run_worker_first: ['/api/*', '/auth/*'],
     not_found_handling: 'single-page-application',
   },
-  domains: [...config.domains],
+  domains: [config.domains.web],
   placement: {
     mode: 'smart',
   },

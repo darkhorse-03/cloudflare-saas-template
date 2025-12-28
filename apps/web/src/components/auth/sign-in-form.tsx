@@ -129,7 +129,7 @@ export function SignInForm({ onForgotPassword, onMagicLink }: SignInFormProps) {
             <Button className="w-full" disabled={!canSubmit || isPending} type="submit">
               {isPending ? 'Signing in...' : 'Sign In'}
             </Button>
-            {lastMethod === 'credential' && (
+            {lastMethod === 'email' && (
               <Badge className="absolute -top-2 -right-2" variant="secondary">
                 Last used
               </Badge>

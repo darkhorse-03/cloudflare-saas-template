@@ -8,6 +8,7 @@
     "format": "biome format --write .",
     "check": "biome check --write .",
     "check-types": "turbo run check-types",
+    "preview": "turbo run preview --filter=./apps/*",
     "deploy": "turbo run deploy --filter=./apps/*",
     "destroy": "turbo run destroy",
     "prepare": "lefthook install"
@@ -29,6 +30,7 @@
     "packages/*"
   ],
   "dependencies": {
-    "alchemy": "^0.82.1"
+    "alchemy": "^0.82.1",
+    "lucide-react": "^0.562.0"
   }
 }

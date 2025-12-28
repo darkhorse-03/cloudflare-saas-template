@@ -41,6 +41,7 @@
     "**/node_modules": true,
     "**/.turbo": true,
     "**/.wrangler": true,
-    "**/.tanstack": true
+    "**/.tanstack": true,
+    "**/routeTree.gen.ts": true
   }
 }

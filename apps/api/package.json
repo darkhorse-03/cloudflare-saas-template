@@ -14,6 +14,7 @@
   },
   "scripts": {
     "dev": "bun run scripts/alchemy-dev.ts",
+    "preview": "bun run scripts/alchemy-preview.ts",
     "deploy": "bun run scripts/alchemy-deploy.ts",
     "destroy": "bun run scripts/alchemy-destroy.ts",
     "db:generate": "drizzle-kit generate",
