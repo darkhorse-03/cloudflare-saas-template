@@ -1,0 +1,188 @@
+---
+title: Database
+description: Working with Drizzle ORM and Cloudflare D1
+---
+
+Zynth uses Drizzle ORM with Cloudflare D1 (SQLite at the edge). Schemas live in `apps/api/src/db/schema/`.
+
+## Defining a Schema
+
+```ts title="apps/api/src/db/schema/posts.ts"
+import { sql } from 'drizzle-orm'
+import { sqliteTable, text, integer, index } from 'drizzle-orm/sqlite-core'
+import { users } from './auth'
+
+export const posts = sqliteTable(
+  'posts',
+  {
+    id: text('id').primaryKey(),
+    userId: text('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    title: text('title').notNull(),
+    content: text('content').notNull(),
+    status: text('status', { enum: ['draft', 'published'] })
+      .notNull()
+      .default('draft'),
+    createdAt: integer('created_at', { mode: 'timestamp_ms' })
+      .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
+      .notNull(),
+    updatedAt: integer('updated_at', { mode: 'timestamp_ms' })
+      .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
+      .$onUpdate(() => new Date())
+      .notNull(),
+  },
+  (table) => [
+    index('posts_user_id_idx').on(table.userId),
+  ]
+)
+```
+
+## Register the Schema
+
+Export from the index file:
+
+```ts title="apps/api/src/db/schema/index.ts"
+export * from './auth'
+export * from './posts'
+```
+
+## Generate Migrations
+
+```bash
+cd apps/api
+bun run db:generate
+```
+
+This creates a migration file in `apps/api/drizzle/`.
+
+## Apply Migrations
+
+```bash
+# Local development
+bun run db:migrate
+
+# Production (after deployment)
+bun run db:migrate:prod
+```
+
+## Querying Data
+
+### Find Many
+
+```ts
+const db = getDb(c.env.DB)
+
+const userPosts = await db.query.posts.findMany({
+  where: eq(posts.userId, user.id),
+  orderBy: (posts, { desc }) => [desc(posts.createdAt)],
+})
+```
+
+### Find First
+
+```ts
+const post = await db.query.posts.findFirst({
+  where: and(
+    eq(posts.id, id),
+    eq(posts.userId, user.id)
+  ),
+})
+```
+
+### Insert
+
+```ts
+const newPost = {
+  id: crypto.randomUUID(),
+  userId: user.id,
+  title: data.title,
+  content: data.content,
+}
+
+await db.insert(posts).values(newPost)
+```
+
+### Update
+
+```ts
+await db
+  .update(posts)
+  .set({
+    title: data.title,
+    content: data.content,
+  })
+  .where(eq(posts.id, id))
+```
+
+### Delete
+
+```ts
+await db.delete(posts).where(eq(posts.id, id))
+```
+
+## Common Patterns
+
+### User-Scoped Data
+
+Always filter by `userId` to prevent unauthorized access:
+
+```ts
+// Always include userId in queries
+const post = await db.query.posts.findFirst({
+  where: and(
+    eq(posts.id, id),
+    eq(posts.userId, user.id)  // Scope to current user
+  ),
+})
+```
+
+### Soft Deletes
+
+Add a `deletedAt` column:
+
+```ts
+deletedAt: integer('deleted_at', { mode: 'timestamp_ms' }),
+```
+
+Filter in queries:
+
+```ts
+where: and(
+  eq(posts.userId, user.id),
+  isNull(posts.deletedAt)
+)
+```
+
+### Enums
+
+Use SQLite text with enum constraint:
+
+```ts
+status: text('status', { enum: ['draft', 'published', 'archived'] })
+  .notNull()
+  .default('draft'),
+```
+
+### Relations
+
+```ts
+import { relations } from 'drizzle-orm'
+
+export const postsRelations = relations(posts, ({ one }) => ({
+  author: one(users, {
+    fields: [posts.userId],
+    references: [users.id],
+  }),
+}))
+```
+
+Query with relations:
+
+```ts
+const postsWithAuthors = await db.query.posts.findMany({
+  with: {
+    author: true,
+  },
+})
+```

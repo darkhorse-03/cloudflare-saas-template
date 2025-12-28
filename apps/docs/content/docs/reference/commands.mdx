@@ -1,0 +1,96 @@
+---
+title: Commands
+description: CLI commands reference
+---
+
+All commands use Bun. Run from the project root unless specified.
+
+## Development
+
+| Command | Description |
+|---------|-------------|
+| `bun dev` | Start all dev servers |
+| `bun dev --filter=api` | Start API only |
+| `bun dev --filter=web` | Start web only |
+
+## Build
+
+| Command | Description |
+|---------|-------------|
+| `bun run build` | Build all apps |
+| `bun run build --filter=api` | Build API only |
+| `bun run build --filter=web` | Build web only |
+
+## Deploy
+
+| Command | Description |
+|---------|-------------|
+| `bun run deploy` | Deploy all apps to Cloudflare |
+
+## Database
+
+Run from `apps/api`:
+
+```bash
+cd apps/api
+```
+
+| Command | Description |
+|---------|-------------|
+| `bun run db:generate` | Generate migrations from schema changes |
+| `bun run db:migrate` | Apply migrations locally |
+| `bun run db:migrate:prod` | Apply migrations to production |
+| `bun run db:studio` | Open Drizzle Studio |
+
+## Code Quality
+
+| Command | Description |
+|---------|-------------|
+| `bun x ultracite fix` | Format and lint (runs on commit) |
+| `bun x ultracite check` | Check without fixing |
+
+## Type Checking
+
+| Command | Description |
+|---------|-------------|
+| `bun run types:check` | Check types in all packages |
+
+## Wrangler (Cloudflare CLI)
+
+```bash
+cd apps/api
+```
+
+| Command | Description |
+|---------|-------------|
+| `bunx wrangler login` | Authenticate with Cloudflare |
+| `bunx wrangler dev` | Start local worker |
+| `bunx wrangler deploy` | Deploy worker |
+| `bunx wrangler secret put KEY` | Set production secret |
+| `bunx wrangler d1 execute DB --local --command "SELECT 1"` | Run SQL locally |
+| `bunx wrangler tail` | Stream production logs |
+
+## Package Management
+
+| Command | Description |
+|---------|-------------|
+| `bun install` | Install all dependencies |
+| `bun add <pkg> --filter=web` | Add to web app |
+| `bun add <pkg> --filter=api` | Add to API app |
+| `bun add <pkg> -w` | Add to workspace root |
+
+## shadcn/ui Components
+
+```bash
+cd apps/web
+bunx shadcn@latest add button
+bunx shadcn@latest add card dialog form
+```
+
+## Turborepo
+
+| Command | Description |
+|---------|-------------|
+| `bunx turbo run build` | Build with caching |
+| `bunx turbo run build --force` | Build without cache |
+| `bunx turbo prune --scope=web` | Create pruned monorepo |

@@ -1,5 +1,4 @@
 import { config } from '@repo/config'
-import { Link } from '@tanstack/react-router'
 import { BookOpen, Github } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { CommandCopyButton } from './command-copy-button'
@@ -25,29 +24,15 @@ export function CTASection() {
 
           {/* Secondary Actions */}
           <div className="flex flex-wrap items-center justify-center gap-4">
-            {cta.secondaryActions.map((action) => {
-              const isExternal = action.href.startsWith('http')
-
-              if (isExternal) {
-                return (
-                  <Button asChild key={action.label} size="lg" variant="outline">
-                    <a href={action.href} rel="noopener noreferrer" target="_blank">
-                      {action.label === 'View on GitHub' && <Github className="mr-2 size-4" />}
-                      {action.label}
-                    </a>
-                  </Button>
-                )
-              }
-
-              return (
-                <Button asChild key={action.label} size="lg" variant="outline">
-                  <Link to={action.href as '/getting-started' | '/features' | '/about'}>
-                    {action.label === 'Read Docs' && <BookOpen className="mr-2 size-4" />}
-                    {action.label}
-                  </Link>
-                </Button>
-              )
-            })}
+            {cta.secondaryActions.map((action) => (
+              <Button asChild key={action.label} size="lg" variant="outline">
+                <a href={action.href} rel="noopener noreferrer" target="_blank">
+                  {action.label === 'View on GitHub' && <Github className="mr-2 size-4" />}
+                  {action.label === 'Read Docs' && <BookOpen className="mr-2 size-4" />}
+                  {action.label}
+                </a>
+              </Button>
+            ))}
           </div>
         </div>
       </div>

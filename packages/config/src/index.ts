@@ -45,15 +45,13 @@ export const config = {
   // Note: Dashboard sidebar navigation is defined separately in dashboard-sidebar.tsx
   nav: [
     { label: 'Home', href: '/' },
-    { label: 'Getting Started', href: '/getting-started' },
-    { label: 'Features', href: '/features' },
-    { label: 'About', href: '/about' },
+    { label: 'Docs', href: 'https://docs.zynth.dev' },
   ],
 
   // Public footer links
   footer: {
     links: [
-      { label: 'Documentation', href: '/getting-started' },
+      { label: 'Documentation', href: 'https://docs.zynth.dev' },
       { label: 'GitHub', href: 'https://github.com/yourusername/your-repo' },
     ],
   },
@@ -181,7 +179,7 @@ export const config = {
       primaryAction: 'Get Started',
       secondaryActions: [
         { label: 'View on GitHub', href: 'https://github.com/yourusername/your-repo' },
-        { label: 'Read Docs', href: '/getting-started' },
+        { label: 'Read Docs', href: 'https://docs.zynth.dev' },
       ],
     },
   },

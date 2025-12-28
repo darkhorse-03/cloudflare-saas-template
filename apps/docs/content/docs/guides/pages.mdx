@@ -1,0 +1,196 @@
+---
+title: Pages & Components
+description: Creating routes and components with TanStack Router
+---
+
+## File-Based Routing
+
+Routes are defined in `apps/web/src/routes/`. The file path becomes the URL path.
+
+| File | URL |
+|------|-----|
+| `routes/index.tsx` | `/` |
+| `routes/about.tsx` | `/about` |
+| `routes/dashboard/index.tsx` | `/dashboard` |
+| `routes/dashboard/settings.tsx` | `/dashboard/settings` |
+| `routes/posts/$id.tsx` | `/posts/:id` |
+
+## Basic Page
+
+```tsx title="apps/web/src/routes/blog.tsx"
+import { createFileRoute } from '@tanstack/react-router'
+import { Layout } from '@/components/layout'
+
+export const Route = createFileRoute('/blog')({
+  component: BlogPage,
+})
+
+function BlogPage() {
+  return (
+    <Layout>
+      <div className="container max-w-6xl mx-auto px-4 py-12">
+        <h1 className="text-4xl font-bold">Blog</h1>
+      </div>
+    </Layout>
+  )
+}
+```
+
+## Dashboard Pages
+
+Dashboard pages use a shared layout with sidebar:
+
+```tsx title="apps/web/src/routes/dashboard/analytics.tsx"
+import { createFileRoute } from '@tanstack/react-router'
+
+export const Route = createFileRoute('/dashboard/analytics')({
+  component: AnalyticsPage,
+})
+
+function AnalyticsPage() {
+  return (
+    <div className="space-y-6">
+      <h1 className="text-3xl font-bold">Analytics</h1>
+      {/* Content here */}
+    </div>
+  )
+}
+```
+
+Add to sidebar in `apps/web/src/components/dashboard-sidebar.tsx`:
+
+```tsx
+const navItems = [
+  // ...existing items
+  {
+    title: 'Analytics',
+    url: '/dashboard/analytics',
+    icon: BarChart,
+  },
+]
+```
+
+## Dynamic Routes
+
+Use `$param` for dynamic segments:
+
+```tsx title="apps/web/src/routes/posts/$id.tsx"
+import { createFileRoute } from '@tanstack/react-router'
+
+export const Route = createFileRoute('/posts/$id')({
+  component: PostPage,
+})
+
+function PostPage() {
+  const { id } = Route.useParams()
+
+  return <div>Post ID: {id}</div>
+}
+```
+
+## Data Fetching
+
+### With React Query Hook
+
+```tsx
+import { useItems } from '@/hooks/demo/use-items'
+
+function ItemsPage() {
+  const { items, isLoading, error } = useItems()
+
+  if (isLoading) return <div>Loading...</div>
+  if (error) return <div>Error: {error.message}</div>
+
+  return (
+    <ul>
+      {items.map(item => (
+        <li key={item.id}>{item.title}</li>
+      ))}
+    </ul>
+  )
+}
+```
+
+### Creating a Hook
+
+```tsx title="apps/web/src/hooks/posts/use-posts.ts"
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { api } from '@/lib/api'
+
+export function usePosts() {
+  const queryClient = useQueryClient()
+
+  const query = useQuery({
+    queryKey: ['posts'],
+    queryFn: async () => {
+      const res = await api.posts.$get()
+      if (!res.ok) throw new Error('Failed to fetch')
+      return res.json()
+    },
+  })
+
+  const createPost = useMutation({
+    mutationFn: async (data: { title: string; content: string }) => {
+      const res = await api.posts.$post({ json: data })
+      if (!res.ok) throw new Error('Failed to create')
+      return res.json()
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['posts'] })
+    },
+  })
+
+  return {
+    posts: query.data?.posts ?? [],
+    isLoading: query.isLoading,
+    createPost,
+  }
+}
+```
+
+## Navigation
+
+```tsx
+import { Link } from '@tanstack/react-router'
+
+// Type-safe navigation
+<Link to="/dashboard/analytics">Analytics</Link>
+
+// With params
+<Link to="/posts/$id" params={{ id: '123' }}>View Post</Link>
+
+// With search params
+<Link to="/posts" search={{ page: 2 }}>Page 2</Link>
+```
+
+## Components
+
+Components live in `apps/web/src/components/`:
+
+```
+components/
+├── ui/              # shadcn/ui primitives
+├── dashboard/       # Dashboard-specific
+├── auth/            # Auth forms
+└── [feature]/       # Feature components
+```
+
+```tsx title="apps/web/src/components/posts/post-card.tsx"
+import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+
+interface PostCardProps {
+  title: string
+  excerpt: string
+}
+
+export function PostCard({ title, excerpt }: PostCardProps) {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>{title}</CardTitle>
+        <CardDescription>{excerpt}</CardDescription>
+      </CardHeader>
+    </Card>
+  )
+}
+```

@@ -1,0 +1,124 @@
+---
+title: Project Structure
+description: Monorepo organization and file locations
+---
+
+## Overview
+
+```
+├── apps/
+│   ├── api/              # Hono API (Cloudflare Worker)
+│   ├── web/              # React frontend (Cloudflare Pages)
+│   └── docs/             # Documentation (this site)
+├── packages/
+│   ├── config/           # Shared configuration
+│   ├── shared/           # Types and validation schemas
+│   └── theme/            # Shared CSS variables
+├── turbo.json            # Turborepo configuration
+├── package.json          # Workspace root
+└── bun.lock              # Dependency lock file
+```
+
+## Apps
+
+### API (`apps/api`)
+
+```
+apps/api/
+├── src/
+│   ├── index.ts          # App entry point
+│   ├── env.ts            # Environment types
+│   ├── routes/           # API route handlers
+│   │   └── demo/         # Feature-grouped routes
+│   ├── db/
+│   │   ├── index.ts      # Database connection
+│   │   └── schema/       # Drizzle table schemas
+│   ├── auth/             # Better Auth configuration
+│   ├── middleware/       # Hono middleware
+│   └── lib/              # Utilities
+├── drizzle/              # Generated migrations
+├── wrangler.toml         # Cloudflare Worker config
+└── package.json
+```
+
+### Web (`apps/web`)
+
+```
+apps/web/
+├── src/
+│   ├── routes/           # TanStack Router pages
+│   │   ├── index.tsx     # Home page
+│   │   ├── dashboard/    # Dashboard pages
+│   │   └── __root.tsx    # Root layout
+│   ├── components/
+│   │   ├── ui/           # shadcn/ui primitives
+│   │   ├── dashboard/    # Dashboard components
+│   │   ├── auth/         # Auth forms
+│   │   └── [feature]/    # Feature components
+│   ├── hooks/
+│   │   ├── demo/         # Demo feature hooks
+│   │   └── use-*.ts      # Shared hooks
+│   ├── lib/
+│   │   ├── api.ts        # Hono RPC client
+│   │   ├── auth-client.ts # Better Auth client
+│   │   └── utils.ts      # Utilities
+│   └── styles.css        # Global styles
+├── public/               # Static assets
+└── package.json
+```
+
+## Packages
+
+### Config (`packages/config`)
+
+Shared constants exposed to frontend. **Do not put secrets here.**
+
+```ts
+// packages/config/src/index.ts
+export const config = {
+  appName: 'zynth',
+  domains: { web: 'example.com', docs: 'docs.example.com' },
+  auth: { enableGoogleOAuth: true },
+  // ...
+}
+```
+
+### Shared (`packages/shared`)
+
+Types and Zod schemas used by both API and web:
+
+```
+packages/shared/
+└── src/
+    ├── index.ts          # Re-exports all schemas
+    └── [feature]/
+        └── schema.ts     # Zod schemas
+```
+
+### Theme (`packages/theme`)
+
+Shared CSS variables and base styles:
+
+```
+packages/theme/
+└── src/
+    └── globals.css       # CSS custom properties
+```
+
+## Import Aliases
+
+| Alias | Path |
+|-------|------|
+| `@/` | `apps/*/src/` |
+| `@repo/config` | `packages/config` |
+| `@repo/shared` | `packages/shared` |
+| `@repo/theme` | `packages/theme` |
+
+## Adding New Features
+
+1. **Schema**: `packages/shared/src/[feature]/schema.ts`
+2. **Database**: `apps/api/src/db/schema/[feature].ts`
+3. **API Routes**: `apps/api/src/routes/[feature]/`
+4. **Frontend Hook**: `apps/web/src/hooks/[feature]/`
+5. **Components**: `apps/web/src/components/[feature]/`
+6. **Page**: `apps/web/src/routes/[path].tsx`

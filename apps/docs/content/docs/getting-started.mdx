@@ -1,0 +1,118 @@
+---
+title: Getting Started
+description: Create your Cloudflare Workers app in under a minute
+---
+
+## Quick Start
+
+Run this command to create a new project with our interactive CLI:
+
+```bash
+bunx create-zynth-app
+```
+
+Or specify a project name directly:
+
+```bash
+bunx create-zynth-app my-awesome-app
+```
+
+## Interactive Setup
+
+The CLI will guide you through configuring your project with a series of prompts:
+
+- **Project name** - Required, used throughout your app
+- **Description** - Optional, appears in meta tags and config
+- **Tagline** - Optional, shown on your landing page
+- **Production URL** - Optional, used for SEO and Open Graph tags
+- **GitHub repository URL** - Optional, updates footer and config links
+- **Twitter/X handle** - Optional, for social links
+- **Initialize git?** - Default: yes, creates git repository
+- **Install dependencies?** - Default: yes, runs bun install
+
+## What You Get
+
+<Cards>
+  <Card
+    title="Turborepo Monorepo"
+    description="Organized workspace with apps/api (Hono), apps/web (React), and shared packages for configuration. Blazing-fast builds with caching."
+  />
+  <Card
+    title="Authentication Flows"
+    description="Pre-built sign-in and sign-up forms with TanStack Form, Zod validation, and Better Auth integration. Protected routes ready to use."
+  />
+  <Card
+    title="Type-Safe APIs"
+    description="Hono RPC enables end-to-end type safety between your API and frontend. Full autocomplete and compile-time error checking."
+  />
+  <Card
+    title="Modern UI Components"
+    description="Tailwind CSS with shadcn/ui components. Dark mode support, responsive design, and beautiful defaults out of the box."
+  />
+  <Card
+    title="File-Based Routing"
+    description="TanStack Router provides automatic route generation from your file structure. Type-safe navigation with prefetching on hover."
+  />
+  <Card
+    title="Deployment Ready"
+    description="Pre-configured wrangler.toml for Cloudflare Workers and Pages. One command to deploy to the edge globally."
+  />
+</Cards>
+
+## Next Steps
+
+### 1. Navigate to your project
+
+```bash
+cd my-awesome-app
+```
+
+### 2. Start the development servers
+
+```bash
+bun run dev
+```
+
+### 3. Open in your browser
+
+Visit `http://localhost:5173` to see your app running.
+
+### 4. Start building
+
+Make changes and see them live reload instantly.
+
+### 5. Deploy to Cloudflare
+
+```bash
+bun run deploy
+```
+
+## File-Based Routing
+
+Zynth uses TanStack Router for type-safe, file-based routing. Routes are automatically generated from files in `apps/web/src/routes/`.
+
+### Creating a Route
+
+Create a new file in the routes directory and TanStack Router automatically creates the route:
+
+```tsx title="apps/web/src/routes/blog.tsx"
+import { createFileRoute } from '@tanstack/react-router'
+import { Layout } from '@/components/layout'
+
+export const Route = createFileRoute('/blog')({
+  component: BlogPage,
+})
+
+function BlogPage() {
+  return <Layout>...</Layout>
+}
+```
+
+### Type-Safe Navigation
+
+TanStack Router automatically prefetches routes when you hover over a link, making navigation feel instant. Use the `Link` component for type-safe navigation:
+
+```tsx
+// Autocomplete and type checking for routes
+<Link to="/blog">View Blog</Link>
+```

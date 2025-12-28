@@ -1,0 +1,95 @@
+---
+title: Installation
+description: Set up a new Zynth project
+---
+
+## Prerequisites
+
+- [Bun](https://bun.sh) v1.0+
+- [Cloudflare account](https://dash.cloudflare.com/sign-up) (for deployment)
+
+## Create a New Project
+
+```bash
+bunx create-zynth-app
+```
+
+The CLI prompts for:
+
+| Prompt | Required | Description |
+|--------|----------|-------------|
+| Project name | Yes | Used for package names and config |
+| Description | No | Meta tags and SEO |
+| Production URL | No | Open Graph and canonical URLs |
+| GitHub URL | No | Footer and social links |
+| Initialize git | No | Creates `.git` directory |
+| Install deps | No | Runs `bun install` |
+
+Or skip prompts with a project name:
+
+```bash
+bunx create-zynth-app my-app
+```
+
+## Development
+
+```bash
+cd my-app
+bun dev
+```
+
+This starts:
+- **Web** at `http://localhost:5173` (Vite dev server)
+- **API** at `http://localhost:8787` (Wrangler)
+
+## Project Structure
+
+```
+my-app/
+├── apps/
+│   ├── api/         # Hono API worker
+│   └── web/         # React frontend
+├── packages/
+│   ├── config/      # Shared configuration
+│   ├── shared/      # Types and validation schemas
+│   └── theme/       # Shared CSS variables
+├── turbo.json       # Turborepo config
+└── package.json     # Workspace root
+```
+
+## Environment Variables
+
+Create `apps/api/.dev.vars` for local development:
+
+```bash
+# Database (auto-created by wrangler)
+# DB is bound automatically
+
+# Auth (optional - for OAuth)
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+GITHUB_CLIENT_ID=
+GITHUB_CLIENT_SECRET=
+
+# Email (optional - for verification emails)
+RESEND_API_KEY=
+```
+
+## Database Setup
+
+D1 database is configured in `wrangler.toml`. For local development:
+
+```bash
+cd apps/api
+bun run db:generate  # Generate migrations
+bun run db:migrate   # Apply migrations locally
+```
+
+## Verify Installation
+
+1. Open `http://localhost:5173`
+2. Click "Sign Up" and create an account
+3. Navigate to the dashboard
+4. Create a demo item to test the API
+
+If everything works, you're ready to build.

@@ -1,0 +1,185 @@
+---
+title: Authentication
+description: User authentication with Better Auth
+---
+
+Zynth uses Better Auth for authentication. It supports email/password, magic links, OTP, and OAuth providers.
+
+## Frontend Authentication
+
+### Sign In
+
+```ts
+import { signIn } from '@/lib/auth-client'
+
+const { data, error } = await signIn.email({
+  email: 'user@example.com',
+  password: 'password123',
+})
+```
+
+### Sign Up
+
+```ts
+import { signUp } from '@/lib/auth-client'
+
+const { data, error } = await signUp.email({
+  email: 'user@example.com',
+  password: 'password123',
+  name: 'John Doe',
+})
+```
+
+### Sign Out
+
+```ts
+import { signOut } from '@/lib/auth-client'
+
+await signOut()
+```
+
+### Get Session
+
+```tsx
+import { useSession } from '@/lib/auth-client'
+
+function UserMenu() {
+  const { data: session, isPending } = useSession()
+
+  if (isPending) return <div>Loading...</div>
+  if (!session) return <Link to="/sign-in">Sign In</Link>
+
+  return <div>Welcome, {session.user.name}</div>
+}
+```
+
+## Magic Link
+
+```ts
+import { signIn } from '@/lib/auth-client'
+
+await signIn.magicLink({
+  email: 'user@example.com',
+})
+```
+
+## Email OTP
+
+```ts
+import { emailOtp } from '@/lib/auth-client'
+
+// Request OTP
+await emailOtp.sendVerificationOtp({
+  email: 'user@example.com',
+  type: 'sign-in',
+})
+
+// Verify OTP
+const { data, error } = await emailOtp.verifyEmail({
+  email: 'user@example.com',
+  otp: '123456',
+})
+```
+
+## OAuth
+
+Enable providers in `packages/config/src/index.ts`:
+
+```ts
+auth: {
+  enableGoogleOAuth: true,
+  enableGitHubOAuth: true,
+}
+```
+
+Add credentials to `apps/api/.dev.vars`:
+
+```bash
+GOOGLE_CLIENT_ID=your-client-id
+GOOGLE_CLIENT_SECRET=your-client-secret
+GITHUB_CLIENT_ID=your-client-id
+GITHUB_CLIENT_SECRET=your-client-secret
+```
+
+Use in frontend:
+
+```ts
+import { signIn } from '@/lib/auth-client'
+
+await signIn.social({ provider: 'google' })
+await signIn.social({ provider: 'github' })
+```
+
+## API Authentication
+
+### Middleware
+
+```ts
+import { requireAuth, getAuthUser } from '@/middleware/auth'
+
+// Require authentication
+app.get('/protected', requireAuth, async (c) => {
+  const user = getAuthUser(c)
+  return c.json({ userId: user.id })
+})
+```
+
+### Optional Auth
+
+```ts
+import { authMiddleware } from '@/middleware/auth'
+
+// Auth is optional - user may be null
+app.get('/public', authMiddleware, async (c) => {
+  const user = c.get('user')
+  return c.json({
+    authenticated: !!user,
+    userId: user?.id
+  })
+})
+```
+
+## Protected Routes (Frontend)
+
+Use the `useAuth` hook:
+
+```tsx title="apps/web/src/hooks/use-auth.ts"
+import { useSession } from '@/lib/auth-client'
+import { useNavigate } from '@tanstack/react-router'
+import { useEffect } from 'react'
+
+export function useRequireAuth() {
+  const { data: session, isPending } = useSession()
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (!isPending && !session) {
+      navigate({ to: '/sign-in' })
+    }
+  }, [session, isPending, navigate])
+
+  return { session, isPending }
+}
+```
+
+## Email Configuration
+
+For verification emails, magic links, and OTP, configure Resend:
+
+```bash
+# apps/api/.dev.vars
+RESEND_API_KEY=re_xxxxx
+```
+
+If no email service is configured, email verification is disabled automatically.
+
+## Session Configuration
+
+Sessions are configured in `apps/api/src/auth/index.ts`:
+
+```ts
+session: {
+  expiresIn: 60 * 60 * 24 * 7, // 7 days
+  updateAge: 60 * 60 * 24,     // Refresh after 1 day
+}
+```

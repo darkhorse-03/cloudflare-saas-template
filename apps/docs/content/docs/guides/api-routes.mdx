@@ -1,0 +1,146 @@
+---
+title: API Routes
+description: Creating type-safe API endpoints with Hono
+---
+
+API routes live in `apps/api/src/routes/`. Each file exports a Hono router that gets mounted to the main app.
+
+## Basic Route
+
+```ts title="apps/api/src/routes/posts.ts"
+import { Hono } from 'hono'
+import type { AppContext } from '@/env'
+
+export const postsRoutes = new Hono<AppContext>()
+  .get('/', async (c) => {
+    return c.json({ posts: [] })
+  })
+  .get('/:id', async (c) => {
+    const id = c.req.param('id')
+    return c.json({ post: { id } })
+  })
+```
+
+## Register the Route
+
+Add to `apps/api/src/index.ts`:
+
+```ts
+import { postsRoutes } from './routes/posts'
+
+const app = new Hono<AppContext>()
+  .route('/posts', postsRoutes)
+```
+
+## Request Validation
+
+Use Zod schemas from `@repo/shared`:
+
+```ts title="packages/shared/src/posts/schema.ts"
+import { z } from 'zod'
+
+export const createPostSchema = z.object({
+  title: z.string().min(1).max(200),
+  content: z.string().min(1),
+})
+
+export type CreatePostInput = z.infer<typeof createPostSchema>
+```
+
+```ts title="apps/api/src/routes/posts.ts"
+import { zValidator } from '@hono/zod-validator'
+import { createPostSchema } from '@repo/shared'
+
+export const postsRoutes = new Hono<AppContext>()
+  .post('/', zValidator('json', createPostSchema), async (c) => {
+    const data = c.req.valid('json')
+    // data is typed as CreatePostInput
+    return c.json({ post: data }, 201)
+  })
+```
+
+## Protected Routes
+
+Use `requireAuth` middleware for authenticated endpoints:
+
+```ts
+import { requireAuth, getAuthUser } from '@/middleware/auth'
+
+export const postsRoutes = new Hono<AppContext>()
+  .get('/', requireAuth, async (c) => {
+    const user = getAuthUser(c)
+
+    const posts = await db.query.posts.findMany({
+      where: eq(posts.userId, user.id),
+    })
+
+    return c.json({ posts })
+  })
+```
+
+## Database Access
+
+```ts
+import { getDb } from '@/db'
+import { posts } from '@/db/schema/posts'
+import { eq } from 'drizzle-orm'
+
+export const postsRoutes = new Hono<AppContext>()
+  .get('/', requireAuth, async (c) => {
+    const user = getAuthUser(c)
+    const db = getDb(c.env.DB)
+
+    const userPosts = await db.query.posts.findMany({
+      where: eq(posts.userId, user.id),
+    })
+
+    return c.json({ posts: userPosts })
+  })
+```
+
+## Frontend Usage
+
+The API client is auto-generated with full types:
+
+```ts title="apps/web/src/lib/api.ts"
+import { api } from '@/lib/api'
+
+// GET /posts
+const res = await api.posts.$get()
+const { posts } = await res.json()
+
+// POST /posts
+const res = await api.posts.$post({
+  json: { title: 'Hello', content: 'World' }
+})
+
+// GET /posts/:id
+const res = await api.posts[':id'].$get({
+  param: { id: '123' }
+})
+```
+
+## Error Handling
+
+Return appropriate status codes:
+
+```ts
+.get('/:id', requireAuth, async (c) => {
+  const id = c.req.param('id')
+  const user = getAuthUser(c)
+  const db = getDb(c.env.DB)
+
+  const post = await db.query.posts.findFirst({
+    where: and(
+      eq(posts.id, id),
+      eq(posts.userId, user.id)
+    ),
+  })
+
+  if (!post) {
+    return c.json({ error: 'Post not found' }, 404)
+  }
+
+  return c.json({ post })
+})
+```
