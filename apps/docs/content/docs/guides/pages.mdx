@@ -150,6 +150,10 @@ export function usePosts() {
 
 ## Navigation
 
+### Internal Links
+
+Use TanStack Router's `Link` for type-safe internal navigation:
+
 ```tsx
 import { Link } from '@tanstack/react-router'
 
@@ -162,6 +166,26 @@ import { Link } from '@tanstack/react-router'
 // With search params
 <Link to="/posts" search={{ page: 2 }}>Page 2</Link>
 ```
+
+### External Links
+
+For links to different workers or external sites, use a standard `<a>` tag:
+
+```tsx
+// Links to docs (separate worker)
+<a href="/docs" target="_blank" rel="noopener noreferrer">
+  Documentation
+</a>
+
+// External links
+<a href="https://github.com/..." target="_blank" rel="noopener noreferrer">
+  GitHub
+</a>
+```
+
+<Callout type="info">
+The Header component handles this automatically via the `newTab` property in `config.nav`. See [Configuration](/reference/configuration) for details.
+</Callout>
 
 ## Components
 

@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "bun run scripts/alchemy-dev.ts",
-    "build": "vite build",
+    "build": "vite build && ([ -f dist/client/api/search ] && mv dist/client/api/search dist/client/api/search.json || true)",
     "start": "serve dist/client",
     "types:check": "fumadocs-mdx && tsc --noEmit",
     "postinstall": "fumadocs-mdx",

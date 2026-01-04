@@ -8,8 +8,8 @@ description: Monorepo organization and file locations
 ```
 ├── apps/
 │   ├── api/              # Hono API (Cloudflare Worker)
-│   ├── web/              # React frontend (Cloudflare Pages)
-│   └── docs/             # Documentation (this site)
+│   ├── web/              # React frontend (Cloudflare Worker)
+│   └── docs/             # Documentation (Cloudflare Worker)
 ├── packages/
 │   ├── config/           # Shared configuration
 │   ├── shared/           # Types and validation schemas
@@ -63,9 +63,31 @@ apps/web/
 │   │   ├── auth-client.ts # Better Auth client
 │   │   └── utils.ts      # Utilities
 │   └── styles.css        # Global styles
+├── worker.ts             # Cloudflare Worker entry
+├── alchemy.run.ts        # Alchemy deployment config
 ├── public/               # Static assets
 └── package.json
 ```
+
+### Docs (`apps/docs`)
+
+```
+apps/docs/
+├── content/
+│   └── docs/             # MDX documentation files
+│       ├── index.mdx     # Docs home
+│       ├── guides/       # How-to guides
+│       └── reference/    # Reference docs
+├── src/
+│   ├── routes/           # TanStack Router pages
+│   ├── components/       # Doc-specific components
+│   └── lib/              # Utilities
+├── worker.ts             # Worker entry (strips /docs prefix)
+├── alchemy.run.ts        # Alchemy deployment config
+└── vite.config.ts        # Vite config with prerender pages
+```
+
+The docs app is deployed as a separate worker at `/docs/*`. The worker entry strips the `/docs` prefix before serving assets.
 
 ## Packages
 
@@ -77,8 +99,12 @@ Shared constants exposed to frontend. **Do not put secrets here.**
 // packages/config/src/index.ts
 export const config = {
   appName: 'zynth',
-  domains: { web: 'example.com', docs: 'docs.example.com' },
+  domains: { web: 'template.zynth.dev' },
   auth: { enableGoogleOAuth: true },
+  nav: [
+    { label: 'Home', href: '/', newTab: false },
+    { label: 'Docs', href: '/docs', newTab: true },
+  ],
   // ...
 }
 ```

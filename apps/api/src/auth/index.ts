@@ -29,7 +29,14 @@ function createAuth(env?: Env, cf?: IncomingRequestCfProperties) {
   const enableMagicLink = config.auth.enableMagicLink
 
   return betterAuth({
+    baseURL: config.webUrl,
     basePath: '/auth', // Web worker strips /api, so we get /auth here
+    advanced: {
+      crossSubDomainCookies: {
+        enabled: true,
+        domain: '.zynth.dev',
+      },
+    },
     session: {
       expiresIn: 60 * 60 * 24 * 7, // 7 days (in seconds)
       updateAge: 60 * 60 * 24, // Update session if older than 1 day
@@ -109,7 +116,7 @@ function createAuth(env?: Env, cf?: IncomingRequestCfProperties) {
               subject: `Welcome to ${config.appName}!`,
               react: WelcomeEmail({
                 userName: user.name || 'there',
-                dashboardUrl: `https://${config.domains[0]}/dashboard`,
+                dashboardUrl: `https://${config.domains.web}/dashboard`,
               }),
             })
           },

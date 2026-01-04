@@ -8,12 +8,27 @@ const app = await alchemy(`${config.appName}-docs`, {
 
 export const docs = await Vite('docs', {
   name: `${config.appName}-docs`,
+  entrypoint: './worker.ts',
   assets: 'dist/client',
-  domains: [config.domains.docs],
-  placement: {
-    mode: 'smart',
-  },
+  routes: [
+    {
+      pattern: `${config.domains.web}/docs`,
+      adopt: true,
+    },
+    {
+      pattern: `${config.domains.web}/docs/*`,
+      adopt: true,
+    },
+    // TanStack Start server function cache (basepath workaround)
+    {
+      pattern: `${config.domains.web}/__tsr/*`,
+      adopt: true,
+    },
+  ],
   url: false,
+  build: {
+    command: 'bun run build',
+  },
 })
 
 console.log({ url: docs.url })

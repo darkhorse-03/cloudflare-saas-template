@@ -6,6 +6,7 @@ import tailwindcss from '@tailwindcss/vite'
 import mdx from 'fumadocs-mdx/vite'
 
 export default defineConfig({
+  base: '/docs/',
   server: {
     port: 3000,
   },
@@ -21,17 +22,28 @@ export default defineConfig({
         prerender: {
           outputPath: 'index.html',
           enabled: true,
-          crawlLinks: true,
+          crawlLinks: false,
         },
       },
 
       pages: [
-        {
-          path: '/',
-        },
-        {
-          path: '/api/search',
-        },
+        // Root
+        { path: '/' },
+        { path: '/api/search' },
+        // Doc pages
+        { path: '/features' },
+        { path: '/getting-started' },
+        { path: '/installation' },
+        // Guides
+        { path: '/guides/api-routes' },
+        { path: '/guides/auth' },
+        { path: '/guides/database' },
+        { path: '/guides/deployment' },
+        { path: '/guides/pages' },
+        // Reference
+        { path: '/reference/commands' },
+        { path: '/reference/configuration' },
+        { path: '/reference/project-structure' },
       ],
     }),
     react(),

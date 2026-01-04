@@ -10,14 +10,13 @@ description: Application and environment configuration
 ```ts
 export const config = {
   appName: 'zynth',
-  tagline: 'Ship in 60 Seconds',
+  tagline: 'Ship in 60 Seconds, Not 3 Days',
   description: 'Cloudflare Workers fullstack template',
 
   domains: {
-    web: 'example.com',
-    docs: 'docs.example.com',
+    web: 'template.zynth.dev',
   },
-  webUrl: 'https://example.com',
+  webUrl: 'https://template.zynth.dev',
 
   auth: {
     enableMagicLink: true,
@@ -25,20 +24,44 @@ export const config = {
     enableGitHubOAuth: false,
   },
 
+  // Public navigation (Header component)
   nav: [
-    { label: 'Home', href: '/' },
-    { label: 'Features', href: '/features' },
+    { label: 'Home', href: '/', newTab: false },
+    { label: 'Docs', href: '/docs', newTab: true },
   ],
 
   // ...
 }
 ```
 
+### Navigation `newTab` Property
+
+The `newTab` property controls how links are rendered in the header:
+
+| Value | Behavior |
+|-------|----------|
+| `false` | Uses TanStack Router `<Link>` for client-side navigation |
+| `true` | Uses `<a target="_blank">` for external/separate-worker links |
+
+Use `newTab: true` for:
+- Links to different workers (e.g., docs served by a separate worker)
+- External URLs
+- Links that should open in a new browser tab
+
 <Callout type="warn">
 Everything in this file is public. Never put API keys or secrets here.
 </Callout>
 
 ## Environment Variables
+
+### Deployment
+
+```bash
+# Required for deployment
+CLOUDFLARE_API_TOKEN=xxx    # API token with Workers, KV, D1, DNS permissions
+CLOUDFLARE_ZONE_ID=xxx      # Zone ID from Cloudflare Dashboard → your-domain → Overview
+ALCHEMY_PASSWORD=xxx        # Password for Alchemy state encryption
+```
 
 ### API (`apps/api/.dev.vars`)
 
@@ -71,42 +94,43 @@ Access in code:
 const apiUrl = import.meta.env.VITE_API_URL
 ```
 
-## Wrangler Configuration
+## Alchemy Configuration
 
-### API Worker (`apps/api/wrangler.toml`)
+This project uses [Alchemy](https://alchemy.run) for infrastructure-as-code deployment. Each app has an `alchemy.run.ts` file.
 
-```toml
-name = "my-app-api"
-main = "src/index.ts"
-compatibility_date = "2024-01-01"
+### Example (`apps/web/alchemy.run.ts`)
 
-# D1 Database
-[[d1_databases]]
-binding = "DB"
-database_name = "my-app-db"
-database_id = "xxx"  # Generated on first deploy
+```ts
+import { DnsRecords, Vite } from 'alchemy/cloudflare'
 
-# KV for rate limiting
-[[kv_namespaces]]
-binding = "KV"
-id = "xxx"  # Generated on first deploy
+// Create DNS record
+await DnsRecords('web-dns', {
+  zoneId: process.env.CLOUDFLARE_ZONE_ID,
+  records: [
+    {
+      type: 'A',
+      name: 'subdomain',
+      content: '192.0.2.1',  // Proxied - actual IP doesn't matter
+      proxied: true,
+      ttl: 1,
+    },
+  ],
+})
 
-# Environment variables
-[vars]
-ENVIRONMENT = "production"
+// Deploy Vite app
+export const web = await Vite('web', {
+  name: 'my-app-web',
+  entrypoint: './worker.ts',
+  routes: [
+    { pattern: 'yourdomain.com' },
+    { pattern: 'yourdomain.com/*' },
+  ],
+})
 ```
 
-### Preview Environment
-
-```toml
-[env.preview]
-name = "my-app-api-preview"
-
-[[env.preview.d1_databases]]
-binding = "DB"
-database_name = "my-app-db-preview"
-database_id = "xxx"
-```
+<Callout type="info">
+See the [Deployment Guide](/guides/deployment) for complete deployment instructions.
+</Callout>
 
 ## Turborepo
 

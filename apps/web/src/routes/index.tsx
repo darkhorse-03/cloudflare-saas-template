@@ -1,4 +1,5 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, redirect } from '@tanstack/react-router'
+import { z } from 'zod'
 import { AICommandsDemo } from '@/components/demos/ai-commands-demo'
 import { AuthFlowDemo } from '@/components/demos/auth-flow-demo'
 import { DatabaseCRUDDemo } from '@/components/demos/database-crud-demo'
@@ -9,8 +10,21 @@ import { CTASection } from '@/components/marketing/cta-section'
 import { HeroSection } from '@/components/marketing/hero-section'
 import { TimelineDemo } from '@/components/marketing/timeline-demo'
 import { ServiceBindingCard } from '@/components/service-binding-card'
+import { authClient } from '@/lib/auth-client'
 
 export const Route = createFileRoute('/')({
+  validateSearch: z.object({
+    redirect: z.string().optional(),
+  }),
+  beforeLoad: async ({ search }) => {
+    // Handle OAuth callback redirect
+    if (search.redirect) {
+      const { data: session } = await authClient.getSession()
+      if (session) {
+        throw redirect({ to: search.redirect })
+      }
+    }
+  },
   component: HomePage,
 })
 

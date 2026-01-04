@@ -43,8 +43,8 @@ export const config = {
   // Public/Marketing navigation links (Header component only)
   // Note: Dashboard sidebar navigation is defined separately in dashboard-sidebar.tsx
   nav: [
-    { label: 'Home', href: '/' },
-    { label: 'Docs', href: '/docs' },
+    { label: 'Home', href: '/', newTab: false },
+    { label: 'Docs', href: '/docs', newTab: true },
   ],
 
   // Public footer links

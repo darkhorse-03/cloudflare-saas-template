@@ -20,12 +20,19 @@
 │   │   │   ├── db/              # Database schemas and setup
 │   │   │   └── middleware/      # Auth and other middleware
 │   │   └── drizzle/             # Database migrations
-│   └── web/          # React frontend
-│       └── src/
-│           ├── routes/          # TanStack Router pages
-│           ├── components/      # React components
-│           ├── hooks/           # React Query hooks
-│           └── lib/             # Utilities
+│   ├── web/          # React frontend
+│   │   └── src/
+│   │       ├── routes/          # TanStack Router pages
+│   │       ├── components/      # React components
+│   │       ├── hooks/           # React Query hooks
+│   │       └── lib/             # Utilities
+│   └── docs/         # Documentation site (Fumadocs + TanStack Start)
+│       ├── content/docs/        # MDX documentation files
+│       ├── src/
+│       │   ├── routes/          # TanStack Router pages
+│       │   ├── components/      # Doc-specific components
+│       │   └── lib/             # Utilities
+│       └── worker.ts            # Cloudflare Worker entry
 ├── packages/
 │   ├── config/       # Shared configuration (public constants)
 │   ├── shared/       # Shared types and validation schemas
@@ -166,10 +173,13 @@ Simple top navigation bar for public pages:
 // packages/config/src/index.ts
 nav: [
   // ... existing items
-  { label: 'Pricing', href: '/pricing' },
+  { label: 'Pricing', href: '/pricing', newTab: false },
+  { label: 'Docs', href: '/docs', newTab: true },  // Opens in new tab
 ]
 ```
 2. Create route: `apps/web/src/routes/pricing.tsx`
+
+**Note:** Use `newTab: true` for links served by different workers (e.g., docs) or external URLs. Use `newTab: false` for internal app routes.
 
 ### 2. Dashboard Navigation (Sidebar)
 **Location:** `apps/web/src/components/dashboard-sidebar.tsx`
@@ -250,3 +260,55 @@ Use these commands to scaffold new code following established patterns:
   - See: `.claude/commands/new-form.md`
 
 **Pattern:** All commands follow feature-based organization and separation of concerns
+
+## Deployment (Alchemy)
+
+This project uses [Alchemy](https://alchemy.run) for infrastructure-as-code deployment to Cloudflare.
+
+### Environment Variables Required
+```bash
+CLOUDFLARE_API_TOKEN    # API token with Workers, KV, D1, DNS permissions
+CLOUDFLARE_ZONE_ID      # Zone ID from Cloudflare Dashboard → your-domain → Overview
+ALCHEMY_PASSWORD        # Password for Alchemy state encryption
+```
+
+### Multi-Worker Architecture
+- **Web** (`template.zynth.dev`): Main React app
+- **API** (`template.zynth.dev/api/*`): Hono API worker (via service binding)
+- **Docs** (`template.zynth.dev/docs/*`): Documentation site (separate worker)
+
+### Docs Deployment Notes
+The docs app is deployed as a separate Cloudflare Worker with its own routes:
+- Routes: `template.zynth.dev/docs` and `template.zynth.dev/docs/*`
+- Worker strips `/docs` prefix before serving assets
+- Search index is prerendered and served as `/docs/api/search.json`
+- All doc pages must be listed in `vite.config.ts` pages array for prerendering (TanStack Start SPA mode limitation)
+
+### Adding DNS Records via Alchemy
+```ts
+// alchemy.run.ts
+import { DnsRecords } from 'alchemy/cloudflare'
+
+await DnsRecords('my-dns', {
+  zoneId: process.env.CLOUDFLARE_ZONE_ID,
+  records: [
+    {
+      type: 'A',
+      name: 'subdomain',
+      content: '192.0.2.1',  // Documentation IP (proxied, so actual IP doesn't matter)
+      proxied: true,
+      ttl: 1,
+    },
+  ],
+})
+```
+
+## UI Components
+
+### Sheet (showClose prop)
+The `SheetContent` component supports a `showClose` prop to control the X button visibility:
+```tsx
+<SheetContent showClose={false}>  {/* Hides the close button */}
+  {children}
+</SheetContent>
+```

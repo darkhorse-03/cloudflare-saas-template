@@ -23,18 +23,30 @@ export function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden items-center gap-1 md:flex">
-            {config.nav.map((item) => (
-              <Link
-                activeProps={{
-                  className: 'text-foreground bg-accent',
-                }}
-                className="rounded-md px-3 py-2 font-medium text-muted-foreground text-sm transition-colors hover:bg-accent hover:text-foreground"
-                key={item.href}
-                to={item.href}
-              >
-                {item.label}
-              </Link>
-            ))}
+            {config.nav.map((item) =>
+              item.newTab ? (
+                <a
+                  className="rounded-md px-3 py-2 font-medium text-muted-foreground text-sm transition-colors hover:bg-accent hover:text-foreground"
+                  href={item.href}
+                  key={item.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {item.label}
+                </a>
+              ) : (
+                <Link
+                  activeProps={{
+                    className: 'text-foreground bg-accent',
+                  }}
+                  className="rounded-md px-3 py-2 font-medium text-muted-foreground text-sm transition-colors hover:bg-accent hover:text-foreground"
+                  key={item.href}
+                  to={item.href}
+                >
+                  {item.label}
+                </Link>
+              ),
+            )}
             <div className="ml-2 flex items-center gap-2 border-l pl-2">
               <ThemeToggle />
               <UserButton />
@@ -56,6 +68,7 @@ export function Header() {
                   event.preventDefault()
                   document.body.style.pointerEvents = ''
                 }}
+                showClose={false}
                 side="right"
               >
                 <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
@@ -66,19 +79,32 @@ export function Header() {
                 <div className="flex-1 overflow-y-auto">
                   <div className="px-2 py-4">
                     <nav className="flex flex-col gap-1">
-                      {config.nav.map((item) => (
-                        <Link
-                          activeProps={{
-                            className: 'text-foreground bg-accent',
-                          }}
-                          className="flex items-center rounded-md px-3 py-3 font-medium text-base text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-                          key={item.href}
-                          onClick={() => setOpen(false)}
-                          to={item.href}
-                        >
-                          {item.label}
-                        </Link>
-                      ))}
+                      {config.nav.map((item) =>
+                        item.newTab ? (
+                          <a
+                            className="flex items-center rounded-md px-3 py-3 font-medium text-base text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                            href={item.href}
+                            key={item.href}
+                            onClick={() => setOpen(false)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {item.label}
+                          </a>
+                        ) : (
+                          <Link
+                            activeProps={{
+                              className: 'text-foreground bg-accent',
+                            }}
+                            className="flex items-center rounded-md px-3 py-3 font-medium text-base text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                            key={item.href}
+                            onClick={() => setOpen(false)}
+                            to={item.href}
+                          >
+                            {item.label}
+                          </Link>
+                        ),
+                      )}
                     </nav>
                   </div>
                 </div>

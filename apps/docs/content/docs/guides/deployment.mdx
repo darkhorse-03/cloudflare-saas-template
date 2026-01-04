@@ -1,14 +1,34 @@
 ---
 title: Deployment
-description: Deploy to Cloudflare Workers and Pages
+description: Deploy to Cloudflare Workers with Alchemy
 ---
 
-Zynth deploys to Cloudflare's edge network with a single command.
+Zynth uses [Alchemy](https://alchemy.run) for infrastructure-as-code deployment to Cloudflare's edge network.
 
 ## Prerequisites
 
 1. [Cloudflare account](https://dash.cloudflare.com/sign-up)
-2. Wrangler authenticated: `bunx wrangler login`
+2. API token with required permissions
+3. Environment variables configured
+
+## Environment Variables
+
+```bash
+# Required for deployment
+CLOUDFLARE_API_TOKEN=xxx    # API token with Workers, KV, D1, DNS permissions
+CLOUDFLARE_ZONE_ID=xxx      # Zone ID from Cloudflare Dashboard → your-domain → Overview
+ALCHEMY_PASSWORD=xxx        # Password for Alchemy state encryption
+```
+
+### API Token Permissions
+
+Create an API token at **Cloudflare Dashboard → My Profile → API Tokens** with:
+
+- **Account → Workers Scripts → Edit**
+- **Account → Workers KV Storage → Edit**
+- **Account → D1 → Edit**
+- **Zone → DNS → Edit** (for custom domains)
+- **Zone → Zone → Read**
 
 ## Deploy
 
@@ -16,24 +36,116 @@ Zynth deploys to Cloudflare's edge network with a single command.
 bun run deploy
 ```
 
-This deploys:
-- **API** to Cloudflare Workers
-- **Web** to Cloudflare Pages
+This deploys all apps using their respective `alchemy.run.ts` configurations.
+
+## Architecture
+
+Zynth uses a multi-worker architecture:
+
+| App | Route | Description |
+|-----|-------|-------------|
+| **Web** | `yourdomain.com` | Main React app |
+| **API** | `yourdomain.com/api/*` | Hono API (via service binding) |
+| **Docs** | `yourdomain.com/docs/*` | Documentation site |
+
+### Service Bindings
+
+The web worker proxies requests to other workers:
+
+```ts title="apps/web/worker.ts"
+// /api/* → API worker
+if (url.pathname.startsWith('/api/')) {
+  return env.api.fetch(new Request(apiUrl, request))
+}
+```
+
+## Alchemy Configuration
+
+Each app has an `alchemy.run.ts` file defining its infrastructure:
+
+```ts title="apps/web/alchemy.run.ts"
+import { DnsRecords, Vite } from 'alchemy/cloudflare'
+
+// Create DNS record
+await DnsRecords('web-dns', {
+  zoneId: process.env.CLOUDFLARE_ZONE_ID,
+  records: [
+    {
+      type: 'A',
+      name: 'subdomain',
+      content: '192.0.2.1',  // Proxied - actual IP doesn't matter
+      proxied: true,
+      ttl: 1,
+    },
+  ],
+})
+
+// Deploy Vite app
+export const web = await Vite('web', {
+  name: 'my-app-web',
+  entrypoint: './worker.ts',
+  bindings: { api },
+  routes: [
+    { pattern: 'yourdomain.com' },
+    { pattern: 'yourdomain.com/*' },
+  ],
+})
+```
+
+## Custom Domains
+
+### DNS Setup via Alchemy
+
+DNS records are managed in code via `DnsRecords`:
+
+```ts
+await DnsRecords('my-dns', {
+  zoneId: process.env.CLOUDFLARE_ZONE_ID,
+  records: [
+    {
+      type: 'A',
+      name: 'app',           // Creates app.yourdomain.com
+      content: '192.0.2.1',  // Documentation IP (proxied)
+      proxied: true,
+      ttl: 1,
+    },
+  ],
+})
+```
+
+<Callout type="info">
+When `proxied: true`, Cloudflare intercepts traffic and routes to your Worker. The actual IP address doesn't matter—`192.0.2.1` is a documentation IP that's never routed.
+</Callout>
+
+### Route Configuration
+
+Routes determine which Worker handles each URL pattern:
+
+```ts
+routes: [
+  { pattern: 'yourdomain.com/docs' },
+  { pattern: 'yourdomain.com/docs/*' },
+]
+```
+
+More specific routes take precedence over wildcards.
 
 ## First Deployment
 
-On first deploy, Cloudflare creates the D1 database and KV namespace automatically based on `wrangler.toml`.
+On first deploy:
 
-After deploying, run migrations on production:
+1. Alchemy creates the D1 database and KV namespace
+2. DNS records are provisioned
+3. Workers are deployed with routes
+
+After deploying, run migrations:
 
 ```bash
 cd apps/api
 bun run db:migrate:prod
 ```
 
-## Environment Variables
-
-### Production Secrets
+## Production Secrets
 
 Set secrets via Wrangler CLI:
 
@@ -46,76 +158,43 @@ bunx wrangler secret put BETTER_AUTH_SECRET
 # OAuth (if enabled)
 bunx wrangler secret put GOOGLE_CLIENT_ID
 bunx wrangler secret put GOOGLE_CLIENT_SECRET
-bunx wrangler secret put GITHUB_CLIENT_ID
-bunx wrangler secret put GITHUB_CLIENT_SECRET
 
 # Email (if enabled)
 bunx wrangler secret put RESEND_API_KEY
 ```
 
-### Web Environment
+## Docs Deployment
 
-For the frontend, set variables in Cloudflare Pages dashboard or `wrangler.toml`:
+The docs app has special considerations:
 
-```toml
-[vars]
-VITE_API_URL = "https://api.yourdomain.com"
+1. **Base path**: Built with `base: '/docs/'` in Vite config
+2. **Worker**: Strips `/docs` prefix before serving assets
+3. **Search**: Prerendered to `/docs/api/search.json`
+4. **Prerendering**: All pages must be listed in `vite.config.ts`
+
+```ts title="apps/docs/vite.config.ts"
+tanstackStart({
+  spa: {
+    enabled: true,
+    prerender: { enabled: true, crawlLinks: true },
+  },
+  pages: [
+    { path: '/' },
+    { path: '/api/search' },
+    { path: '/getting-started' },
+    // ... all doc pages
+  ],
+})
 ```
 
-## Custom Domains
-
-### API (Workers)
-
-1. Go to Workers & Pages > your-api > Settings > Domains
-2. Add custom domain (e.g., `api.yourdomain.com`)
-
-### Web (Pages)
-
-1. Go to Workers & Pages > your-web > Custom domains
-2. Add custom domain (e.g., `yourdomain.com`)
-
-## Configuration
-
-Deployment settings are in `wrangler.toml`:
-
-```toml title="apps/api/wrangler.toml"
-name = "my-app-api"
-compatibility_date = "2024-01-01"
-
-[[d1_databases]]
-binding = "DB"
-database_name = "my-app-db"
-database_id = "auto-generated-on-deploy"
-
-[[kv_namespaces]]
-binding = "KV"
-id = "auto-generated-on-deploy"
-```
-
-## Preview Deployments
-
-Deploy to a preview environment:
-
-```bash
-cd apps/api
-bunx wrangler deploy --env preview
-
-cd apps/web
-bunx wrangler pages deploy dist --branch preview
-```
-
-## Rollbacks
-
-Cloudflare keeps deployment history. To rollback:
-
-1. Go to Workers & Pages > your-app > Deployments
-2. Click on a previous deployment
-3. Click "Rollback to this deployment"
+<Callout type="warn">
+TanStack Start SPA mode requires all pages to be explicitly listed for prerendering. `crawlLinks` alone may not discover all pages.
+</Callout>
 
 ## Monitoring
 
-- **Logs**: Workers & Pages > your-app > Logs
-- **Analytics**: Workers & Pages > your-app > Analytics
+- **Logs**: Workers & Pages → your-app → Logs
+- **Analytics**: Workers & Pages → your-app → Analytics
 - **Errors**: Real-time error tracking in the dashboard
 
 ## CI/CD
@@ -139,6 +218,16 @@ jobs:
       - run: bun run deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
+          ALCHEMY_PASSWORD: ${{ secrets.ALCHEMY_PASSWORD }}
 ```
 
-Create an API token at Cloudflare dashboard > My Profile > API Tokens with "Edit Workers" permissions.
+## Rollbacks
+
+Cloudflare keeps deployment history. To rollback:
+
+1. Go to Workers & Pages → your-app → Deployments
+2. Click on a previous deployment
+3. Click "Rollback to this deployment"
+
+Or redeploy a previous git commit.
