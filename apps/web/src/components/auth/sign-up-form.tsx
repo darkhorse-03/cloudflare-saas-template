@@ -1,15 +1,18 @@
 import { useForm } from '@tanstack/react-form'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { signUp } from '@/lib/auth-client'
 import { signUpSchema } from '@/schemas/auth'
+import { Turnstile, type TurnstileRef, useTurnstileEnabled } from './turnstile'
 
 export function SignUpForm() {
   const [error, setError] = useState<string | null>(null)
   const [isPending, setIsPending] = useState(false)
+  const turnstileRef = useRef<TurnstileRef>(null)
+  const turnstileEnabled = useTurnstileEnabled()
 
   const form = useForm({
     defaultValues: {
@@ -21,14 +24,32 @@ export function SignUpForm() {
       setIsPending(true)
       setError(null)
 
-      const { error: signUpError } = await signUp.email({
-        email: value.email,
-        password: value.password,
-        name: value.name,
-      })
+      // Get captcha token if Turnstile is enabled
+      const captchaToken = turnstileRef.current?.getToken()
+      if (turnstileEnabled && !captchaToken) {
+        setError('Please complete the captcha verification')
+        setIsPending(false)
+        return
+      }
+
+      const { error: signUpError } = await signUp.email(
+        {
+          email: value.email,
+          password: value.password,
+          name: value.name,
+        },
+        captchaToken
+          ? {
+              headers: {
+                'x-captcha-response': captchaToken,
+              },
+            }
+          : undefined,
+      )
 
       if (signUpError) {
         setError(signUpError.message || 'Failed to sign up')
+        turnstileRef.current?.reset()
         setIsPending(false)
         return
       }
@@ -142,6 +163,8 @@ export function SignUpForm() {
       </form.Field>
 
       {error && <p className="text-destructive text-sm">{error}</p>}
+
+      <Turnstile ref={turnstileRef} />
 
       <form.Subscribe selector={(state) => [state.canSubmit, state.isSubmitting]}>
         {([canSubmit]) => (

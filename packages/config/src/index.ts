@@ -38,6 +38,9 @@ export const config = {
     enableMagicLink: true,
     enableGoogleOAuth: true,
     enableGitHubOAuth: false,
+    // Cloudflare Turnstile (bot protection)
+    // Get keys from: https://dash.cloudflare.com/turnstile
+    turnstileSiteKey: '', // Leave empty to disable
   },
 
   // Public/Marketing navigation links (Header component only)

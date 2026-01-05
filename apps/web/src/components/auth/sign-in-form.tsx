@@ -1,6 +1,6 @@
 import { useForm } from '@tanstack/react-form'
 import { useNavigate, useRouter } from '@tanstack/react-router'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label'
 import { authClient, signIn, useSession } from '@/lib/auth-client'
 import { signInSchema } from '@/schemas/auth'
 import { useAuthDialog } from './auth-dialog'
+import { Turnstile, type TurnstileRef, useTurnstileEnabled } from './turnstile'
 
 interface SignInFormProps {
   onForgotPassword?: () => void
@@ -18,6 +19,8 @@ export function SignInForm({ onForgotPassword, onMagicLink }: SignInFormProps) {
   const { closeDialog } = useAuthDialog()
   const [error, setError] = useState<string | null>(null)
   const [isPending, setIsPending] = useState(false)
+  const turnstileRef = useRef<TurnstileRef>(null)
+  const turnstileEnabled = useTurnstileEnabled()
 
   const navigate = useNavigate()
   const router = useRouter()
@@ -32,13 +35,31 @@ export function SignInForm({ onForgotPassword, onMagicLink }: SignInFormProps) {
       setIsPending(true)
       setError(null)
 
-      const { data, error: signInError } = await signIn.email({
-        email: value.email,
-        password: value.password,
-      })
+      // Get captcha token if Turnstile is enabled
+      const captchaToken = turnstileRef.current?.getToken()
+      if (turnstileEnabled && !captchaToken) {
+        setError('Please complete the captcha verification')
+        setIsPending(false)
+        return
+      }
+
+      const { data, error: signInError } = await signIn.email(
+        {
+          email: value.email,
+          password: value.password,
+        },
+        captchaToken
+          ? {
+              headers: {
+                'x-captcha-response': captchaToken,
+              },
+            }
+          : undefined,
+      )
 
       if (signInError) {
         setError(signInError.message || 'Failed to sign in')
+        turnstileRef.current?.reset()
         setIsPending(false)
         return
       }
@@ -122,6 +143,8 @@ export function SignInForm({ onForgotPassword, onMagicLink }: SignInFormProps) {
       </form.Field>
 
       {error && <p className="text-destructive text-sm">{error}</p>}
+
+      <Turnstile ref={turnstileRef} />
 
       <form.Subscribe selector={(state) => [state.canSubmit, state.isSubmitting]}>
         {([canSubmit]) => (

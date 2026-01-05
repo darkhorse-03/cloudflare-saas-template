@@ -6,7 +6,7 @@ import type {
 import { config } from '@repo/config'
 import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
-import { emailOTP, lastLoginMethod, magicLink } from 'better-auth/plugins'
+import { captcha, emailOTP, lastLoginMethod, magicLink } from 'better-auth/plugins'
 import { withCloudflare } from 'better-auth-cloudflare'
 import { getDb } from '@/db'
 import { createEmailService } from '@/lib/email'
@@ -123,6 +123,15 @@ function createAuth(env?: Env, cf?: IncomingRequestCfProperties) {
         }
       : undefined,
     plugins: [
+      // Cloudflare Turnstile bot protection (if configured)
+      ...(config.auth.turnstileSiteKey && env?.TURNSTILE_SECRET_KEY
+        ? [
+            captcha({
+              provider: 'cloudflare-turnstile',
+              secretKey: env.TURNSTILE_SECRET_KEY,
+            }),
+          ]
+        : []),
       lastLoginMethod({
         customResolveMethod: (ctx) => {
           // Track magic link authentication

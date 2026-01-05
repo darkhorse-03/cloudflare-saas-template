@@ -44,6 +44,10 @@ export const api = await Worker('worker', {
       GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
       GITHUB_CLIENT_SECRET: alchemy.secret(process.env.GITHUB_CLIENT_SECRET ?? ''),
     }),
+    // Cloudflare Turnstile bot protection (optional)
+    ...(process.env.TURNSTILE_SECRET_KEY && {
+      TURNSTILE_SECRET_KEY: alchemy.secret(process.env.TURNSTILE_SECRET_KEY),
+    }),
   },
   compatibilityFlags: ['nodejs_compat'],
   url: false,

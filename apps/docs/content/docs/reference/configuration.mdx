@@ -22,6 +22,7 @@ export const config = {
     enableMagicLink: true,
     enableGoogleOAuth: true,
     enableGitHubOAuth: false,
+    turnstileSiteKey: '', // Cloudflare Turnstile (leave empty to disable)
   },
 
   // Public navigation (Header component)
@@ -54,44 +55,45 @@ Everything in this file is public. Never put API keys or secrets here.
 
 ## Environment Variables
 
-### Deployment
+All environment variables are configured in the root `.env` file. Copy `.env.example` to get started:
 
 ```bash
-# Required for deployment
-CLOUDFLARE_API_TOKEN=xxx    # API token with Workers, KV, D1, DNS permissions
-CLOUDFLARE_ZONE_ID=xxx      # Zone ID from Cloudflare Dashboard → your-domain → Overview
-ALCHEMY_PASSWORD=xxx        # Password for Alchemy state encryption
+cp .env.example .env
 ```
 
-### API (`apps/api/.dev.vars`)
+### Required for Deployment
 
 ```bash
-# Required
-BETTER_AUTH_SECRET=your-secret-key
+CLOUDFLARE_API_TOKEN=       # API token with Workers, KV, D1, DNS permissions
+CLOUDFLARE_ZONE_ID=         # Zone ID from Cloudflare Dashboard → your-domain → Overview
+ALCHEMY_PASSWORD=           # Password for Alchemy state encryption (generate: openssl rand -base64 32)
+```
 
-# OAuth (optional)
+### Email Service
+
+```bash
+RESEND_API_KEY=             # Get from https://resend.com/api-keys
+FROM_EMAIL=noreply@yourdomain.com
+```
+
+### OAuth Providers (Optional)
+
+```bash
+# Google: https://console.cloud.google.com/apis/credentials
 GOOGLE_CLIENT_ID=
 GOOGLE_CLIENT_SECRET=
+
+# GitHub: https://github.com/settings/developers
 GITHUB_CLIENT_ID=
 GITHUB_CLIENT_SECRET=
-
-# Email service (optional)
-RESEND_API_KEY=
 ```
 
-### Web
-
-Frontend uses `VITE_` prefixed variables:
+### Bot Protection (Optional)
 
 ```bash
-# apps/web/.env
-VITE_API_URL=http://localhost:8787
-```
-
-Access in code:
-
-```ts
-const apiUrl = import.meta.env.VITE_API_URL
+# Cloudflare Turnstile: https://dash.cloudflare.com/turnstile
+# Site key goes in packages/config/src/index.ts (public)
+TURNSTILE_SECRET_KEY=
 ```
 
 ## Alchemy Configuration

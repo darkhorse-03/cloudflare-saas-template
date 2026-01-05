@@ -1,11 +1,12 @@
 import { useForm } from '@tanstack/react-form'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { signIn } from '@/lib/auth-client'
 import { magicLinkSchema } from '@/schemas/auth'
+import { Turnstile, type TurnstileRef, useTurnstileEnabled } from './turnstile'
 
 interface MagicLinkFormProps {
   onBack: () => void
@@ -16,6 +17,8 @@ export function MagicLinkForm({ onBack }: MagicLinkFormProps) {
   const [isPending, setIsPending] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
   const [sentEmail, setSentEmail] = useState('')
+  const turnstileRef = useRef<TurnstileRef>(null)
+  const turnstileEnabled = useTurnstileEnabled()
 
   const form = useForm({
     defaultValues: {
@@ -25,16 +28,34 @@ export function MagicLinkForm({ onBack }: MagicLinkFormProps) {
       setIsPending(true)
       setError(null)
 
-      const { error: sendError } = await signIn.magicLink({
-        email: value.email,
-        callbackURL: '/dashboard',
-      })
+      // Get captcha token if Turnstile is enabled
+      const captchaToken = turnstileRef.current?.getToken()
+      if (turnstileEnabled && !captchaToken) {
+        setError('Please complete the captcha verification')
+        setIsPending(false)
+        return
+      }
+
+      const { error: sendError } = await signIn.magicLink(
+        {
+          email: value.email,
+          callbackURL: '/dashboard',
+        },
+        captchaToken
+          ? {
+              headers: {
+                'x-captcha-response': captchaToken,
+              },
+            }
+          : undefined,
+      )
 
       if (sendError) {
         toast.error('Failed to send magic link', {
           description: sendError.message,
         })
         setError(sendError.message || 'Failed to send magic link')
+        turnstileRef.current?.reset()
         setIsPending(false)
         return
       }
@@ -127,6 +148,8 @@ export function MagicLinkForm({ onBack }: MagicLinkFormProps) {
       </form.Field>
 
       {error && <p className="text-destructive text-sm">{error}</p>}
+
+      <Turnstile ref={turnstileRef} />
 
       <form.Subscribe selector={(state) => [state.canSubmit, state.isSubmitting]}>
         {([canSubmit]) => (
