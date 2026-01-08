@@ -30,6 +30,8 @@
 ## 🚨 Critical (Production Blockers)
 
 - [X] CRITICAL - No custom backend call from url (we do service bindings) we will always use rpc calls, or workers.ts to route to the correct endpoint. add instructions to CLAUDE.md CLAUDE.md
+- [ ] default dummy email setup to sign in 
+- [ ] cloudflare token collides with alchemy setup, so our token shoudl have permissions to create the db, kv, and r2 bucket, etc. need to add in docs
 
 ### 1. Email Setup
 - [X] Choose provider: Resend (easy) OR Cloudflare Email Routing (free, needs domain) (We went with resend)
@@ -42,11 +44,11 @@
 
 
 ### 3. Environment & Security
-- [ ] Create `.env.example` with all required vars
-- [ ] Document secret management (Cloudflare secrets)
-- [ ] CORS middleware configuration
-- [ ] Security headers (Helmet for Hono)
-- [ ] Cloudflare Turnstile (bot protection for signup/login)
+- [X] Create `.env.example` with all required vars
+- [X] Document secret management (Cloudflare secrets)
+- [X] CORS middleware configuration
+- [X] Security headers (Helmet for Hono)
+- [X] Cloudflare Turnstile (bot protection for signup/login)
 - [ ] Rate limiting for general API endpoints (Cloudflare Rate Limiting API)
 - [ ] API key/token management system
 

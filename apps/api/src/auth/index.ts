@@ -31,10 +31,11 @@ function createAuth(env?: Env, cf?: IncomingRequestCfProperties) {
   return betterAuth({
     baseURL: config.webUrl,
     basePath: '/auth', // Web worker strips /api, so we get /auth here
+    trustedOrigins: ['http://localhost:5174', 'http://localhost:8787'], // Dev origins
     advanced: {
       crossSubDomainCookies: {
         enabled: true,
-        domain: '.zynth.dev',
+        domain: `.${config.domains.web.split('.').slice(-2).join('.')}`, // Extract root domain
       },
     },
     session: {

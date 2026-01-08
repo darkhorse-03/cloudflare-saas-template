@@ -1,7 +1,7 @@
 import path from 'node:path'
 import { config } from '@repo/config'
 import alchemy from 'alchemy'
-import { D1Database, KVNamespace, Worker } from 'alchemy/cloudflare'
+import { D1Database, KVNamespace, R2Bucket, Worker } from 'alchemy/cloudflare'
 
 if (!process.env.RESEND_API_KEY) {
   throw new Error('RESEND_API_KEY is not set')
@@ -26,6 +26,14 @@ const kv = await KVNamespace('kv', {
   adopt: true,
 })
 
+// R2 storage bucket (optional - only created if storage is enabled)
+const r2 = config.storage.enabled
+  ? await R2Bucket('storage', {
+      name: `${config.appName}-storage`,
+      adopt: true,
+    })
+  : null
+
 export const api = await Worker('worker', {
   name: `${config.appName}-api`,
   entrypoint: path.join(import.meta.dirname, 'src', 'index.ts'),
@@ -48,6 +56,8 @@ export const api = await Worker('worker', {
     ...(process.env.TURNSTILE_SECRET_KEY && {
       TURNSTILE_SECRET_KEY: alchemy.secret(process.env.TURNSTILE_SECRET_KEY),
     }),
+    // R2 storage (optional)
+    ...(r2 && { R2: r2 }),
   },
   compatibilityFlags: ['nodejs_compat'],
   url: false,

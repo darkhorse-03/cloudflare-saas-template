@@ -3,6 +3,7 @@ import { Link, useNavigate, useRouterState } from '@tanstack/react-router'
 import {
   BarChart3,
   ChevronUp,
+  HardDrive,
   Home,
   LogOut,
   Moon,
@@ -58,6 +59,15 @@ const navItems = [
     url: '/dashboard/items',
     icon: Package,
   },
+  ...(config.storage.enabled
+    ? [
+        {
+          title: 'Storage',
+          url: '/dashboard/storage',
+          icon: HardDrive,
+        },
+      ]
+    : []),
 ]
 
 export function DashboardSidebar() {

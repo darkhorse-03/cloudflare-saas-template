@@ -9,6 +9,7 @@ import { authMiddleware } from '@/middleware/auth'
 import { itemsRoutes } from '@/routes/demo/items'
 import { preferencesRoutes } from '@/routes/demo/preferences'
 import { todosRoutes } from '@/routes/demo/todos'
+import { storageRoutes } from '@/routes/storage'
 import { logger } from 'hono/logger'
 
 const app = new Hono<AppContext>()
@@ -49,7 +50,7 @@ app.use('/*', authMiddleware)
 
 // Auth routes - handle all Better Auth endpoints
 // Note: /api prefix is stripped by the web worker before reaching here
-app.on(['POST', 'GET'], '/auth/**', (c) => {
+app.all('/auth/*', (c) => {
   const auth = c.get('auth')
   return auth.handler(c.req.raw)
 })
@@ -79,6 +80,8 @@ const routes = app
   .route('/demo/todos', todosRoutes)
   .route('/demo/items', itemsRoutes)
   .route('/demo/preferences', preferencesRoutes)
+  // Storage routes (R2 file uploads)
+  .route('/storage', storageRoutes)
 
 export type AppType = typeof routes
 export default app

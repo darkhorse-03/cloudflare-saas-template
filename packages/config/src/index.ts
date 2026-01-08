@@ -43,6 +43,20 @@ export const config = {
     turnstileSiteKey: '', // Leave empty to disable
   },
 
+  // Storage configuration (Cloudflare R2 + Images)
+  // Set enabled: true and configure R2 bucket to activate
+  storage: {
+    enabled: true,
+    // General upload limits
+    maxFileSize: 10 * 1024 * 1024, // 10MB default
+    allowedMimeTypes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'application/pdf'],
+    // Avatar-specific settings
+    avatars: {
+      maxSize: 2 * 1024 * 1024, // 2MB
+      allowedTypes: ['image/jpeg', 'image/png', 'image/webp'],
+    },
+  },
+
   // Public/Marketing navigation links (Header component only)
   // Note: Dashboard sidebar navigation is defined separately in dashboard-sidebar.tsx
   nav: [
@@ -88,12 +102,14 @@ export const config = {
           'Form validation',
           'Protected routes',
           'Rate limiting',
+          'Bot protection',
         ],
         tasksWith: [
           'Better Auth pre-built',
           'Forms ready',
           'Sessions working',
           'Rate limiting configured',
+          'Bot protection ready',
         ],
         quoteWithout: '"Auth is a nightmare"',
         quoteWith: '"Already shipping"',
