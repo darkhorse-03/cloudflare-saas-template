@@ -30,7 +30,7 @@
 ## 🚨 Critical (Production Blockers)
 
 - [X] CRITICAL - No custom backend call from url (we do service bindings) we will always use rpc calls, or workers.ts to route to the correct endpoint. add instructions to CLAUDE.md CLAUDE.md
-- [ ] default dummy email setup to sign in 
+- [X] default dummy email setup to sign in (POST /api/seed/test-user) 
 - [ ] cloudflare token collides with alchemy setup, so our token shoudl have permissions to create the db, kv, and r2 bucket, etc. need to add in docs
 
 ### 1. Email Setup
@@ -64,13 +64,13 @@
 ## 🎯 High Priority (Core Features)
 
 ### 5. Storage (Cloudflare R2)
-- [ ] R2 bucket setup with Alchemy
-- [ ] File upload API endpoint
-- [ ] Cloudflare Images integration (on-the-fly optimization, resize, WebP conversion)
-- [ ] Avatar upload functionality
-- [ ] Signed URL generation (pre-signed uploads/downloads)
-- [ ] File type validation & size limits
-- [ ] Multipart upload for large files
+- [X] R2 bucket setup with Alchemy
+- [X] File upload API endpoint
+- [ ] Cloudflare Images integration (on-the-fly optimization, resize, WebP conversion) - *nice to have*
+- [X] Avatar upload functionality
+- [ ] Signed URL generation (pre-signed uploads/downloads) - *nice to have, for large files*
+- [X] File type validation & size limits
+- [ ] Multipart upload for large files - *nice to have*
 
 ### 6. Payments (Stripe)
 - [ ] Stripe integration

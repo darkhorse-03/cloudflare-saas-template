@@ -5,6 +5,23 @@ description: User authentication with Better Auth
 
 Zynth uses Better Auth for authentication. It supports email/password, magic links, OTP, and OAuth providers.
 
+## Test User (Development)
+
+For quick development without email setup, create a test user:
+
+```bash
+curl -X POST http://localhost:5173/api/seed/test-user
+```
+
+This creates a verified user you can sign in with immediately:
+
+| Field    | Value              |
+|----------|-------------------|
+| Email    | `test@example.com` |
+| Password | `password123`      |
+
+The endpoint is idempotent - safe to call multiple times.
+
 ## Frontend Authentication
 
 ### Sign In
@@ -92,7 +109,7 @@ auth: {
 }
 ```
 
-Add credentials to `apps/api/.dev.vars`:
+Add credentials to `.env` in your project root:
 
 ```bash
 GOOGLE_CLIENT_ID=your-client-id
@@ -164,14 +181,14 @@ export function useRequireAuth() {
 
 ## Email Configuration
 
-For verification emails, magic links, and OTP, configure Resend:
+For verification emails, magic links, and OTP, configure Resend in `.env`:
 
 ```bash
-# apps/api/.dev.vars
 RESEND_API_KEY=re_xxxxx
+FROM_EMAIL=noreply@yourdomain.com
 ```
 
-If no email service is configured, email verification is disabled automatically.
+If no email service is configured, email verification is disabled automatically. Use the [test user](#test-user-development) for development without email.
 
 ## Session Configuration
 

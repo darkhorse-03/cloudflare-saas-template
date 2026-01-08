@@ -9,6 +9,7 @@ import { authMiddleware } from '@/middleware/auth'
 import { itemsRoutes } from '@/routes/demo/items'
 import { preferencesRoutes } from '@/routes/demo/preferences'
 import { todosRoutes } from '@/routes/demo/todos'
+import { seedRoutes } from '@/routes/seed'
 import { storageRoutes } from '@/routes/storage'
 import { logger } from 'hono/logger'
 
@@ -82,6 +83,8 @@ const routes = app
   .route('/demo/preferences', preferencesRoutes)
   // Storage routes (R2 file uploads)
   .route('/storage', storageRoutes)
+  // ⚠️  Seed routes - REMOVE BEFORE PRODUCTION DEPLOYMENT
+  .route('/seed', seedRoutes)
 
 export type AppType = typeof routes
 export default app

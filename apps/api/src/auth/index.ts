@@ -31,7 +31,7 @@ function createAuth(env?: Env, cf?: IncomingRequestCfProperties) {
   return betterAuth({
     baseURL: config.webUrl,
     basePath: '/auth', // Web worker strips /api, so we get /auth here
-    trustedOrigins: ['http://localhost:5174', 'http://localhost:8787'], // Dev origins
+    trustedOrigins: ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:8787'], // Dev origins
     advanced: {
       crossSubDomainCookies: {
         enabled: true,
