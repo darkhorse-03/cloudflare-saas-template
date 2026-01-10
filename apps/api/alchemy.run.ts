@@ -58,6 +58,11 @@ export const api = await Worker('worker', {
     }),
     // R2 storage (optional)
     ...(r2 && { R2: r2 }),
+    // Polar.sh payments (optional)
+    ...(process.env.POLAR_ACCESS_TOKEN && {
+      POLAR_ACCESS_TOKEN: alchemy.secret(process.env.POLAR_ACCESS_TOKEN),
+      POLAR_WEBHOOK_SECRET: alchemy.secret(process.env.POLAR_WEBHOOK_SECRET ?? ''),
+    }),
   },
   compatibilityFlags: ['nodejs_compat'],
   url: false,

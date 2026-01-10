@@ -15,6 +15,20 @@
       "when": 1766691630742,
       "tag": "0001_flippant_butterfly",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1767940078979,
+      "tag": "0002_romantic_tana_nile",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1768046155473,
+      "tag": "0003_sleepy_toad_men",
+      "breakpoints": true
     }
   ]
 }

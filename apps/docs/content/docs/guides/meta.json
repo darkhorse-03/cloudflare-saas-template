@@ -1,4 +1,12 @@
 {
   "title": "Guides",
-  "pages": ["api-routes", "pages", "database", "auth", "deployment"]
+  "pages": [
+    "api-routes",
+    "pages",
+    "database",
+    "auth",
+    "storage",
+    "payments",
+    "deployment"
+  ]
 }

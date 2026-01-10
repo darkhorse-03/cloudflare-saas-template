@@ -3,6 +3,7 @@ import { Link, useNavigate, useRouterState } from '@tanstack/react-router'
 import {
   BarChart3,
   ChevronUp,
+  CreditCard,
   HardDrive,
   Home,
   LogOut,
@@ -65,6 +66,15 @@ const navItems = [
           title: 'Storage',
           url: '/dashboard/storage',
           icon: HardDrive,
+        },
+      ]
+    : []),
+  ...(config.payments.enabled
+    ? [
+        {
+          title: 'Billing',
+          url: '/dashboard/billing',
+          icon: CreditCard,
         },
       ]
     : []),

@@ -16,7 +16,7 @@ interface SignInFormProps {
 }
 
 export function SignInForm({ onForgotPassword, onMagicLink }: SignInFormProps) {
-  const { closeDialog } = useAuthDialog()
+  const { closeDialog, onSuccess, redirectTo } = useAuthDialog()
   const [error, setError] = useState<string | null>(null)
   const [isPending, setIsPending] = useState(false)
   const turnstileRef = useRef<TurnstileRef>(null)
@@ -68,7 +68,11 @@ export function SignInForm({ onForgotPassword, onMagicLink }: SignInFormProps) {
         closeDialog()
         await session.refetch()
         await router.invalidate()
-        navigate({ to: '/dashboard' })
+        if (onSuccess) {
+          onSuccess()
+        } else {
+          navigate({ to: redirectTo })
+        }
       }
 
       setIsPending(false)

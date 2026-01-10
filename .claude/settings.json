@@ -7,6 +7,10 @@
           {
             "type": "command",
             "command": "bun x ultracite fix $FILE"
+          },
+          {
+            "type": "command",
+            "command": "bun run check-types"
           }
         ]
       }

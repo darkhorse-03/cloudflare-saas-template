@@ -22,6 +22,10 @@ This creates a verified user you can sign in with immediately:
 
 The endpoint is idempotent - safe to call multiple times.
 
+<Callout type="warn">
+  Remove `apps/api/src/routes/seed.ts` and its import in `index.ts` before deploying to production.
+</Callout>
+
 ## Frontend Authentication
 
 ### Sign In

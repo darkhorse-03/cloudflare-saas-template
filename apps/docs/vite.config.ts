@@ -40,6 +40,8 @@ export default defineConfig({
         { path: '/guides/database' },
         { path: '/guides/deployment' },
         { path: '/guides/pages' },
+        { path: '/guides/storage' },
+        { path: '/guides/payments' },
         // Reference
         { path: '/reference/commands' },
         { path: '/reference/configuration' },

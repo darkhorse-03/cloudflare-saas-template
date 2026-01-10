@@ -1,6 +1,7 @@
 import { useForm } from '@tanstack/react-form'
 import { useRef, useState } from 'react'
 import { toast } from 'sonner'
+import { useAuthDialog } from '@/components/auth/auth-dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -13,6 +14,7 @@ interface MagicLinkFormProps {
 }
 
 export function MagicLinkForm({ onBack }: MagicLinkFormProps) {
+  const { redirectTo } = useAuthDialog()
   const [error, setError] = useState<string | null>(null)
   const [isPending, setIsPending] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
@@ -39,7 +41,7 @@ export function MagicLinkForm({ onBack }: MagicLinkFormProps) {
       const { error: sendError } = await signIn.magicLink(
         {
           email: value.email,
-          callbackURL: '/dashboard',
+          callbackURL: redirectTo,
         },
         captchaToken
           ? {

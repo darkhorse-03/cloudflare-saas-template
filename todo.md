@@ -31,7 +31,7 @@
 
 - [X] CRITICAL - No custom backend call from url (we do service bindings) we will always use rpc calls, or workers.ts to route to the correct endpoint. add instructions to CLAUDE.md CLAUDE.md
 - [X] default dummy email setup to sign in (POST /api/seed/test-user) 
-- [ ] cloudflare token collides with alchemy setup, so our token shoudl have permissions to create the db, kv, and r2 bucket, etc. need to add in docs
+- [X] cloudflare token collides with alchemy setup, so our token should have permissions to create the db, kv, and r2 bucket, etc. (documented in deployment.mdx + .env.example)
 
 ### 1. Email Setup
 - [X] Choose provider: Resend (easy) OR Cloudflare Email Routing (free, needs domain) (We went with resend)
@@ -72,13 +72,15 @@
 - [X] File type validation & size limits
 - [ ] Multipart upload for large files - *nice to have*
 
-### 6. Payments (Stripe)
-- [ ] Stripe integration
-- [ ] Subscription plans setup
-- [ ] Checkout flow
-- [ ] Webhook handling
-- [ ] Customer portal integration
-- [ ] Payment status in user dashboard
+### 6. Payments (Polar.sh)
+- [X] Polar.sh integration (@polar-sh/hono)
+- [X] Multi-plan config support
+- [X] Checkout flow
+- [X] Webhook handling
+- [X] Customer portal integration
+- [X] Payment status API endpoint
+- [X] Frontend subscription hooks
+- [X] Payment documentation
 
 ### 7. Monitoring & Observability
 - [ ] Error tracking (Sentry/Cloudflare Workers Analytics)

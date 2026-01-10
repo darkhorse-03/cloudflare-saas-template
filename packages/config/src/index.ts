@@ -57,10 +57,64 @@ export const config = {
     },
   },
 
+  // Payments configuration (Polar.sh)
+  // Set enabled: true and configure products in Polar dashboard
+  payments: {
+    enabled: true, // Enable when ready to accept payments
+
+    // Define plans/tiers - developers can add more plans as needed
+    // Each plan maps to Polar product IDs for different billing cycles
+    // Optional free tier - remove to hide free plan
+    freePlan: {
+      name: 'Free',
+      description: 'Perfect for getting started',
+      features: ['Basic features', 'Community support', 'Limited usage'],
+    },
+
+    // Paid plans - add/remove as needed
+    plans: {
+      pro: {
+        name: 'Pro',
+        description: 'For serious builders',
+        features: ['Unlimited projects', 'Priority support', 'Advanced analytics'],
+        popular: true, // Show "Most Popular" badge
+        pricing: {
+          // Only include pricing options you want to offer
+          monthly: { price: 19, productId: 'a7c921ed-cc4f-4a5b-af31-2ba88f7d6334' },
+          // yearly: { price: 15, productId: '' }, // price per month, billed annually
+          // lifetime: { price: 299, productId: '' },
+        },
+      },
+      // Example: Add more tiers
+      // enterprise: {
+      //   name: 'Enterprise',
+      //   description: 'For teams and organizations',
+      //   features: ['Everything in Pro', 'Custom integrations', 'Dedicated support'],
+      //   pricing: {
+      //     monthly: { price: 49, productId: '' },
+      //     yearly: { price: 39, productId: '' },
+      //   },
+      // },
+    },
+
+    // Plan hierarchy for access control (index determines priority)
+    // Higher index = more access. Used by hasAccess() helper.
+    // e.g., ['pro', 'enterprise'] means enterprise users can access pro features
+    hierarchy: ['pro'],
+
+    // Checkout success/cancel URLs
+    successUrl: '/dashboard?payment=success',
+    cancelUrl: '/pricing',
+
+    // Use 'sandbox' for testing, 'production' for live
+    server: 'sandbox' as const,
+  },
+
   // Public/Marketing navigation links (Header component only)
   // Note: Dashboard sidebar navigation is defined separately in dashboard-sidebar.tsx
   nav: [
     { label: 'Home', href: '/', newTab: false },
+    { label: 'Pricing', href: '/pricing', newTab: false },
     { label: 'Docs', href: '/docs', newTab: true },
   ],
 

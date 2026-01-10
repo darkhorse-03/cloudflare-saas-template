@@ -69,4 +69,7 @@ export default defineConfig({
   ssr: {
     external: ['better-auth', 'better-auth-cloudflare', '@better-auth/core'],
   },
+  server: {
+    allowedHosts: true, // Allow ngrok and other tunneling services
+  },
 })

@@ -17,30 +17,57 @@ import { config } from '@repo/config'
 
 type AuthView = 'signin' | 'signup' | 'forgot-password' | 'reset-password' | 'magic-link'
 
+interface OpenDialogOptions {
+  onSuccess?: () => void
+  redirectTo?: string
+}
+
 interface AuthDialogContextType {
   isOpen: boolean
-  openDialog: () => void
+  openDialog: (options?: OpenDialogOptions) => void
   closeDialog: () => void
+  onSuccess?: () => void
+  redirectTo: string
 }
 
 const AuthDialogContext = createContext<AuthDialogContextType | undefined>(undefined)
 
+const defaultContext: AuthDialogContextType = {
+  isOpen: false,
+  openDialog: () => {
+    // no-op when outside provider
+  },
+  closeDialog: () => {
+    // no-op when outside provider
+  },
+  onSuccess: undefined,
+  redirectTo: '/dashboard',
+}
+
 export function useAuthDialog() {
   const context = useContext(AuthDialogContext)
-  if (!context) {
-    throw new Error('useAuthDialog must be used within AuthDialogProvider')
-  }
-  return context
+  // Return default context if provider not available (e.g., during sign-out)
+  return context ?? defaultContext
 }
 
 export function AuthDialogProvider({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false)
+  const [onSuccess, setOnSuccess] = useState<(() => void) | undefined>(undefined)
+  const [redirectTo, setRedirectTo] = useState('/dashboard')
 
-  const openDialog = () => setIsOpen(true)
-  const closeDialog = () => setIsOpen(false)
+  const openDialog = (options?: OpenDialogOptions) => {
+    setOnSuccess(() => options?.onSuccess)
+    setRedirectTo(options?.redirectTo ?? '/dashboard')
+    setIsOpen(true)
+  }
+  const closeDialog = () => {
+    setIsOpen(false)
+    setOnSuccess(undefined)
+    setRedirectTo('/dashboard')
+  }
 
   return (
-    <AuthDialogContext.Provider value={{ isOpen, openDialog, closeDialog }}>
+    <AuthDialogContext.Provider value={{ isOpen, openDialog, closeDialog, onSuccess, redirectTo }}>
       {children}
     </AuthDialogContext.Provider>
   )

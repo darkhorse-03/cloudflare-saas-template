@@ -22,13 +22,22 @@ ALCHEMY_PASSWORD=xxx        # Password for Alchemy state encryption
 
 ### API Token Permissions
 
-Create an API token at **Cloudflare Dashboard → My Profile → API Tokens** with:
+Create an API token at **Cloudflare Dashboard → My Profile → API Tokens → Create Token → Custom Token**:
 
-- **Account → Workers Scripts → Edit**
-- **Account → Workers KV Storage → Edit**
-- **Account → D1 → Edit**
-- **Zone → DNS → Edit** (for custom domains)
-- **Zone → Zone → Read**
+| Scope | Permission | Purpose |
+|-------|------------|---------|
+| Account → Workers Scripts | Edit | Deploy workers |
+| Account → Workers KV Storage | Edit | Create KV namespaces (sessions) |
+| Account → D1 | Edit | Create D1 databases |
+| Account → Workers R2 Storage | Edit | Create R2 buckets (if storage enabled) |
+| Zone → DNS | Edit | Create DNS records |
+| Zone → Zone | Read | Read zone info |
+
+<Callout type="warn">
+  Alchemy creates resources on first deploy. If your token lacks permissions, deployment will fail with cryptic errors. Create a token with **all** permissions above, even if you're not using all features yet.
+</Callout>
+
+**Quick setup**: Use the "Edit Cloudflare Workers" template as a starting point, then add D1, R2, and DNS permissions.
 
 ## Deploy
 
