@@ -32,7 +32,8 @@ app.use(logger())
 
 // Create auth instance and attach to context
 app.use('/*', async (c, next) => {
-  const auth = createAuth(c.env, c.req.raw.cf as IncomingRequestCfProperties)
+  const cfRequest = c.req.raw as Request & { cf?: IncomingRequestCfProperties }
+  const auth = createAuth(c.env, cfRequest.cf)
   c.set('auth', auth)
   await next()
 })

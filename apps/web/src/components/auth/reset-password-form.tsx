@@ -113,7 +113,7 @@ export function ResetPasswordForm({ email, onSuccess, onBack }: ResetPasswordFor
             />
             {field.state.meta.isTouched && field.state.meta.errors.length > 0 && (
               <p className="text-destructive text-sm" role="alert">
-                {field.state.meta.errors.map((error) => error?.message).join(', ')}
+                {field.state.meta.errors.map((error) => String(error)).join(', ')}
               </p>
             )}
           </div>
@@ -142,7 +142,7 @@ export function ResetPasswordForm({ email, onSuccess, onBack }: ResetPasswordFor
             />
             {field.state.meta.isTouched && field.state.meta.errors.length > 0 && (
               <p className="text-destructive text-sm" role="alert">
-                {field.state.meta.errors.map((error) => error?.message).join(', ')}
+                {field.state.meta.errors.map((error) => String(error)).join(', ')}
               </p>
             )}
           </div>
@@ -177,7 +177,7 @@ export function ResetPasswordForm({ email, onSuccess, onBack }: ResetPasswordFor
             />
             {field.state.meta.isTouched && field.state.meta.errors.length > 0 && (
               <p className="text-destructive text-sm" role="alert">
-                {field.state.meta.errors.map((error) => error?.message).join(', ')}
+                {field.state.meta.errors.map((error) => String(error)).join(', ')}
               </p>
             )}
           </div>

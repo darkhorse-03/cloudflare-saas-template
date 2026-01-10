@@ -1,0 +1,236 @@
+---
+title: Storage
+description: File uploads with Cloudflare R2
+---
+
+Zynth uses [Cloudflare R2](https://developers.cloudflare.com/r2/) for object storage, supporting file uploads, avatars, and general file management.
+
+## Quick Start
+
+Storage is enabled by default. Configure in `packages/config/src/index.ts`:
+
+```ts
+storage: {
+  enabled: true,
+  maxFileSize: 10 * 1024 * 1024, // 10MB
+  allowedMimeTypes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'application/pdf'],
+  avatars: {
+    maxSize: 2 * 1024 * 1024, // 2MB
+    allowedTypes: ['image/jpeg', 'image/png', 'image/webp'],
+  },
+},
+```
+
+## Frontend Usage
+
+### Upload a File
+
+```tsx
+import { useUploadFile } from '@/hooks/storage/use-storage'
+
+function FileUploader() {
+  const uploadFile = useUploadFile()
+
+  const handleUpload = async (file: File) => {
+    const result = await uploadFile.mutateAsync({ file, prefix: 'documents' })
+    console.log('Uploaded:', result.file.url)
+  }
+
+  return (
+    <input
+      type="file"
+      onChange={(e) => e.target.files?.[0] && handleUpload(e.target.files[0])}
+    />
+  )
+}
+```
+
+### Avatar Upload
+
+```tsx
+import { useUploadAvatar, useAvatar, useDeleteAvatar } from '@/hooks/storage/use-storage'
+
+function AvatarUploader() {
+  const { data: avatar } = useAvatar()
+  const uploadAvatar = useUploadAvatar()
+  const deleteAvatar = useDeleteAvatar()
+
+  return (
+    <div>
+      {avatar?.avatar && (
+        <img src={`/api${avatar.avatar.url}`} alt="Avatar" />
+      )}
+      <input
+        type="file"
+        accept="image/*"
+        onChange={(e) => {
+          const file = e.target.files?.[0]
+          if (file) uploadAvatar.mutate(file)
+        }}
+      />
+      <button onClick={() => deleteAvatar.mutate()}>
+        Remove Avatar
+      </button>
+    </div>
+  )
+}
+```
+
+### List Files
+
+```tsx
+import { useStorageFiles } from '@/hooks/storage/use-storage'
+
+function FileList() {
+  const { data, isLoading } = useStorageFiles('uploads')
+
+  if (isLoading) return <div>Loading...</div>
+
+  return (
+    <ul>
+      {data?.files.map((file) => (
+        <li key={file.key}>{file.key}</li>
+      ))}
+    </ul>
+  )
+}
+```
+
+### Delete a File
+
+```tsx
+import { useDeleteFile } from '@/hooks/storage/use-storage'
+
+function DeleteButton({ fileKey }: { fileKey: string }) {
+  const deleteFile = useDeleteFile()
+
+  return (
+    <button onClick={() => deleteFile.mutate(fileKey)}>
+      Delete
+    </button>
+  )
+}
+```
+
+## API Endpoints
+
+| Endpoint | Method | Auth | Description |
+|----------|--------|------|-------------|
+| `/api/storage/status` | GET | No | Check if storage is enabled |
+| `/api/storage/upload` | POST | Yes | Upload a file |
+| `/api/storage/files/:key` | GET | No | Get/serve a file |
+| `/api/storage/files/:key` | DELETE | Yes | Delete a file |
+| `/api/storage/list` | GET | Yes | List user's files |
+| `/api/storage/avatars` | POST | Yes | Upload avatar |
+| `/api/storage/avatars/me` | GET | Yes | Get current user's avatar |
+| `/api/storage/avatars/me` | DELETE | Yes | Delete avatar |
+
+## File Organization
+
+Files are organized by user ID to ensure isolation:
+
+```
+uploads/
+  {userId}/
+    {timestamp}-{filename}
+avatars/
+  {userId}/
+    avatar.{ext}
+```
+
+## Validation
+
+Files are validated before upload:
+
+```ts
+// General uploads
+{
+  maxSize: 10 * 1024 * 1024, // 10MB
+  allowedTypes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'application/pdf']
+}
+
+// Avatars
+{
+  maxSize: 2 * 1024 * 1024, // 2MB
+  allowedTypes: ['image/jpeg', 'image/png', 'image/webp']
+}
+```
+
+## Backend Usage
+
+### Storage Service
+
+```ts
+import { createStorageService } from '@/lib/storage'
+
+// In a route handler
+const storage = createStorageService(c.env.R2)
+
+// Check if enabled
+if (!storage.isEnabled()) {
+  return c.json({ error: 'Storage not enabled' }, 503)
+}
+
+// Upload
+const key = storage.generateKey('uploads', filename, userId)
+const result = await storage.upload(key, arrayBuffer, {
+  contentType: 'image/png',
+  size: file.size,
+  metadata: { userId, originalName: filename }
+})
+
+// Get file
+const object = await storage.get(key)
+
+// Delete
+await storage.delete(key)
+
+// List
+const files = await storage.list({ prefix: `uploads/${userId}`, limit: 50 })
+```
+
+## Public URLs
+
+Files are served through the API at:
+
+```
+/api/storage/files/{key}
+```
+
+For avatars:
+
+```
+/api/storage/avatars/{userId}
+```
+
+## R2 Bucket Setup
+
+The R2 bucket is created automatically by Alchemy during deployment. Configuration in `apps/api/alchemy.run.ts`:
+
+```ts
+const r2 = config.storage.enabled
+  ? await R2Bucket('storage', {
+      name: `${config.appName}-storage`,
+      adopt: true,
+    })
+  : null
+```
+
+## Security
+
+- Files are scoped to user IDs
+- Delete operations verify ownership
+- File types and sizes are validated
+- Avatars overwrite previous uploads (one per user)
+
+## Hooks Reference
+
+| Hook | Description |
+|------|-------------|
+| `useStorageStatus()` | Get storage configuration |
+| `useStorageFiles(prefix?)` | List files with optional prefix |
+| `useUploadFile()` | Upload a file mutation |
+| `useDeleteFile()` | Delete a file mutation |
+| `useAvatar()` | Get current user's avatar |
+| `useUploadAvatar()` | Upload avatar mutation |
+| `useDeleteAvatar()` | Delete avatar mutation |

@@ -1,0 +1,258 @@
+---
+title: Payments
+description: Accept payments with Polar.sh
+---
+
+Zynth uses [Polar.sh](https://polar.sh) with the official Better Auth plugin for seamless payment integration. Customers are automatically created on signup.
+
+## Quick Start
+
+### 1. Create a Polar Account
+
+1. Sign up at [polar.sh](https://polar.sh)
+2. Create an organization
+3. Create products for your plans (subscriptions and/or one-time)
+
+### 2. Get Credentials
+
+From your Polar dashboard:
+- **Access Token**: Settings → Developers → Create Token
+- **Webhook Secret**: Settings → Webhooks → Create Webhook
+  - URL: `https://yourdomain.com/api/auth/polar/webhooks`
+  - Events: Select relevant events (subscriptions, orders, etc.)
+
+### 3. Configure Environment
+
+Add to your `.env` file:
+
+```bash
+POLAR_ACCESS_TOKEN=your_access_token
+POLAR_WEBHOOK_SECRET=your_webhook_secret
+```
+
+### 4. Configure Plans
+
+Edit `packages/config/src/index.ts`:
+
+```ts
+payments: {
+  enabled: true,
+  plans: {
+    pro: {
+      name: 'Pro',
+      features: ['Feature A', 'Feature B'],
+      products: {
+        monthly: 'prod_xxx',   // Polar product ID
+        yearly: 'prod_yyy',
+        lifetime: 'prod_zzz',  // Optional
+      },
+    },
+  },
+  hierarchy: ['pro'],
+  successUrl: '/dashboard?payment=success',
+  server: 'production', // Change from 'sandbox'
+},
+```
+
+## Frontend Usage
+
+### Check Subscription Status
+
+```tsx
+import { useCustomerState, useHasPaidPlan } from '@/hooks/payments/use-subscription'
+
+function UpgradePrompt() {
+  const { data: customerState, isLoading } = useCustomerState()
+  const { hasPaidPlan } = useHasPaidPlan()
+
+  if (isLoading) return <div>Loading...</div>
+
+  if (hasPaidPlan) {
+    return <div>You have an active subscription!</div>
+  }
+
+  return <button onClick={() => checkout('pro-monthly')}>Upgrade to Pro</button>
+}
+```
+
+### Initiate Checkout
+
+```tsx
+import { checkout, getCheckoutSlug } from '@/hooks/payments/use-subscription'
+
+function PricingCard() {
+  return (
+    <div>
+      <button onClick={() => checkout('pro-monthly')}>
+        $10/month
+      </button>
+      <button onClick={() => checkout('pro-yearly')}>
+        $100/year (Save 17%)
+      </button>
+    </div>
+  )
+}
+```
+
+### Open Customer Portal
+
+```tsx
+import { openPortal } from '@/hooks/payments/use-subscription'
+
+function BillingSettings() {
+  return (
+    <button onClick={() => openPortal()}>
+      Manage Billing
+    </button>
+  )
+}
+```
+
+### List Subscriptions
+
+```tsx
+import { useSubscriptions } from '@/hooks/payments/use-subscription'
+
+function SubscriptionList() {
+  const { data: subscriptions, isLoading } = useSubscriptions()
+
+  if (isLoading) return <div>Loading...</div>
+
+  return (
+    <ul>
+      {subscriptions?.map((sub) => (
+        <li key={sub.id}>{sub.product.name} - {sub.status}</li>
+      ))}
+    </ul>
+  )
+}
+```
+
+### List Orders
+
+```tsx
+import { useOrders } from '@/hooks/payments/use-subscription'
+
+function OrderHistory() {
+  const { data: orders, isLoading } = useOrders()
+
+  if (isLoading) return <div>Loading...</div>
+
+  return (
+    <ul>
+      {orders?.map((order) => (
+        <li key={order.id}>{order.product.name} - ${order.amount / 100}</li>
+      ))}
+    </ul>
+  )
+}
+```
+
+## How It Works
+
+The Polar Better Auth plugin integrates directly with your authentication:
+
+1. **Customer Creation**: When a user signs up, a Polar customer is automatically created
+2. **Checkout**: `authClient.checkout()` redirects to Polar's hosted checkout
+3. **Portal**: `authClient.customer.portal()` opens the self-service billing portal
+4. **Webhooks**: Events are handled at `/api/auth/polar/webhooks`
+5. **Customer State**: Query subscriptions, benefits, and meters via `authClient.customer.state()`
+
+## Auth Endpoints
+
+All payment endpoints are handled through Better Auth:
+
+| Endpoint | Description |
+|----------|-------------|
+| `/api/auth/polar/checkout` | Initiate checkout session |
+| `/api/auth/polar/portal` | Customer portal redirect |
+| `/api/auth/polar/webhooks` | Webhook receiver |
+| `/api/auth/polar/customer/state` | Get customer state |
+| `/api/auth/polar/customer/subscriptions` | List subscriptions |
+| `/api/auth/polar/customer/orders` | List orders |
+| `/api/auth/polar/customer/benefits` | List benefits |
+
+## Multiple Plans
+
+Add more plans to support tiered pricing:
+
+```ts
+payments: {
+  plans: {
+    pro: {
+      name: 'Pro',
+      features: ['10 projects', 'Email support'],
+      products: { monthly: 'prod_pro_monthly', yearly: 'prod_pro_yearly' },
+    },
+    enterprise: {
+      name: 'Enterprise',
+      features: ['Unlimited projects', 'Priority support'],
+      products: { monthly: 'prod_ent_monthly', yearly: 'prod_ent_yearly' },
+    },
+  },
+  hierarchy: ['pro', 'enterprise'],
+},
+```
+
+Checkout slugs follow the format `{plan}-{type}`:
+- `pro-monthly`, `pro-yearly`
+- `enterprise-monthly`, `enterprise-yearly`
+
+## Testing
+
+### Sandbox Mode
+
+Use `server: 'sandbox'` in config for testing. Polar sandbox mode allows test payments without real transactions.
+
+### Test the Flow
+
+1. Start your dev server: `bun dev`
+2. Sign up (creates Polar customer automatically)
+3. Call `checkout('pro-monthly')` to test checkout
+4. Check webhook logs in Polar dashboard
+5. Verify subscription via `useCustomerState()`
+
+## Hooks Reference
+
+| Hook | Description |
+|------|-------------|
+| `useCustomerState()` | Get full customer state (subscriptions, benefits, meters) |
+| `useHasPaidPlan()` | Check if user has active subscription |
+| `useSubscriptions()` | List active subscriptions |
+| `useOrders()` | List orders/purchases |
+| `useBenefits()` | List granted benefits |
+| `usePlans()` | Get plan config with checkout slugs |
+
+## Helper Functions
+
+| Function | Description |
+|----------|-------------|
+| `checkout(slug)` | Initiate checkout (e.g., `checkout('pro-monthly')`) |
+| `openPortal()` | Open customer billing portal |
+| `getCheckoutSlug(plan, type)` | Get slug for plan/type combo |
+
+## Webhook Events
+
+The plugin handles these webhook events automatically:
+
+- `subscription.created` / `subscription.active` / `subscription.canceled`
+- `order.created` / `order.paid`
+- `customer.created` / `customer.updated`
+- `benefit.granted` / `benefit.revoked`
+
+Add custom handlers in `apps/api/src/auth/index.ts`:
+
+```ts
+webhooks({
+  secret: env.POLAR_WEBHOOK_SECRET,
+  onPayload: (payload) => {
+    console.log('[Polar]', payload.type)
+  },
+  onSubscriptionActive: async (payload) => {
+    // Custom logic when subscription becomes active
+  },
+  onOrderPaid: async (payload) => {
+    // Custom logic when order is paid
+  },
+})
+```

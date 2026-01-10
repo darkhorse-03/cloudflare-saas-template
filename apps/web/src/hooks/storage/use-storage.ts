@@ -61,7 +61,7 @@ export function useDeleteFile() {
 
   return useMutation({
     mutationFn: async (key: string) => {
-      const res = await api.storage.files[':key'].$delete({
+      const res = await api.storage.files[':key{.+}'].$delete({
         param: { key },
       })
       if (!res.ok) {

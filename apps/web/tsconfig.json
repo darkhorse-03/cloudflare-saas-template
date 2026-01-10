@@ -18,7 +18,7 @@
     "noUncheckedSideEffectImports": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*", "../api/src/*"]
     },
     "strictNullChecks": true
   }
