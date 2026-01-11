@@ -110,7 +110,7 @@ export function AuthDialog() {
 
   return (
     <Dialog onOpenChange={handleOpenChange} open={isOpen}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>

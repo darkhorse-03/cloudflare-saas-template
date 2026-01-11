@@ -10,7 +10,7 @@ function Profile() {
   const { user } = useAuth()
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <div>
         <h1 className="font-bold text-3xl tracking-tight">Profile</h1>
         <p className="mt-2 text-muted-foreground">Manage your profile information</p>
@@ -25,15 +25,15 @@ function Profile() {
           <div className="space-y-4">
             <div>
               <p className="font-medium text-sm">Name</p>
-              <p className="text-gray-500 text-sm">{user?.name}</p>
+              <p className="text-muted-foreground text-sm">{user?.name}</p>
             </div>
             <div>
               <p className="font-medium text-sm">Email</p>
-              <p className="text-gray-500 text-sm">{user?.email}</p>
+              <p className="text-muted-foreground text-sm">{user?.email}</p>
             </div>
             <div>
               <p className="font-medium text-sm">Email Verified</p>
-              <p className="text-gray-500 text-sm">{user?.emailVerified ? 'Yes' : 'No'}</p>
+              <p className="text-muted-foreground text-sm">{user?.emailVerified ? 'Yes' : 'No'}</p>
             </div>
           </div>
         </CardContent>

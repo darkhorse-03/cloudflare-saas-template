@@ -30,7 +30,8 @@ export function getPolarPlugin(polarClient: any, env?: Env) {
       portal(),
       webhooks({
         secret: env?.POLAR_WEBHOOK_SECRET ?? '',
-        onPayload: (payload) => {
+        // biome-ignore lint/suspicious/useAwait: Type requires async but no await needed yet
+        onPayload: async (payload) => {
           console.log('[Polar Webhook]', payload.type)
         },
       }),

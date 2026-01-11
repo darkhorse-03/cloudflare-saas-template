@@ -14,7 +14,7 @@ export function Footer() {
           <div className="flex items-center gap-4">
             {config.footer.links.map((link) => (
               <a
-                className="transition-colors hover:text-foreground"
+                className="underline-offset-4 transition-colors hover:text-foreground hover:underline"
                 href={link.href}
                 key={link.href}
                 rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}

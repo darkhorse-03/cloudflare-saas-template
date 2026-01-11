@@ -10,7 +10,7 @@ function Dashboard() {
   const { user } = useAuth()
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <div>
         <h1 className="font-bold text-3xl tracking-tight">Overview</h1>
         <p className="mt-2 text-muted-foreground">Welcome back, {user?.name}!</p>
@@ -26,15 +26,17 @@ function Dashboard() {
             <div className="space-y-2">
               <div>
                 <p className="font-medium text-sm">Name</p>
-                <p className="text-gray-500 text-sm">{user?.name}</p>
+                <p className="text-muted-foreground text-sm">{user?.name}</p>
               </div>
               <div>
                 <p className="font-medium text-sm">Email</p>
-                <p className="text-gray-500 text-sm">{user?.email}</p>
+                <p className="text-muted-foreground text-sm">{user?.email}</p>
               </div>
               <div>
                 <p className="font-medium text-sm">Email Verified</p>
-                <p className="text-gray-500 text-sm">{user?.emailVerified ? 'Yes' : 'No'}</p>
+                <p className="text-muted-foreground text-sm">
+                  {user?.emailVerified ? 'Yes' : 'No'}
+                </p>
               </div>
             </div>
           </CardContent>
@@ -46,7 +48,9 @@ function Dashboard() {
             <CardDescription>Common tasks</CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-gray-500 text-sm">Your dashboard features will appear here</p>
+            <p className="text-muted-foreground text-sm">
+              Your dashboard features will appear here
+            </p>
           </CardContent>
         </Card>
 
@@ -56,7 +60,7 @@ function Dashboard() {
             <CardDescription>Recent activity</CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-gray-500 text-sm">No recent activity</p>
+            <p className="text-muted-foreground text-sm">No recent activity</p>
           </CardContent>
         </Card>
       </div>

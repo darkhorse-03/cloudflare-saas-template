@@ -26,7 +26,9 @@ export default function DefaultSearchDialog(props: SharedProps) {
   const { locale } = useI18n() // (optional) for i18n
   const { search, setSearch, query } = useDocsSearch({
     type: 'static',
-    from: '/docs/api/search.json',
+    // In production, worker rewrites /api/search to /api/search.json
+    // In development, the route handler serves JSON directly
+    from: '/docs/api/search',
     initOrama,
     locale,
   })

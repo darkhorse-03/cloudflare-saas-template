@@ -1,6 +1,6 @@
 import { config } from '@repo/config'
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { CreditCard, ExternalLink, Sparkles } from 'lucide-react'
+import { Check, CreditCard, ExternalLink, Sparkles } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -49,7 +49,7 @@ function PlanStatus({ isLoading, hasPaidPlan, activeSubscription }: PlanStatusPr
           <span className="font-semibold text-2xl">Pro</span>
           <Badge variant="default">Active</Badge>
         </div>
-        <div className="text-sm text-muted-foreground space-y-1">
+        <div className="space-y-1 text-muted-foreground text-sm">
           <p>
             Billing cycle:{' '}
             <span className="text-foreground">
@@ -75,7 +75,7 @@ function PlanStatus({ isLoading, hasPaidPlan, activeSubscription }: PlanStatusPr
         <span className="font-semibold text-2xl">Free</span>
         <Badge variant="secondary">Current</Badge>
       </div>
-      <p className="text-sm text-muted-foreground">
+      <p className="text-muted-foreground text-sm">
         You're on the free plan. Upgrade to unlock premium features.
       </p>
     </div>
@@ -89,7 +89,7 @@ function BillingPage() {
 
   if (!config.payments.enabled) {
     return (
-      <div className="space-y-4">
+      <div className="space-y-6">
         <div>
           <h1 className="font-bold text-3xl tracking-tight">Billing</h1>
           <p className="mt-2 text-muted-foreground">Manage your subscription and billing</p>
@@ -120,7 +120,7 @@ function BillingPage() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <CreditCard className="h-5 w-5" />
+            <CreditCard className="size-5" />
             Current Plan
           </CardTitle>
           <CardDescription>Your active subscription details</CardDescription>
@@ -135,13 +135,13 @@ function BillingPage() {
         <CardFooter className="flex gap-3">
           {hasPaidPlan ? (
             <Button variant="outline" onClick={handleOpenPortal}>
-              <ExternalLink className="mr-2 h-4 w-4" />
+              <ExternalLink className="mr-2 size-4" />
               Manage Subscription
             </Button>
           ) : (
             <Button asChild>
               <Link to="/pricing">
-                <Sparkles className="mr-2 h-4 w-4" />
+                <Sparkles className="mr-2 size-4" />
                 Upgrade to Pro
               </Link>
             </Button>
@@ -154,7 +154,7 @@ function BillingPage() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Sparkles className="h-5 w-5" />
+              <Sparkles className="size-5" />
               Unlock Pro Features
             </CardTitle>
             <CardDescription>See what you're missing out on</CardDescription>
@@ -163,7 +163,7 @@ function BillingPage() {
             <ul className="grid gap-2 sm:grid-cols-2">
               {plans[0]?.features.map((feature) => (
                 <li key={feature} className="flex items-center gap-2 text-sm">
-                  <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                  <Check className="size-4 text-primary" />
                   {feature}
                 </li>
               ))}
@@ -185,13 +185,13 @@ function BillingPage() {
             <CardDescription>View and download your invoices</CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground text-sm">
               Access your complete billing history and download invoices from the customer portal.
             </p>
           </CardContent>
           <CardFooter>
             <Button variant="outline" onClick={handleOpenPortal}>
-              <ExternalLink className="mr-2 h-4 w-4" />
+              <ExternalLink className="mr-2 size-4" />
               View Invoices
             </Button>
           </CardFooter>

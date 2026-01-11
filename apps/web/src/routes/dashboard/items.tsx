@@ -1,4 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { Package } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
@@ -55,7 +56,7 @@ function Items() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <div>
         <h1 className="font-bold text-3xl tracking-tight">Items</h1>
         <p className="mt-2 text-muted-foreground">
@@ -127,7 +128,13 @@ function Items() {
         <CardContent>
           {isLoading && <p className="text-muted-foreground text-sm">Loading items...</p>}
           {!isLoading && items.length === 0 && (
-            <p className="text-muted-foreground text-sm">No items yet. Create one above!</p>
+            <div className="flex flex-col items-center justify-center py-8 text-center">
+              <Package className="size-12 text-muted-foreground/50" />
+              <h3 className="mt-4 font-medium">No items yet</h3>
+              <p className="mt-1 text-muted-foreground text-sm">
+                Create your first item using the form above.
+              </p>
+            </div>
           )}
           {!isLoading && items.length > 0 && (
             <div className="space-y-4">
@@ -136,7 +143,7 @@ function Items() {
                   key={item.id}
                   className="flex items-start justify-between rounded-lg border p-4"
                 >
-                  <div className="space-y-1 flex-1">
+                  <div className="flex-1 space-y-1">
                     <div className="flex items-center gap-2">
                       <h3 className="font-semibold">{item.title}</h3>
                       <span className="rounded-full bg-muted px-2 py-0.5 font-medium text-xs">

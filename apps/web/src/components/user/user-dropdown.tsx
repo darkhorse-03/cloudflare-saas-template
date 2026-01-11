@@ -36,8 +36,8 @@ export function UserDropdown() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button className="relative h-10 w-10 rounded-full" variant="ghost">
-          <Avatar className="h-10 w-10">
+        <Button className="relative size-10 rounded-full" variant="ghost">
+          <Avatar className="size-10">
             <AvatarImage alt={user.name || 'User'} src={user.image || undefined} />
             <AvatarFallback>{initials}</AvatarFallback>
           </Avatar>
@@ -47,19 +47,19 @@ export function UserDropdown() {
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
             <p className="font-medium text-sm leading-none">{user.name}</p>
-            <p className="text-gray-500 text-xs leading-none">{user.email}</p>
+            <p className="text-muted-foreground text-xs leading-none">{user.email}</p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
           <Link className="cursor-pointer" to="/dashboard">
-            <User className="mr-2 h-4 w-4" />
+            <User className="mr-2 size-4" />
             <span>Dashboard</span>
           </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem className="cursor-pointer text-red-600" onClick={handleSignOut}>
-          <LogOut className="mr-2 h-4 w-4" />
+          <LogOut className="mr-2 size-4" />
           <span>Sign Out</span>
         </DropdownMenuItem>
       </DropdownMenuContent>

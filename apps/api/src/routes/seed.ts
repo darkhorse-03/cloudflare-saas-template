@@ -18,7 +18,7 @@ export const seedRoutes = new Hono<AppContext>()
  * POST /seed/test-user
  *
  * Creates a verified test user:
- *   Email: test@example.com
+ *   Email: testuser+seed@gmail.com
  *   Password: password123
  */
 seedRoutes.post('/test-user', async (c) => {
@@ -26,14 +26,18 @@ seedRoutes.post('/test-user', async (c) => {
   const db = getDb(c.env.DB)
 
   // Check if test user already exists
-  const existing = await db.select().from(users).where(eq(users.email, 'test@example.com')).get()
+  const existing = await db
+    .select()
+    .from(users)
+    .where(eq(users.email, 'testuser+seed@gmail.com'))
+    .get()
 
   if (existing) {
     return c.json({
       success: true,
       message: 'Test user already exists',
       credentials: {
-        email: 'test@example.com',
+        email: 'testuser+seed@gmail.com',
         password: 'password123',
       },
     })
@@ -42,7 +46,7 @@ seedRoutes.post('/test-user', async (c) => {
   // Use better-auth's internal API to create user with proper password hashing
   const ctx = await auth.api.signUpEmail({
     body: {
-      email: 'test@example.com',
+      email: 'testuser+seed@gmail.com',
       password: 'password123',
       name: 'Test User',
     },
@@ -53,13 +57,16 @@ seedRoutes.post('/test-user', async (c) => {
   }
 
   // Mark as verified
-  await db.update(users).set({ emailVerified: true }).where(eq(users.email, 'test@example.com'))
+  await db
+    .update(users)
+    .set({ emailVerified: true })
+    .where(eq(users.email, 'testuser+seed@gmail.com'))
 
   return c.json({
     success: true,
     message: 'Test user created',
     credentials: {
-      email: 'test@example.com',
+      email: 'testuser+seed@gmail.com',
       password: 'password123',
     },
   })

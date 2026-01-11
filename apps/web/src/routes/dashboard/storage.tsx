@@ -9,7 +9,7 @@ function StoragePage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Storage</h1>
+        <h1 className="font-bold text-3xl tracking-tight">Storage</h1>
         <p className="text-muted-foreground">Upload and manage files with Cloudflare R2</p>
       </div>
       <StorageDemo />

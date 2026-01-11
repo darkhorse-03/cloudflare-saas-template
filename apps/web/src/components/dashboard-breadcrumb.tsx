@@ -14,6 +14,9 @@ const routeLabels: Record<string, string> = {
   '/dashboard/team': 'Team',
   '/dashboard/settings': 'Settings',
   '/dashboard/profile': 'Profile',
+  '/dashboard/items': 'Items',
+  '/dashboard/storage': 'Storage',
+  '/dashboard/billing': 'Billing',
 }
 
 export function DashboardBreadcrumb() {

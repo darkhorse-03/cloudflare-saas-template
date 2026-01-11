@@ -7,7 +7,7 @@ export const Route = createFileRoute('/dashboard/team')({
 
 function Team() {
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <div>
         <h1 className="font-bold text-3xl tracking-tight">Team</h1>
         <p className="mt-2 text-muted-foreground">Manage your team members</p>
@@ -19,7 +19,7 @@ function Team() {
           <CardDescription>View and manage team member access</CardDescription>
         </CardHeader>
         <CardContent>
-          <p className="text-gray-500 text-sm">Team member list will appear here</p>
+          <p className="text-muted-foreground text-sm">Team member list will appear here</p>
         </CardContent>
       </Card>
     </div>

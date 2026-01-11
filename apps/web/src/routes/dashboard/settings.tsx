@@ -9,8 +9,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { Skeleton } from '@/components/ui/skeleton'
 import { Switch } from '@/components/ui/switch'
 import { usePreferences } from '@/hooks/demo/use-preferences'
+import { type Theme, useTheme } from '@/hooks/use-theme'
 
 export const Route = createFileRoute('/dashboard/settings')({
   component: Settings,
@@ -18,6 +20,7 @@ export const Route = createFileRoute('/dashboard/settings')({
 
 function Settings() {
   const { preferences, isLoading, updatePreferences } = usePreferences()
+  const { theme, setTheme } = useTheme()
 
   const handleUpdate = (updates: Parameters<typeof updatePreferences.mutate>[0]) => {
     updatePreferences.mutate(updates, {
@@ -30,20 +33,59 @@ function Settings() {
     })
   }
 
+  const handleThemeChange = (value: Theme) => {
+    // Apply theme immediately
+    setTheme(value)
+    // Also save to database for persistence across devices
+    handleUpdate({ theme: value })
+  }
+
   if (isLoading) {
     return (
-      <div className="space-y-4">
+      <div className="space-y-6">
         <div>
           <h1 className="font-bold text-3xl tracking-tight">Settings</h1>
           <p className="mt-2 text-muted-foreground">Manage your account settings</p>
         </div>
-        <p className="text-muted-foreground text-sm">Loading settings...</p>
+        <div className="grid gap-4">
+          <Card>
+            <CardHeader>
+              <Skeleton className="h-6 w-32" />
+              <Skeleton className="h-4 w-48" />
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-16" />
+                <Skeleton className="h-10 w-full" />
+              </div>
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-20" />
+                <Skeleton className="h-10 w-full" />
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <Skeleton className="h-6 w-28" />
+              <Skeleton className="h-4 w-56" />
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between">
+                <div className="space-y-1">
+                  <Skeleton className="h-4 w-36" />
+                  <Skeleton className="h-3 w-52" />
+                </div>
+                <Skeleton className="h-6 w-11 rounded-full" />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <div>
         <h1 className="font-bold text-3xl tracking-tight">Settings</h1>
         <p className="mt-2 text-muted-foreground">Manage your account settings</p>
@@ -58,12 +100,7 @@ function Settings() {
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="theme">Theme</Label>
-              <Select
-                value={preferences?.theme ?? 'system'}
-                onValueChange={(value) =>
-                  handleUpdate({ theme: value as 'light' | 'dark' | 'system' })
-                }
-              >
+              <Select value={theme} onValueChange={(value) => handleThemeChange(value as Theme)}>
                 <SelectTrigger id="theme">
                   <SelectValue />
                 </SelectTrigger>

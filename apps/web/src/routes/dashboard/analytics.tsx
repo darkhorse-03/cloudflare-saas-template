@@ -7,7 +7,7 @@ export const Route = createFileRoute('/dashboard/analytics')({
 
 function Analytics() {
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <div>
         <h1 className="font-bold text-3xl tracking-tight">Analytics</h1>
         <p className="mt-2 text-muted-foreground">View your analytics and metrics</p>
@@ -20,7 +20,7 @@ function Analytics() {
             <CardDescription>Total page views this month</CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-gray-500 text-sm">Analytics data will appear here</p>
+            <p className="text-muted-foreground text-sm">Analytics data will appear here</p>
           </CardContent>
         </Card>
 
@@ -30,7 +30,7 @@ function Analytics() {
             <CardDescription>Currently active users</CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-gray-500 text-sm">User data will appear here</p>
+            <p className="text-muted-foreground text-sm">User data will appear here</p>
           </CardContent>
         </Card>
 
@@ -40,7 +40,7 @@ function Analytics() {
             <CardDescription>This month's conversion rate</CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-gray-500 text-sm">Conversion data will appear here</p>
+            <p className="text-muted-foreground text-sm">Conversion data will appear here</p>
           </CardContent>
         </Card>
       </div>
