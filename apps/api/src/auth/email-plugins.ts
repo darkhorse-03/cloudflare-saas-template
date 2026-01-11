@@ -5,7 +5,7 @@ import { MagicLinkEmail } from '@/lib/email/templates/magic-link-email'
 import { OtpEmail } from '@/lib/email/templates/otp-email'
 
 export function getEmailPlugins(emailService: EmailService) {
-  const plugins = [
+  const plugins: ReturnType<typeof emailOTP | typeof magicLink>[] = [
     emailOTP({
       otpLength: 6,
       expiresIn: 300,

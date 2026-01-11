@@ -1,5 +1,7 @@
-import { createFileRoute, redirect } from '@tanstack/react-router'
+import { useEffect, useRef } from 'react'
+import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router'
 import { z } from 'zod'
+import { useAuthDialog } from '@/components/auth/auth-dialog'
 import { AICommandsDemo } from '@/components/demos/ai-commands-demo'
 import { AuthFlowDemo } from '@/components/demos/auth-flow-demo'
 import { DatabaseCRUDDemo } from '@/components/demos/database-crud-demo'
@@ -17,7 +19,7 @@ export const Route = createFileRoute('/')({
     redirect: z.string().optional(),
   }),
   beforeLoad: async ({ search }) => {
-    // Handle OAuth callback redirect
+    // Handle OAuth callback redirect - if authenticated, redirect immediately
     if (search.redirect) {
       const { data: session } = await authClient.getSession()
       if (session) {
@@ -28,9 +30,39 @@ export const Route = createFileRoute('/')({
   component: HomePage,
 })
 
+/**
+ * Opens auth dialog when redirect param is present and user is not authenticated.
+ * Uses a ref to ensure dialog only opens once per redirect param.
+ */
+function AuthRedirectHandler({ redirectTo }: { redirectTo: string }) {
+  const { openDialog } = useAuthDialog()
+  const navigate = useNavigate()
+  const hasOpened = useRef(false)
+
+  useEffect(() => {
+    if (hasOpened.current) {
+      return
+    }
+    hasOpened.current = true
+
+    // Open dialog with the redirect destination
+    openDialog({ redirectTo })
+
+    // Clear the redirect param from URL to prevent re-opening on refresh
+    navigate({ to: '/', search: {}, replace: true })
+  }, [openDialog, redirectTo, navigate])
+
+  return null
+}
+
 function HomePage() {
+  const { redirect: redirectTo } = Route.useSearch()
+
   return (
     <Layout>
+      {/* Auto-open auth dialog when redirect param is present */}
+      {redirectTo && <AuthRedirectHandler redirectTo={redirectTo} />}
+
       {/* 1. Hero Section - Emotional hook + CTA */}
       <HeroSection />
 

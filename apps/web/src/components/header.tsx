@@ -68,7 +68,6 @@ export function Header() {
                   event.preventDefault()
                   document.body.style.pointerEvents = ''
                 }}
-                showClose={false}
                 side="right"
               >
                 <SheetTitle className="sr-only">Navigation Menu</SheetTitle>

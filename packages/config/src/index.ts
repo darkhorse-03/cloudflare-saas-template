@@ -8,7 +8,7 @@
  */
 
 export const config = {
-  appName: 'zynth',
+  appName: 'template',
   tagline: 'Ship in 60 Seconds, Not 3 Days',
   description:
     'Skip the setup hell. Auth, database, and type-safe APIs pre-configured. Optimized for AI-assisted development with Claude Code. Built for indie hackers who ship fast.',

@@ -36,7 +36,7 @@ export function AuthFlowDemo() {
               <Shield className="size-5 text-primary" />
               <CardTitle>Authentication (Pre-Built)</CardTitle>
             </div>
-            <div className="rounded-full bg-green-500/10 px-3 py-1 font-mono text-green-600 text-xs dark:text-green-400">
+            <div className="rounded-full bg-emerald-500/10 px-3 py-1 font-mono text-emerald-600 text-xs dark:text-emerald-400">
               Save 8 hours
             </div>
           </div>
@@ -61,27 +61,27 @@ export function AuthFlowDemo() {
             <div className="mb-2 font-medium text-sm">What's included:</div>
             <ul className="grid gap-2 text-muted-foreground text-sm sm:grid-cols-2">
               <li className="flex items-start gap-2">
-                <span className="text-green-500">✓</span>
+                <span className="text-emerald-500">✓</span>
                 <span>TanStack Form + Zod validation</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-green-500">✓</span>
+                <span className="text-emerald-500">✓</span>
                 <span>Better Auth integration</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-green-500">✓</span>
+                <span className="text-emerald-500">✓</span>
                 <span>Session management</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-green-500">✓</span>
+                <span className="text-emerald-500">✓</span>
                 <span>Protected routes</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-green-500">✓</span>
+                <span className="text-emerald-500">✓</span>
                 <span>Rate limiting (10 login/min)</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-green-500">✓</span>
+                <span className="text-emerald-500">✓</span>
                 <span>Email verification ready</span>
               </li>
             </ul>

@@ -3,10 +3,10 @@ import { Zap } from 'lucide-react'
 import { CommandCopyButton } from './command-copy-button'
 
 export function HeroSection() {
-  const { hero, timeline } = config.marketing
+  const { hero } = config.marketing
 
   return (
-    <section className="relative overflow-hidden py-20 sm:py-28">
+    <section className="relative overflow-hidden py-16 sm:py-24">
       {/* Background gradient */}
       <div className="absolute inset-0 -z-10 bg-gradient-to-b from-primary/5 via-background to-background" />
 
@@ -32,24 +32,9 @@ export function HeroSection() {
           </div>
 
           {/* Trust Signal */}
-          <div className="mb-12 flex items-center justify-center gap-2 text-sm text-muted-foreground">
+          <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
             <Zap className="size-4 text-primary" />
             <span>{hero.trustSignal}</span>
-          </div>
-
-          {/* Timeline Preview */}
-          <div className="mx-auto max-w-2xl rounded-lg border bg-card p-6">
-            <div className="mb-4 text-center font-semibold text-sm">
-              From idea to deployed in 60 seconds:
-            </div>
-            <div className="grid gap-3 sm:grid-cols-4">
-              {timeline.map((stage) => (
-                <div className="text-center" key={stage.time}>
-                  <div className="mb-1 font-mono text-primary text-xs">{stage.time}s</div>
-                  <div className="font-medium text-sm">{stage.label}</div>
-                </div>
-              ))}
-            </div>
           </div>
         </div>
       </div>

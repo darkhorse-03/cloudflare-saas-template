@@ -49,7 +49,7 @@ export function BeforeAfterComparison() {
                   {/* WITHOUT Zynth */}
                   <div className="space-y-3">
                     <div className="mb-3 flex items-center gap-2">
-                      <X className="size-5 text-destructive" />
+                      <X aria-hidden="true" className="size-5 text-destructive" />
                       <span className="font-semibold text-sm text-destructive">Without Zynth</span>
                     </div>
                     <div className="mb-2 rounded bg-destructive/10 px-3 py-1 font-mono text-destructive text-xs">
@@ -71,23 +71,26 @@ export function BeforeAfterComparison() {
                   {/* WITH Zynth */}
                   <div className="space-y-3">
                     <div className="mb-3 flex items-center gap-2">
-                      <Check className="size-5 text-green-500" />
-                      <span className="font-semibold text-sm text-green-600 dark:text-green-400">
+                      <Check aria-hidden="true" className="size-5 text-emerald-500" />
+                      <span className="font-semibold text-sm text-emerald-600 dark:text-emerald-400">
                         With Zynth
                       </span>
                     </div>
-                    <div className="mb-2 rounded bg-green-500/10 px-3 py-1 font-mono text-green-600 text-xs dark:text-green-400">
+                    <div className="mb-2 rounded bg-emerald-500/10 px-3 py-1 font-mono text-emerald-600 text-xs dark:text-emerald-400">
                       {point.timeWith}
                     </div>
                     <ul className="space-y-2 text-sm">
                       {point.tasksWith.map((task) => (
                         <li className="flex items-start gap-2" key={task}>
-                          <Check className="mt-0.5 size-4 shrink-0 text-green-500" />
+                          <Check
+                            aria-hidden="true"
+                            className="mt-0.5 size-4 shrink-0 text-emerald-500"
+                          />
                           <span>{task}</span>
                         </li>
                       ))}
                     </ul>
-                    <div className="mt-4 border-t pt-3 italic text-green-600 text-xs dark:text-green-400">
+                    <div className="mt-4 border-t pt-3 italic text-emerald-600 text-xs dark:text-emerald-400">
                       {point.quoteWith}
                     </div>
                   </div>

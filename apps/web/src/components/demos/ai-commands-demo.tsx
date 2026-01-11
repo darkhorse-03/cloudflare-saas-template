@@ -62,7 +62,7 @@ export function AICommandsDemo() {
             <Terminal className="size-5 text-primary" />
             <CardTitle>AI Commands (Claude Code)</CardTitle>
           </div>
-          <div className="rounded-full bg-green-500/10 px-3 py-1 font-mono text-green-600 text-xs dark:text-green-400">
+          <div className="rounded-full bg-emerald-500/10 px-3 py-1 font-mono text-emerald-600 text-xs dark:text-emerald-400">
             Save 70+ min/day
           </div>
         </div>
@@ -84,7 +84,7 @@ export function AICommandsDemo() {
             <TabsContent className="mt-4" key={cmd.id} value={cmd.id}>
               <div className="space-y-3">
                 {/* Command */}
-                <div className="rounded-lg bg-black p-3 font-mono text-green-400 text-sm">
+                <div className="rounded-lg bg-black p-3 font-mono text-emerald-400 text-sm">
                   <span className="text-gray-500">$</span> {cmd.command}
                 </div>
 
@@ -97,9 +97,9 @@ export function AICommandsDemo() {
                 </div>
 
                 {/* Time Saved */}
-                <div className="flex items-center justify-between rounded-lg bg-green-500/10 p-2 text-sm">
+                <div className="flex items-center justify-between rounded-lg bg-emerald-500/10 p-2 text-sm">
                   <span className="text-muted-foreground">Time saved vs manual setup:</span>
-                  <span className="font-semibold text-green-600 dark:text-green-400">
+                  <span className="font-semibold text-emerald-600 dark:text-emerald-400">
                     ~{cmd.timeSaved}
                   </span>
                 </div>
@@ -113,19 +113,19 @@ export function AICommandsDemo() {
           <div className="mb-2 font-medium text-sm">Why AI commands matter:</div>
           <ul className="grid gap-2 text-muted-foreground text-sm sm:grid-cols-2">
             <li className="flex items-start gap-2">
-              <span className="text-green-500">✓</span>
+              <span className="text-emerald-500">✓</span>
               <span>Instant scaffolding (no boilerplate copy-paste)</span>
             </li>
             <li className="flex items-start gap-2">
-              <span className="text-green-500">✓</span>
+              <span className="text-emerald-500">✓</span>
               <span>Type-safe by default (auto-generates types)</span>
             </li>
             <li className="flex items-start gap-2">
-              <span className="text-green-500">✓</span>
+              <span className="text-emerald-500">✓</span>
               <span>Follows project conventions (no style conflicts)</span>
             </li>
             <li className="flex items-start gap-2">
-              <span className="text-green-500">✓</span>
+              <span className="text-emerald-500">✓</span>
               <span>Production-ready code (not just templates)</span>
             </li>
           </ul>

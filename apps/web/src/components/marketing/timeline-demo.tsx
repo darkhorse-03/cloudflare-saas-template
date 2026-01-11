@@ -103,7 +103,7 @@ export function TimelineDemo() {
 
               const getStageClassName = () => {
                 if (isCompleted) {
-                  return 'border-green-500 bg-green-500/10 text-green-500'
+                  return 'border-emerald-500 bg-emerald-500/10 text-emerald-500'
                 }
                 if (isActive) {
                   return 'border-primary bg-primary/10 text-primary'
@@ -146,7 +146,7 @@ export function TimelineDemo() {
             <ul className="space-y-2 text-muted-foreground text-sm">
               {timeline[currentStage].details.map((detail) => (
                 <li className="flex items-start gap-2" key={detail}>
-                  <Check className="mt-0.5 size-4 shrink-0 text-green-500" />
+                  <Check className="mt-0.5 size-4 shrink-0 text-emerald-500" />
                   <span>{detail}</span>
                 </li>
               ))}

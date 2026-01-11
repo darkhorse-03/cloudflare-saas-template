@@ -87,7 +87,7 @@ export function DatabaseCRUDDemo() {
             <Database className="size-5 text-primary" />
             <CardTitle>Type-Safe Database (D1 + Drizzle)</CardTitle>
           </div>
-          <div className="rounded-full bg-green-500/10 px-3 py-1 font-mono text-green-600 text-xs dark:text-green-400">
+          <div className="rounded-full bg-emerald-500/10 px-3 py-1 font-mono text-emerald-600 text-xs dark:text-emerald-400">
             Save 6 hours
           </div>
         </div>
@@ -144,20 +144,22 @@ export function DatabaseCRUDDemo() {
               key={todo.id}
             >
               <div className="flex items-center gap-3">
-                <Check className="size-4 text-green-500" />
+                <Check aria-hidden="true" className="size-4 text-emerald-500" />
                 <span className="text-sm">{todo.text}</span>
               </div>
               <Button
+                className="text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
                 disabled={deleteMutation.isPending}
                 onClick={() => deleteMutation.mutate(todo.id)}
-                size="sm"
+                size="icon"
                 variant="ghost"
               >
                 {deleteMutation.isPending ? (
                   <Loader2 className="size-4 animate-spin" />
                 ) : (
-                  <Trash2 className="size-4 text-muted-foreground hover:text-destructive" />
+                  <Trash2 className="size-4" />
                 )}
+                <span className="sr-only">Delete todo</span>
               </Button>
             </div>
           ))}

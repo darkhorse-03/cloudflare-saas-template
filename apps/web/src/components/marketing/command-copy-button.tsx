@@ -33,7 +33,7 @@ export function CommandCopyButton({ command, variant = 'default' }: CommandCopyB
     return (
       <div className="group relative">
         <Button
-          className="relative h-14 w-full rounded-lg bg-primary px-8 font-mono text-lg transition-all hover:scale-105 sm:w-auto sm:min-w-[400px]"
+          className="relative h-14 w-full rounded-lg bg-primary px-8 font-mono text-lg transition-all hover:scale-105 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 sm:w-auto sm:min-w-[400px]"
           onClick={handleCopy}
           size="lg"
         >
@@ -66,7 +66,7 @@ export function CommandCopyButton({ command, variant = 'default' }: CommandCopyB
         variant="ghost"
       >
         {copied ? (
-          <Check className="size-4 animate-in fade-in zoom-in text-green-500" />
+          <Check className="size-4 animate-in fade-in zoom-in text-emerald-500" />
         ) : (
           <Copy className="size-4" />
         )}

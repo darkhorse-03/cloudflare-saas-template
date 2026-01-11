@@ -28,7 +28,7 @@ interface PlanStatusProps {
   hasPaidPlan: boolean
   activeSubscription?: {
     recurringInterval?: string
-    currentPeriodEnd?: string
+    currentPeriodEnd?: Date | null
   }
 }
 
