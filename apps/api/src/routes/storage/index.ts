@@ -60,9 +60,11 @@ export const storageRoutes = new Hono<AppContext>()
     })
 
     if ('code' in result) {
+      c.get('log').error('storage.upload.failed', { code: result.code, userId: user.id })
       return c.json({ error: result.message, code: result.code }, 500)
     }
 
+    c.get('log').info('storage.upload', { key, size: file.size, userId: user.id })
     return c.json({ file: result }, 201)
   })
 
@@ -127,8 +129,10 @@ export const storageRoutes = new Hono<AppContext>()
     const deleted = await storage.delete(key)
 
     if (!deleted) {
+      c.get('log').error('storage.delete.failed', { key, userId: user.id })
       return c.json({ error: 'Failed to delete file' }, 500)
     }
 
+    c.get('log').info('storage.delete', { key, userId: user.id })
     return c.json({ success: true })
   })

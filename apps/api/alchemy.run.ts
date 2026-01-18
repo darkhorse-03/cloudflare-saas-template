@@ -75,11 +75,11 @@ export const api = await Worker('worker', {
   observability: {
     logs: {
       enabled: true,
-      persist: false,
+      persist: true,
     },
     traces: {
       enabled: true,
-      persist: false,
+      persist: true,
     },
   },
 })

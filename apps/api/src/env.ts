@@ -2,6 +2,7 @@ import type { Session, User } from 'better-auth'
 import type { createAuth } from './auth'
 import type { WorkerEnv } from './env.d'
 import type { EmailService } from './lib/email'
+import type { Logger } from './lib/logger'
 
 export type Auth = ReturnType<typeof createAuth>
 
@@ -13,6 +14,7 @@ export interface AppContext {
     user: User | null
     session: Session | null
     emailService?: EmailService
+    log: Logger
   }
 }
 

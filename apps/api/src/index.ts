@@ -2,11 +2,11 @@ import type { IncomingRequestCfProperties } from '@cloudflare/workers-types'
 import { config } from '@repo/config'
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
-import { logger } from 'hono/logger'
 import { createAuth } from '@/auth'
 import type { AppContext } from '@/env'
 import { createEmailService } from '@/lib/email'
 import { authMiddleware } from '@/middleware/auth'
+import { requestLogger } from '@/middleware/logger'
 import { itemsRoutes } from '@/routes/demo/items'
 import { preferencesRoutes } from '@/routes/demo/preferences'
 import { todosRoutes } from '@/routes/demo/todos'
@@ -28,7 +28,7 @@ app.use(
   }),
 )
 
-app.use(logger())
+app.use(requestLogger())
 
 app.use('/*', async (c, next) => {
   const cfRequest = c.req.raw as Request & { cf?: IncomingRequestCfProperties }

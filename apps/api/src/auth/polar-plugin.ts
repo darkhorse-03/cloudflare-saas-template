@@ -1,6 +1,7 @@
 import { checkout, polar, portal, webhooks } from '@polar-sh/better-auth'
 import { config } from '@repo/config'
 import type { Env } from '../env'
+import { log } from '../lib/logger'
 
 // biome-ignore lint/suspicious/noExplicitAny: Polar client type is dynamic
 export function getPolarPlugin(polarClient: any, env?: Env) {
@@ -32,7 +33,7 @@ export function getPolarPlugin(polarClient: any, env?: Env) {
         secret: env?.POLAR_WEBHOOK_SECRET ?? '',
         // biome-ignore lint/suspicious/useAwait: Type requires async but no await needed yet
         onPayload: async (payload) => {
-          console.log('[Polar Webhook]', payload.type)
+          log.info('polar.webhook', { type: payload.type })
         },
       }),
     ],
