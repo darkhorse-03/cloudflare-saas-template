@@ -312,3 +312,28 @@ The `SheetContent` component supports a `showClose` prop to control the X button
   {children}
 </SheetContent>
 ```
+
+## Logging
+
+Use structured JSON logging in API routes via `c.get('log')`:
+
+```ts
+// In any route handler
+app.post('/items', async (c) => {
+  const log = c.get('log')
+  const user = c.get('user')
+
+  log.info('items.create', { name: data.name, userId: user.id })
+
+  // On error
+  log.error('items.create.failed', { error: err.message, userId: user.id })
+})
+```
+
+**Log levels:** `debug`, `info`, `warn`, `error`
+
+**Automatic logging:** Every request logs `request.start` and `request.end` with method, path, status, duration, and userId.
+
+**View logs:**
+- Real-time: `wrangler tail --format=json`
+- Historical: Cloudflare Dashboard → Workers → Logs

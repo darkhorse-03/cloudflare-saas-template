@@ -1,0 +1,171 @@
+---
+title: Logging
+description: Structured logging with Cloudflare Workers
+---
+
+Zynth includes structured JSON logging that integrates with [Cloudflare Workers Logs](https://developers.cloudflare.com/workers/observability/logs/).
+
+## Quick Start
+
+Use `c.get('log')` in any route handler:
+
+```ts
+app.post('/items', async (c) => {
+  const log = c.get('log')
+  const user = c.get('user')
+
+  log.info('items.create', { name: data.name, userId: user.id })
+
+  try {
+    const item = await db.insert(items).values({ ... }).returning()
+    log.info('items.create.success', { itemId: item.id })
+    return c.json(item)
+  } catch (err) {
+    log.error('items.create.failed', { error: err.message })
+    throw err
+  }
+})
+```
+
+## Log Levels
+
+| Level | Method | Use Case |
+|-------|--------|----------|
+| `debug` | `log.debug()` | Verbose debugging info |
+| `info` | `log.info()` | Normal operations |
+| `warn` | `log.warn()` | Potential issues |
+| `error` | `log.error()` | Errors and failures |
+
+## Automatic Request Logging
+
+Every request is automatically logged with:
+
+**Request start:**
+```json
+{
+  "level": "info",
+  "msg": "request.start",
+  "ts": 1705612800000,
+  "requestId": "a1b2c3d4",
+  "method": "POST",
+  "path": "/demo/items"
+}
+```
+
+**Request end:**
+```json
+{
+  "level": "info",
+  "msg": "request.end",
+  "ts": 1705612800045,
+  "requestId": "a1b2c3d4",
+  "status": 201,
+  "duration": 45,
+  "userId": "user_123"
+}
+```
+
+The `requestId` is included in the `X-Request-Id` response header for debugging.
+
+## Viewing Logs
+
+### Real-time (Development)
+
+Stream logs in your terminal:
+
+```bash
+wrangler tail --format=json
+```
+
+Filter for errors only:
+
+```bash
+wrangler tail --format=json | jq 'select(.logs[].message[0] | fromjson? | .level == "error")'
+```
+
+### Historical (Dashboard)
+
+1. Go to **Cloudflare Dashboard**
+2. Navigate to **Workers & Pages** → your worker
+3. Click the **Logs** tab
+
+Logs are searchable and filterable by time range.
+
+## Log Format
+
+All logs are JSON with these fields:
+
+| Field | Description |
+|-------|-------------|
+| `level` | Log level (debug, info, warn, error) |
+| `msg` | Event name (e.g., `items.create`) |
+| `ts` | Unix timestamp in milliseconds |
+| `requestId` | Unique request identifier |
+| `userId` | User ID (when authenticated) |
+| `...` | Any additional context you pass |
+
+## Naming Conventions
+
+Use dot notation for event names:
+
+```ts
+// Good
+log.info('items.create', { ... })
+log.info('items.create.success', { ... })
+log.error('items.create.failed', { ... })
+log.info('storage.upload', { ... })
+log.info('polar.webhook', { type: 'subscription.created' })
+
+// Avoid
+log.info('Created item', { ... })  // Not searchable
+log.info('error', { ... })         // Too generic
+```
+
+## Outside Request Context
+
+For code outside Hono handlers (webhooks, background tasks), use the base logger:
+
+```ts
+import { log } from '@/lib/logger'
+
+// No request context available
+log.info('polar.webhook', { type: payload.type })
+log.error('background.job.failed', { jobId, error: err.message })
+```
+
+## Configuration
+
+Logging is configured in `apps/api/alchemy.run.ts`:
+
+```ts
+observability: {
+  logs: {
+    enabled: true,
+    persist: true,  // Store logs for dashboard queries
+  },
+  traces: {
+    enabled: true,
+    persist: true,
+  },
+},
+```
+
+| Setting | `persist: false` | `persist: true` |
+|---------|------------------|-----------------|
+| `wrangler tail` | Yes | Yes |
+| Dashboard Logs | No | Yes (queryable ~7 days) |
+
+## What's Logged
+
+The template logs these events by default:
+
+| Event | Location |
+|-------|----------|
+| `request.start` | Every request |
+| `request.end` | Every request (with duration) |
+| `request.error` | Unhandled errors |
+| `storage.upload` | File uploads |
+| `storage.delete` | File deletions |
+| `polar.webhook` | Payment webhooks |
+
+Add logging to your own routes for important operations.

@@ -39,6 +39,7 @@ export default defineConfig({
         { path: '/guides/auth' },
         { path: '/guides/database' },
         { path: '/guides/deployment' },
+        { path: '/guides/logging' },
         { path: '/guides/pages' },
         { path: '/guides/storage' },
         { path: '/guides/payments' },
