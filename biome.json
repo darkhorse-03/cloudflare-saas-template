@@ -65,6 +65,9 @@
     "rules": {
       "recommended": true,
       "nursery": "off",
+      "correctness": {
+        "noUnusedImports": "off"
+      },
       "performance": {
         "noBarrelFile": "off"
       }
