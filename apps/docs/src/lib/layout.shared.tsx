@@ -20,7 +20,7 @@ export function baseOptions(): BaseLayoutProps {
       },
       {
         text: 'GitHub',
-        url: 'https://github.com',
+        url: 'https://github.com/darkhorse-03/cloudflare-saas-template',
         active: 'nested-url',
       },
     ],

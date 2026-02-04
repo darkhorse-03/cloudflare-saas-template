@@ -1,7 +1,8 @@
 import path from 'node:path'
 import { config } from '@repo/config'
 import alchemy from 'alchemy'
-import { D1Database, KVNamespace, R2Bucket, Worker } from 'alchemy/cloudflare'
+import { D1Database, KVNamespace, Queue, R2Bucket, Worker } from 'alchemy/cloudflare'
+import type { Job } from './src/jobs/types'
 
 if (!process.env.RESEND_API_KEY) {
   throw new Error('RESEND_API_KEY is not set')
@@ -34,6 +35,13 @@ const r2 = config.storage.enabled
     })
   : null
 
+// Background jobs queue (optional - only created if jobs are enabled)
+export const jobsQueue = config.jobs.enabled
+  ? await Queue<Job>('jobs-queue', {
+      name: `${config.appName}-jobs`,
+    })
+  : null
+
 export const api = await Worker('worker', {
   name: `${config.appName}-api`,
   entrypoint: path.join(import.meta.dirname, 'src', 'index.ts'),
@@ -63,7 +71,25 @@ export const api = await Worker('worker', {
       POLAR_ACCESS_TOKEN: alchemy.secret(process.env.POLAR_ACCESS_TOKEN),
       POLAR_WEBHOOK_SECRET: alchemy.secret(process.env.POLAR_WEBHOOK_SECRET ?? ''),
     }),
+    // Background jobs queue (optional)
+    ...(jobsQueue && { JOBS: jobsQueue }),
   },
+  // Queue consumer configuration
+  eventSources: jobsQueue
+    ? [
+        {
+          queue: jobsQueue,
+          settings: {
+            batchSize: config.jobs.queue.batchSize,
+            maxRetries: config.jobs.queue.maxRetries,
+          },
+        },
+      ]
+    : [],
+  // Cron triggers for scheduled jobs
+  crons: config.jobs.enabled
+    ? [config.jobs.cron.sessionCleanup, config.jobs.cron.expiredTokens]
+    : [],
   compatibilityFlags: ['nodejs_compat'],
   url: false,
   placement: {

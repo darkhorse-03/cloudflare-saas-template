@@ -2,6 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Package } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
+import { ExportButton } from '@/components/demo/export-button'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -119,11 +120,14 @@ function Items() {
 
       {/* Items List */}
       <Card>
-        <CardHeader>
-          <CardTitle>Your Items</CardTitle>
-          <CardDescription>
-            All items are scoped to your user account and stored in D1
-          </CardDescription>
+        <CardHeader className="flex flex-row items-start justify-between space-y-0">
+          <div className="space-y-1.5">
+            <CardTitle>Your Items</CardTitle>
+            <CardDescription>
+              All items are scoped to your user account and stored in D1
+            </CardDescription>
+          </div>
+          <ExportButton />
         </CardHeader>
         <CardContent>
           {isLoading && <p className="text-muted-foreground text-sm">Loading items...</p>}

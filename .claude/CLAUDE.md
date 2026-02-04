@@ -259,6 +259,11 @@ Use these commands to scaffold new code following established patterns:
   - Includes: Field validation, async validation, React Query integration
   - See: `.claude/commands/new-form.md`
 
+- **`/new-job`** - Scaffold a new background job handler
+  - Creates: `apps/api/src/jobs/handlers/[category].ts`
+  - Includes: Job type definition, handler registration, usage examples
+  - See: `.claude/commands/new-job.md`
+
 **Pattern:** All commands follow feature-based organization and separation of concerns
 
 ## Deployment (Alchemy)
@@ -337,3 +342,33 @@ app.post('/items', async (c) => {
 **View logs:**
 - Real-time: `wrangler tail --format=json`
 - Historical: Cloudflare Dashboard → Workers → Logs
+
+## Background Jobs
+
+Use Cloudflare Queues for async job processing:
+
+```ts
+import { enqueue } from '@/jobs'
+
+// In any route handler
+app.post('/users', async (c) => {
+  const user = await createUser(data)
+
+  // Enqueue job (non-blocking)
+  await enqueue(c.env.JOBS, {
+    type: 'email.send',
+    to: user.email,
+    subject: 'Welcome!',
+    template: 'welcome',
+    data: { name: user.name },
+  })
+
+  return c.json(user)
+})
+```
+
+**Built-in jobs:** `email.send`, `webhook.deliver`, `cleanup.sessions`, `cleanup.expiredTokens`
+
+**Create new jobs:** Use `/new-job` command or add to `apps/api/src/jobs/types.ts`
+
+**Configuration:** `packages/config/src/index.ts` → `jobs`

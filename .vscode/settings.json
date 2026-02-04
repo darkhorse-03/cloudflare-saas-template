@@ -43,5 +43,8 @@
     "**/.wrangler": true,
     "**/.tanstack": true,
     "**/routeTree.gen.ts": true
+  },
+  "workbench.editor.customLabels.patterns": {
+    "**/app/**/{page,layout,route,template,loading}.{tsx,ts}": "${dirname}/${filename}.${extname}"
   }
 }

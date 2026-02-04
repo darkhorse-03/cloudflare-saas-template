@@ -57,6 +57,22 @@ export const config = {
     },
   },
 
+  // Background jobs configuration (Cloudflare Queues + Cron)
+  // Set enabled: true to activate queue worker and cron triggers
+  jobs: {
+    enabled: true,
+    queue: {
+      batchSize: 10, // Messages processed per batch
+      maxRetries: 3, // Retry attempts before dead letter
+    },
+    cron: {
+      // Cron schedules for cleanup jobs
+      // Format: https://developers.cloudflare.com/workers/configuration/cron-triggers/
+      sessionCleanup: '0 2 * * *', // Daily at 2am UTC
+      expiredTokens: '0 * * * *', // Hourly
+    },
+  },
+
   // Payments configuration (Polar.sh)
   // Set enabled: true and configure products in Polar dashboard
   payments: {
@@ -122,13 +138,13 @@ export const config = {
   footer: {
     links: [
       { label: 'Documentation', href: '/docs' },
-      { label: 'GitHub', href: 'https://github.com/yourusername/your-repo' },
+      { label: 'GitHub', href: 'https://github.com/darkhorse-03/cloudflare-saas-template' },
     ],
   },
 
   // Social links (optional)
   social: {
-    github: 'https://github.com/yourusername/your-repo',
+    github: 'https://github.com/darkhorse-03/cloudflare-saas-template',
     twitter: '',
   },
 
@@ -250,7 +266,10 @@ export const config = {
       subtitle: 'Deploy in 60 seconds. Skip 3 days of setup.',
       primaryAction: 'Get Started',
       secondaryActions: [
-        { label: 'View on GitHub', href: 'https://github.com/yourusername/your-repo' },
+        {
+          label: 'View on GitHub',
+          href: 'https://github.com/darkhorse-03/cloudflare-saas-template',
+        },
         { label: 'Read Docs', href: '/docs' },
       ],
     },

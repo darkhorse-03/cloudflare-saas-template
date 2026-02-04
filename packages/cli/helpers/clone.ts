@@ -3,7 +3,7 @@ import { spinner } from '@clack/prompts'
 import degit from 'degit'
 import pc from 'picocolors'
 
-const TEMPLATE_REPO = 'https://github.com/yourusername/zynth-template'
+const TEMPLATE_REPO = 'https://github.com/darkhorse-03/cloudflare-saas-template'
 const CLONE_TIMEOUT = 30_000
 
 export async function cloneTemplate(projectName: string): Promise<void> {

@@ -4,9 +4,11 @@ import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { createAuth } from '@/auth'
 import type { AppContext } from '@/env'
+import { handleScheduled, processJobBatch } from '@/jobs'
 import { createEmailService } from '@/lib/email'
 import { authMiddleware } from '@/middleware/auth'
 import { requestLogger } from '@/middleware/logger'
+import { exportRoutes } from '@/routes/demo/export'
 import { itemsRoutes } from '@/routes/demo/items'
 import { preferencesRoutes } from '@/routes/demo/preferences'
 import { todosRoutes } from '@/routes/demo/todos'
@@ -76,6 +78,7 @@ const apiRoutes = new Hono<AppContext>()
   .route('/demo/todos', todosRoutes)
   .route('/demo/items', itemsRoutes)
   .route('/demo/preferences', preferencesRoutes)
+  .route('/demo/export', exportRoutes)
   .route('/storage', storageRoutes)
   .route('/seed', seedRoutes)
 
@@ -84,4 +87,10 @@ app.route('/', apiRoutes)
 
 // Export the apiRoutes type for RPC client
 export type AppType = typeof apiRoutes
-export default app
+
+// Worker exports with queue and scheduled handlers
+export default {
+  fetch: app.fetch,
+  queue: processJobBatch,
+  scheduled: handleScheduled,
+}

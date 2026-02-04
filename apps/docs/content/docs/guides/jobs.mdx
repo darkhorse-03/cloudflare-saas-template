@@ -1,0 +1,233 @@
+---
+title: Background Jobs
+description: Async job processing with Cloudflare Queues
+---
+
+Zynth includes a type-safe background jobs system built on [Cloudflare Queues](https://developers.cloudflare.com/queues/). Process emails, webhooks, cleanup tasks, and more without blocking your API responses.
+
+## Quick Start
+
+Enqueue a job from any route:
+
+```ts
+import { enqueue } from '@/jobs'
+
+app.post('/users', async (c) => {
+  const user = await createUser(data)
+
+  // Enqueue welcome email (non-blocking)
+  await enqueue(c.env.JOBS, {
+    type: 'email.send',
+    to: user.email,
+    subject: 'Welcome!',
+    template: 'welcome',
+    data: { name: user.name },
+  })
+
+  return c.json(user)
+})
+```
+
+## Configuration
+
+Configure jobs in `packages/config/src/index.ts`:
+
+```ts
+jobs: {
+  enabled: true,
+  queue: {
+    batchSize: 10,    // Messages processed per batch
+    maxRetries: 3,    // Retry attempts before failure
+  },
+  cron: {
+    sessionCleanup: '0 2 * * *',   // Daily at 2am UTC
+    expiredTokens: '0 * * * *',    // Hourly
+  },
+},
+```
+
+## Built-in Job Types
+
+| Job Type | Description |
+|----------|-------------|
+| `email.send` | Send emails via configured provider |
+| `webhook.deliver` | Deliver webhooks with retries |
+| `cleanup.sessions` | Remove expired sessions |
+| `cleanup.expiredTokens` | Remove expired verification tokens |
+
+## Creating Custom Jobs
+
+### 1. Define the Job Type
+
+Add to `apps/api/src/jobs/types.ts`:
+
+```ts
+export type Job =
+  // ... existing types
+  | { type: 'image.process'; key: string; sizes: number[] }
+```
+
+### 2. Create the Handler
+
+Create `apps/api/src/jobs/handlers/image.ts`:
+
+```ts
+import type { JobHandler } from '../types'
+
+export const imageProcessHandler: JobHandler<'image.process'> = async (job, ctx) => {
+  const { key, sizes } = job
+
+  ctx.log.info('job.image.process.start', { key, sizes })
+
+  // Process image using ctx.env.R2, ctx.env.AI, etc.
+  for (const size of sizes) {
+    // Resize logic...
+  }
+
+  ctx.log.info('job.image.process.complete', { key })
+}
+```
+
+### 3. Register the Handler
+
+Add to `apps/api/src/jobs/registry.ts`:
+
+```ts
+import { imageProcessHandler } from './handlers/image'
+
+export const handlers: { [T in JobType]: JobHandler<T> } = {
+  // ... existing handlers
+  'image.process': imageProcessHandler,
+}
+```
+
+### 4. Use It
+
+```ts
+await enqueue(c.env.JOBS, {
+  type: 'image.process',
+  key: 'uploads/user123/photo.jpg',
+  sizes: [100, 200, 400],
+})
+```
+
+Or use the Claude command:
+
+```
+/new-job image.process
+```
+
+## Job Context
+
+Every handler receives a `JobContext`:
+
+```ts
+interface JobContext {
+  env: Env        // Worker bindings (DB, KV, R2, JOBS, etc.)
+  db: Database    // Drizzle database instance
+  log: Logger     // Scoped logger with job metadata
+}
+```
+
+## Batch Processing
+
+Enqueue multiple jobs efficiently:
+
+```ts
+import { enqueueBatch } from '@/jobs'
+
+await enqueueBatch(c.env.JOBS, [
+  { type: 'email.send', to: 'user1@example.com', ... },
+  { type: 'email.send', to: 'user2@example.com', ... },
+  { type: 'email.send', to: 'user3@example.com', ... },
+])
+```
+
+## Cron Jobs
+
+Scheduled tasks run via Cloudflare Cron Triggers. Configure schedules in config:
+
+```ts
+cron: {
+  sessionCleanup: '0 2 * * *',   // Daily at 2am UTC
+  expiredTokens: '0 * * * *',    // Hourly
+},
+```
+
+Cron expressions: [Cloudflare Cron Syntax](https://developers.cloudflare.com/workers/configuration/cron-triggers/)
+
+## Error Handling & Retries
+
+Jobs automatically retry on failure:
+
+```ts
+export const handler: JobHandler<'webhook.deliver'> = async (job, ctx) => {
+  const response = await fetch(job.url, { ... })
+
+  if (!response.ok) {
+    // Throwing triggers a retry
+    throw new Error(`HTTP ${response.status}`)
+  }
+}
+```
+
+- Jobs retry up to `maxRetries` times (default: 3)
+- Exponential backoff between retries
+- Failed jobs can go to a dead letter queue
+
+## Logging
+
+Jobs automatically log with context:
+
+```ts
+ctx.log.info('job.email.send.start', { to: job.to })
+ctx.log.info('job.email.send.complete', { messageId })
+ctx.log.error('job.email.send.failed', { error: err.message })
+```
+
+View logs:
+- Real-time: `wrangler tail --format=json`
+- Dashboard: Cloudflare Workers → Logs
+
+## File Structure
+
+```
+apps/api/src/jobs/
+├── types.ts          # Job type definitions
+├── registry.ts       # Handler registry
+├── producer.ts       # enqueue() and enqueueBatch()
+├── consumer.ts       # Queue message processor
+├── cron.ts           # Scheduled task handler
+├── index.ts          # Public exports
+└── handlers/
+    ├── email.ts      # email.* handlers
+    ├── webhook.ts    # webhook.* handlers
+    └── cleanup.ts    # cleanup.* handlers
+```
+
+## Best Practices
+
+**Design for Idempotency**
+Jobs may run multiple times due to retries. Design handlers to be safe to re-run:
+
+```ts
+// Check if already processed
+const existing = await ctx.db.query.processedJobs.findFirst({
+  where: eq(processedJobs.jobId, job.id)
+})
+if (existing) return
+
+// Process and mark as done
+await processJob(job)
+await ctx.db.insert(processedJobs).values({ jobId: job.id })
+```
+
+**Keep Jobs Small**
+- Workers have CPU time limits
+- For heavy work, break into multiple jobs
+- Use external services for intensive processing
+
+**Log Generously**
+- Log at start, completion, and on errors
+- Include relevant job parameters
+- Use structured logging for easy filtering

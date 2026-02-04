@@ -25,28 +25,29 @@ export default defineConfig({
           crawlLinks: false,
         },
       },
-
+      // All pages must be listed explicitly for staticFunctionMiddleware to generate cache files
       pages: [
-        // Root
         { path: '/' },
         { path: '/api/search' },
-        // Doc pages
-        { path: '/features' },
-        { path: '/getting-started' },
-        { path: '/installation' },
+        // Docs pages
+        { path: '/docs' },
+        { path: '/docs/getting-started' },
+        { path: '/docs/features' },
+        { path: '/docs/installation' },
         // Guides
-        { path: '/guides/api-routes' },
-        { path: '/guides/auth' },
-        { path: '/guides/database' },
-        { path: '/guides/deployment' },
-        { path: '/guides/logging' },
-        { path: '/guides/pages' },
-        { path: '/guides/storage' },
-        { path: '/guides/payments' },
+        { path: '/docs/guides/api-routes' },
+        { path: '/docs/guides/auth' },
+        { path: '/docs/guides/database' },
+        { path: '/docs/guides/deployment' },
+        { path: '/docs/guides/jobs' },
+        { path: '/docs/guides/logging' },
+        { path: '/docs/guides/pages' },
+        { path: '/docs/guides/payments' },
+        { path: '/docs/guides/storage' },
         // Reference
-        { path: '/reference/commands' },
-        { path: '/reference/configuration' },
-        { path: '/reference/project-structure' },
+        { path: '/docs/reference/commands' },
+        { path: '/docs/reference/configuration' },
+        { path: '/docs/reference/project-structure' },
       ],
     }),
     react(),
