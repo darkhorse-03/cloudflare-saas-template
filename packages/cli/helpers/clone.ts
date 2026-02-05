@@ -28,8 +28,8 @@ export async function cloneTemplate(projectName: string): Promise<void> {
 
     await cloneWithTimeout
 
-    // Remove CLI from cloned template (users don't need it)
-    execSync(`rm -rf ${projectName}/packages/cli`, { stdio: 'ignore' })
+    // Remove CLI and docs from cloned template (users don't need them)
+    execSync(`rm -rf ${projectName}/packages/cli ${projectName}/apps/docs`, { stdio: 'ignore' })
 
     s.stop('Template cloned ✓')
   } catch (error) {

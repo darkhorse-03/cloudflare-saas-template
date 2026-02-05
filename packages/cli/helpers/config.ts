@@ -1,4 +1,4 @@
-import { readFile, writeFile } from 'node:fs/promises'
+import { copyFile, readFile, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { spinner } from '@clack/prompts'
 import pc from 'picocolors'
@@ -6,15 +6,6 @@ import type { ProjectConfig } from './prompts.js'
 
 // Regex patterns
 const APP_NAME_REGEX = /appName: ['"]zynth['"]/
-const DESCRIPTION_REGEX = /description: ['"].*?['"]/
-const TAGLINE_REGEX = /tagline: ['"].*?['"]/
-const URL_REGEX = /url: ['"]https:\/\/your-domain\.com['"]/
-const OG_IMAGE_REGEX = /ogImage: ['"]https:\/\/your-domain\.com\/og-image\.png['"]/
-const GITHUB_URL_REGEX = /https:\/\/github\.com\/yourusername\/your-repo/g
-const TWITTER_REGEX = /twitter: ['"']['"]/
-const MAGIC_LINK_REGEX = /enableMagicLink: (true|false)/
-const GOOGLE_OAUTH_REGEX = /enableGoogleOAuth: (true|false)/
-const GITHUB_OAUTH_REGEX = /enableGitHubOAuth: (true|false)/
 
 export async function updateConfig(config: ProjectConfig): Promise<void> {
   const s = spinner()
@@ -27,49 +18,6 @@ export async function updateConfig(config: ProjectConfig): Promise<void> {
     // Update app name
     configContent = configContent.replace(APP_NAME_REGEX, `appName: '${config.name}'`)
 
-    // Update description
-    if (config.description) {
-      configContent = configContent.replace(
-        DESCRIPTION_REGEX,
-        `description: '${config.description}'`,
-      )
-    }
-
-    // Update tagline
-    if (config.tagline) {
-      configContent = configContent.replace(TAGLINE_REGEX, `tagline: '${config.tagline}'`)
-    }
-
-    // Update SEO URL
-    if (config.url) {
-      configContent = configContent.replace(URL_REGEX, `url: '${config.url}'`)
-      configContent = configContent.replace(OG_IMAGE_REGEX, `ogImage: '${config.url}/og-image.png'`)
-    }
-
-    // Update GitHub URL
-    if (config.githubUrl) {
-      configContent = configContent.replace(GITHUB_URL_REGEX, config.githubUrl)
-    }
-
-    // Update Twitter handle
-    if (config.twitterHandle) {
-      configContent = configContent.replace(TWITTER_REGEX, `twitter: '${config.twitterHandle}'`)
-    }
-
-    // Update auth settings
-    configContent = configContent.replace(
-      MAGIC_LINK_REGEX,
-      `enableMagicLink: ${config.enableMagicLink}`,
-    )
-    configContent = configContent.replace(
-      GOOGLE_OAUTH_REGEX,
-      `enableGoogleOAuth: ${config.enableGoogleOAuth}`,
-    )
-    configContent = configContent.replace(
-      GITHUB_OAUTH_REGEX,
-      `enableGitHubOAuth: ${config.enableGitHubOAuth}`,
-    )
-
     await writeFile(configPath, configContent, 'utf-8')
 
     // Update root package.json
@@ -77,6 +25,11 @@ export async function updateConfig(config: ProjectConfig): Promise<void> {
     const rootPkg = JSON.parse(await readFile(rootPkgPath, 'utf-8'))
     rootPkg.name = `${config.name}-monorepo`
     await writeFile(rootPkgPath, `${JSON.stringify(rootPkg, null, 2)}\n`, 'utf-8')
+
+    // Copy .env.example to .env
+    const envExamplePath = join(config.name, '.env.example')
+    const envPath = join(config.name, '.env')
+    await copyFile(envExamplePath, envPath)
 
     s.stop('Configuration updated ✓')
   } catch (error) {

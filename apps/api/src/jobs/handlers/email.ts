@@ -8,7 +8,8 @@ export const emailSendHandler: JobHandler<'email.send'> = async (job, ctx) => {
 
   const emailService = createEmailService(ctx.env)
   if (!emailService) {
-    throw new Error('Email service not configured (missing RESEND_API_KEY or FROM_EMAIL)')
+    ctx.log.warn('job.email.send.skipped', { to, reason: 'Email service not configured' })
+    return // Skip gracefully - email is optional
   }
 
   const result = await emailService.send({

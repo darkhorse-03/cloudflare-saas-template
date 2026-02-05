@@ -91,11 +91,11 @@
 - [ ] Alerting setup
 
 ### 8. Background Jobs
-- [ ] Cloudflare Queues integration
-- [ ] Cron triggers setup
-- [ ] Email queue worker
-- [ ] Cleanup jobs (old sessions, etc.)
-- [ ] Job retry logic with exponential backoff
+- [X] Cloudflare Queues integration
+- [X] Cron triggers setup
+- [X] Email queue worker
+- [X] Cleanup jobs (old sessions, etc.)
+- [X] Job retry logic with exponential backoff
 - [ ] Cloudflare Workflows (orchestration for multi-step processes)
 
 ---

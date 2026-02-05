@@ -12,7 +12,7 @@ import { getProjectConfig } from './helpers/prompts.js'
 program
   .name('create-zynth-app')
   .description('Create a new Zynth fullstack app')
-  .version('0.0.1')
+  .version('0.0.4')
   .argument('[project-name]', 'Name of your project')
   .action(async (projectName?: string) => {
     console.clear()
@@ -37,11 +37,13 @@ program
         '\n\n' +
         pc.bold('Next steps:') +
         '\n' +
-        pc.dim(`  cd ${config.name}`) +
+        pc.dim(`  1. cd ${config.name}`) +
         '\n' +
-        pc.dim(`  ${config.shouldInstall ? '' : 'bun install\n  '}bun run dev`) +
+        pc.dim(`  2. Edit ${pc.cyan('.env')} with your Cloudflare & Resend credentials`) +
+        '\n' +
+        pc.dim(`  3. ${config.shouldInstall ? '' : 'bun install && '}bun run dev`) +
         '\n\n' +
-        pc.dim('Happy coding! 🚀'),
+        pc.dim('See .env.example for required environment variables.'),
     )
 
     process.exit(0)

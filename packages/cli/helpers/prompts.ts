@@ -3,14 +3,6 @@ import pc from 'picocolors'
 
 export interface ProjectConfig {
   name: string
-  description: string
-  tagline: string
-  url: string
-  githubUrl: string
-  twitterHandle: string
-  enableMagicLink: boolean
-  enableGoogleOAuth: boolean
-  enableGitHubOAuth: boolean
   shouldInitGit: boolean
   shouldInstall: boolean
 }
@@ -29,86 +21,6 @@ export async function getProjectConfig(projectName?: string): Promise<ProjectCon
   }
 
   const name = nameInput || 'my-saas-app'
-
-  const description = await text({
-    message: 'App description? (optional)',
-    placeholder: 'My awesome fullstack app',
-  })
-
-  if (isCancel(description)) {
-    outro(pc.red('Operation cancelled'))
-    process.exit(0)
-  }
-
-  const tagline = await text({
-    message: 'App tagline? (optional)',
-    placeholder: 'Fullstack Cloudflare Workers Template',
-  })
-
-  if (isCancel(tagline)) {
-    outro(pc.red('Operation cancelled'))
-    process.exit(0)
-  }
-
-  const url = await text({
-    message: 'Production URL? (optional)',
-    placeholder: 'https://your-domain.com',
-  })
-
-  if (isCancel(url)) {
-    outro(pc.red('Operation cancelled'))
-    process.exit(0)
-  }
-
-  const githubUrl = await text({
-    message: 'GitHub repository URL? (optional)',
-    placeholder: `https://github.com/yourusername/${name}`,
-  })
-
-  if (isCancel(githubUrl)) {
-    outro(pc.red('Operation cancelled'))
-    process.exit(0)
-  }
-
-  const twitterHandle = await text({
-    message: 'Twitter/X handle? (optional)',
-    placeholder: '@yourhandle',
-  })
-
-  if (isCancel(twitterHandle)) {
-    outro(pc.red('Operation cancelled'))
-    process.exit(0)
-  }
-
-  const enableMagicLink = await confirm({
-    message: 'Enable magic link (passwordless) login?',
-    initialValue: false,
-  })
-
-  if (isCancel(enableMagicLink)) {
-    outro(pc.red('Operation cancelled'))
-    process.exit(0)
-  }
-
-  const enableGoogleOAuth = await confirm({
-    message: 'Enable Google OAuth login?',
-    initialValue: false,
-  })
-
-  if (isCancel(enableGoogleOAuth)) {
-    outro(pc.red('Operation cancelled'))
-    process.exit(0)
-  }
-
-  const enableGitHubOAuth = await confirm({
-    message: 'Enable GitHub OAuth login?',
-    initialValue: false,
-  })
-
-  if (isCancel(enableGitHubOAuth)) {
-    outro(pc.red('Operation cancelled'))
-    process.exit(0)
-  }
 
   const shouldInitGit = await confirm({
     message: 'Initialize git repository?',
@@ -132,14 +44,6 @@ export async function getProjectConfig(projectName?: string): Promise<ProjectCon
 
   return {
     name,
-    description: description as string,
-    tagline: tagline as string,
-    url: url as string,
-    githubUrl: githubUrl as string,
-    twitterHandle: twitterHandle as string,
-    enableMagicLink: enableMagicLink as boolean,
-    enableGoogleOAuth: enableGoogleOAuth as boolean,
-    enableGitHubOAuth: enableGitHubOAuth as boolean,
     shouldInitGit: shouldInitGit as boolean,
     shouldInstall: shouldInstall as boolean,
   }

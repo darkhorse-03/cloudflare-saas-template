@@ -19,26 +19,16 @@ bunx create-zynth-app my-app
 - **Hono API** on Cloudflare Workers with type-safe RPC
 - **React + TanStack Router** frontend on Cloudflare Pages
 - **Drizzle ORM + D1** (SQLite) database with migrations
-- **Better Auth** with email/password, magic link, Google & GitHub OAuth
+- **Better Auth** with email/password (magic link & OAuth optional)
 - **shadcn/ui + Tailwind CSS** component library
 - **Turborepo** monorepo with Bun
 - **Claude Code** optimized with commands and project context
 
 ## CLI Options
 
-The interactive setup walks you through:
-
 | Option | Description |
 |---|---|
 | Project name | Directory name for your app |
-| Description | App description (updates config) |
-| Tagline | Marketing tagline |
-| Production URL | Your domain for SEO/OG tags |
-| GitHub URL | Repository link for footer/social |
-| Twitter handle | Social link |
-| Magic link auth | Enable passwordless login |
-| Google OAuth | Enable Google sign-in |
-| GitHub OAuth | Enable GitHub sign-in |
 | Init git | Initialize a git repository |
 | Install deps | Run `bun install` automatically |
 

@@ -4,12 +4,10 @@ import alchemy from 'alchemy'
 import { D1Database, KVNamespace, Queue, R2Bucket, Worker } from 'alchemy/cloudflare'
 import type { Job } from './src/jobs/types'
 
-if (!process.env.RESEND_API_KEY) {
-  throw new Error('RESEND_API_KEY is not set')
-}
-
 if (!process.env.ALCHEMY_PASSWORD) {
-  throw new Error('ALCHEMY_PASSWORD is not set')
+  throw new Error(
+    'ALCHEMY_PASSWORD is not set.\nCopy .env.example to .env and set ALCHEMY_PASSWORD (any string for local dev).',
+  )
 }
 
 const app = await alchemy(`${config.appName}-api`, {
@@ -48,9 +46,11 @@ export const api = await Worker('worker', {
   bindings: {
     DB: db,
     KV: kv,
-    // Secrets (sensitive - use alchemy.secret)
-    RESEND_API_KEY: alchemy.secret(process.env.RESEND_API_KEY),
-    FROM_EMAIL: alchemy.secret(process.env.FROM_EMAIL ?? ''),
+    // Email service (optional - auth works without it, just no email verification/magic links)
+    ...(process.env.RESEND_API_KEY && {
+      RESEND_API_KEY: alchemy.secret(process.env.RESEND_API_KEY),
+      FROM_EMAIL: alchemy.secret(process.env.FROM_EMAIL ?? ''),
+    }),
     // OAuth providers (optional)
     ...(process.env.GOOGLE_CLIENT_ID && {
       GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
