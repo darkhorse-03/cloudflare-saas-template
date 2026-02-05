@@ -4,8 +4,8 @@ import { spinner } from '@clack/prompts'
 import pc from 'picocolors'
 import type { ProjectConfig } from './prompts.js'
 
-// Regex patterns
-const APP_NAME_REGEX = /appName: ['"]zynth['"]/
+// Regex patterns - match any appName value
+const APP_NAME_REGEX = /appName: ['"][^'"]+['"]/
 
 export async function updateConfig(config: ProjectConfig): Promise<void> {
   const s = spinner()
