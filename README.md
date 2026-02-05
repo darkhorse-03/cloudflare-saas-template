@@ -1,96 +1,159 @@
 <div align="center">
 
-# zynth template
+# Zynth
 
-**Fullstack Cloudflare Workers template with service bindings**
+**Ship your SaaS this weekend, not next quarter.**
 
+[![npm](https://img.shields.io/npm/v/create-zynth-app?color=cb3837&label=create-zynth-app)](https://www.npmjs.com/package/create-zynth-app)
 [![Cloudflare Workers](https://img.shields.io/badge/Cloudflare-Workers-F38020?logo=cloudflare&logoColor=white)](https://workers.cloudflare.com/)
-[![Hono](https://img.shields.io/badge/Hono-E36002?logo=hono&logoColor=white)](https://hono.dev/)
-[![React](https://img.shields.io/badge/React-61DAFB?logo=react&logoColor=black)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 
-[Getting Started](#-getting-started) · [Stack](#-stack)
-
-![](docs/screenshot.png)
-
-```
-Browser → Web Worker ⚡ Service Binding ⚡ API Worker
-```
-
-✓ No public API URL &nbsp;&nbsp; ✓ Zero network latency &nbsp;&nbsp; ✓ Type-safe end-to-end
+[Quick Start](#-quick-start) · [Features](#-features) · [Stack](#-stack) · [Documentation](#-documentation)
 
 </div>
 
 ---
 
-## 🚀 Getting Started
+## ⚡ Quick Start
 
 ```bash
-# 1. Use this template on GitHub, then clone your repo
-
-# 2. Install & run
-bun install
-bun run dev
+bunx create-zynth-app my-app
+cd my-app
+bun dev
 ```
 
-**Configure your project:**
+That's it. Auth, database, and API are ready.
 
-| File | What to change |
-|------|----------------|
-| `package.json` | `name` |
-| `apps/api/alchemy.run.ts` | App name, worker name |
-| `apps/web/alchemy.run.ts` | App name, worker name, `domains` |
+---
 
-**Clean up boilerplate:**
+## ✨ Features
 
-Remove `docs/`, demo components in `apps/web/src/components/`, demo routes, and sample API endpoints.
+### Core
+- **Type-safe API** — Hono RPC, no manual fetch calls
+- **Authentication** — Email/password, magic link, Google & GitHub OAuth
+- **Database** — Drizzle ORM + Cloudflare D1 (SQLite)
+- **UI Components** — shadcn/ui + Tailwind CSS
 
-**Deploy:**
+### Infrastructure
+- **Edge-first** — Deploys to 300+ Cloudflare locations
+- **Service bindings** — Zero-latency worker-to-worker calls
+- **Background jobs** — Queues + cron triggers
+- **File storage** — R2 object storage with upload API
 
-```bash
-bun run deploy
-```
+### Optional Integrations
+- **Payments** — Polar.sh subscription billing
+- **Email** — Resend transactional emails
+- **Bot protection** — Cloudflare Turnstile
+
+### Developer Experience
+- **One-command deploy** — `bun deploy` via Alchemy
+- **Claude Code optimized** — Project context + slash commands
+- **Pre-commit hooks** — Auto-format with Biome
 
 ---
 
 ## 📦 Stack
 
-| Tool | Purpose |
-|------|---------|
-| [Hono](https://hono.dev) | Type-safe RPC |
-| [TanStack Router](https://tanstack.com/router) | File-based routing |
-| [React Query](https://tanstack.com/query) | Smart caching |
-| [shadcn/ui](https://ui.shadcn.com) | UI components |
-| [Alchemy](https://alchemy.run) | One-command deploy |
-| [Biome](https://biomejs.dev) | Fast lint & format |
-| [Turborepo](https://turbo.build) | Monorepo tasks |
+| Layer | Technology |
+|-------|------------|
+| **API** | [Hono](https://hono.dev) on Cloudflare Workers |
+| **Frontend** | [React 19](https://react.dev) + [TanStack Router](https://tanstack.com/router) |
+| **Database** | [Drizzle ORM](https://orm.drizzle.team) + [Cloudflare D1](https://developers.cloudflare.com/d1) |
+| **Auth** | [Better Auth](https://better-auth.com) |
+| **Styling** | [Tailwind CSS](https://tailwindcss.com) + [shadcn/ui](https://ui.shadcn.com) |
+| **Deploy** | [Alchemy](https://alchemy.run) (infrastructure-as-code) |
+| **Monorepo** | [Turborepo](https://turbo.build) + [Bun](https://bun.sh) |
 
 ---
 
-## 📁 Structure
+## 📁 Project Structure
 
 ```
-apps/
-  api/   →  Hono API (Cloudflare Worker)
-  web/   →  React SPA (Cloudflare Pages)
+├── apps/
+│   ├── api/          # Hono API (Cloudflare Worker)
+│   │   ├── src/
+│   │   │   ├── routes/       # API endpoints
+│   │   │   ├── db/           # Database schema
+│   │   │   ├── auth/         # Auth configuration
+│   │   │   └── jobs/         # Background job handlers
+│   │   └── drizzle/          # Migrations
+│   └── web/          # React frontend (Cloudflare Pages)
+│       └── src/
+│           ├── routes/       # Pages (file-based routing)
+│           ├── components/   # React components
+│           └── hooks/        # React Query hooks
+├── packages/
+│   ├── config/       # Shared configuration
+│   └── shared/       # Shared types & validation
 ```
 
 ---
 
 ## 🛠 Commands
 
-| Command | Description |
-|---------|-------------|
-| `bun run dev` | Start dev servers |
-| `bun run deploy` | Deploy to Cloudflare |
-| `bun run check` | Lint & format |
+```bash
+bun dev              # Start dev servers
+bun deploy           # Deploy to Cloudflare
+bun run build        # Build for production
+```
 
 ---
 
-## 🔜 Roadmap
+## ⚙️ Configuration
 
-| Feature | Status |
-|---------|--------|
-| Better Auth | Planned |
-| Drizzle + D1 | Planned |
-| Resend | Planned |
+After scaffolding, edit `.env` with your credentials:
+
+```bash
+# Required for local dev
+ALCHEMY_PASSWORD=any-string-for-dev
+
+# Required for deployment
+CLOUDFLARE_API_TOKEN=
+CLOUDFLARE_ZONE_ID=
+
+# Optional: enables email features
+RESEND_API_KEY=
+FROM_EMAIL=
+```
+
+Update `packages/config/src/index.ts` for your app:
+- `appName` — Your app name
+- `domains.web` — Your production domain (for deployment)
+
+---
+
+## 📖 Documentation
+
+- [Getting Started Guide](https://github.com/darkhorse-03/cloudflare-saas-template/wiki)
+- [API Routes](./apps/api/src/routes/)
+- [Database Schema](./apps/api/src/db/schema/)
+
+---
+
+## 🚀 Deploy
+
+```bash
+# Set environment variables
+export CLOUDFLARE_API_TOKEN=your-token
+export CLOUDFLARE_ZONE_ID=your-zone-id
+export ALCHEMY_PASSWORD=secure-password
+
+# Deploy
+bun deploy
+```
+
+Your app will be live on your configured domain.
+
+---
+
+## 📄 License
+
+MIT
+
+---
+
+<div align="center">
+
+**[Create your app now](https://www.npmjs.com/package/create-zynth-app)** · Built for indie hackers who ship fast
+
+</div>

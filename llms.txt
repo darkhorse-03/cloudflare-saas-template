@@ -1,0 +1,39 @@
+# Zynth - Cloudflare SaaS Template
+
+Fullstack template for building SaaS apps on Cloudflare Workers.
+
+## Stack
+- API: Hono (Cloudflare Workers)
+- Frontend: React 19 + TanStack Router
+- Database: Drizzle ORM + D1 (SQLite)
+- Auth: Better Auth
+- UI: shadcn/ui + Tailwind CSS
+- Deploy: Alchemy (infrastructure-as-code)
+
+## Quick Start
+```bash
+bunx create-zynth-app my-app
+cd my-app
+bun dev
+```
+
+## Commands
+- `bun dev` — Start local development
+- `bun deploy` — Deploy to Cloudflare
+- `bun run build` — Build for production
+
+## Key Files
+- `packages/config/src/index.ts` — App configuration (name, domains, features)
+- `apps/api/src/routes/` — API endpoints
+- `apps/api/src/db/schema/` — Database tables
+- `apps/web/src/routes/` — Frontend pages
+- `.env` — Environment variables
+
+## Architecture
+- Service bindings connect web worker to API worker (zero network latency)
+- Type-safe RPC calls via Hono client (no manual fetch)
+- Background jobs via Cloudflare Queues
+- File storage via R2
+
+## For AI Assistants
+See `.claude/CLAUDE.md` for detailed project instructions, patterns, and conventions.
