@@ -8,36 +8,62 @@ Zynth uses [Alchemy](https://alchemy.run) for infrastructure-as-code deployment 
 ## Prerequisites
 
 1. [Cloudflare account](https://dash.cloudflare.com/sign-up)
-2. API token with required permissions
-3. Environment variables configured
+2. Environment variables configured
 
-## Environment Variables
+## Authentication
+
+Alchemy supports two authentication methods:
+
+### Option 1: Browser OAuth (Recommended for local dev)
+
+By default, Alchemy authenticates via browser OAuth. Just run:
 
 ```bash
-# Required for deployment
-CLOUDFLARE_API_TOKEN=xxx    # API token with Workers, KV, D1, DNS permissions
-CLOUDFLARE_ZONE_ID=xxx      # Zone ID from Cloudflare Dashboard → your-domain → Overview
-ALCHEMY_PASSWORD=xxx        # Password for Alchemy state encryption
+bun run deploy
 ```
 
-### API Token Permissions
+Alchemy will open your browser to authenticate with Cloudflare. No API token needed.
 
-Create an API token at **Cloudflare Dashboard → My Profile → API Tokens → Create Token → Custom Token**:
+### Option 2: API Token (Required for CI/CD)
+
+For automated deployments (GitHub Actions, etc.), create an API token:
+
+1. Go to **Cloudflare Dashboard → My Profile → API Tokens → Create Token**
+2. Select **Custom Token**
+3. Add these permissions:
 
 | Scope | Permission | Purpose |
 |-------|------------|---------|
 | Account → Workers Scripts | Edit | Deploy workers |
 | Account → Workers KV Storage | Edit | Create KV namespaces (sessions) |
 | Account → D1 | Edit | Create D1 databases |
-| Account → Workers R2 Storage | Edit | Create R2 buckets (if storage enabled) |
+| Account → Workers R2 Storage | Edit | Create R2 buckets (file storage) |
+| Account → Cloudflare Queues | Edit | Create queues (background jobs) |
 | Zone → DNS | Edit | Create DNS records |
 | Zone → Zone | Read | Read zone info |
 
 <Callout type="warn">
-  Alchemy creates resources on first deploy. If your token lacks permissions, deployment will fail with cryptic errors. Create a token with **all** permissions above, even if you're not using all features yet.
+  Alchemy creates resources on first deploy. If your token lacks permissions, deployment will fail with `401 Unauthorized`. Create a token with **all** permissions above, even if you're not using all features yet.
 </Callout>
 
-**Quick setup**: Use the "Edit Cloudflare Workers" template as a starting point, then add D1, R2, and DNS permissions.
+**Quick setup**: Use the "Edit Cloudflare Workers" template as a starting point, then add D1, R2, Queues, and DNS permissions.
+
+## Environment Variables
+
+```bash
+# Required
+ALCHEMY_PASSWORD=xxx        # Encryption for Alchemy state (any string for local dev)
+
+# Optional - only if using API token auth instead of browser OAuth
+CLOUDFLARE_API_TOKEN=xxx    # API token with permissions above
+
+# Optional - only if deploying to custom domain
+CLOUDFLARE_ZONE_ID=xxx      # Zone ID from Cloudflare Dashboard → your-domain → Overview
+```
+
+<Callout type="info">
+  If `CLOUDFLARE_API_TOKEN` is set, it overrides browser OAuth. Leave it unset for local development to use the simpler browser auth flow.
+</Callout>
 
 ## Deploy
 
@@ -207,6 +233,8 @@ TanStack Start SPA mode requires all pages to be explicitly listed for prerender
 - **Errors**: Real-time error tracking in the dashboard
 
 ## CI/CD
+
+For automated deployments, you need an API token (browser OAuth won't work in CI).
 
 Example GitHub Actions workflow:
 
