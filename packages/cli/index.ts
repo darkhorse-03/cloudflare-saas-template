@@ -12,7 +12,7 @@ import { getProjectConfig } from './helpers/prompts.js'
 program
   .name('create-zynth-app')
   .description('Create a new Zynth fullstack app')
-  .version('0.0.4')
+  .version('0.0.5')
   .argument('[project-name]', 'Name of your project')
   .action(async (projectName?: string) => {
     console.clear()

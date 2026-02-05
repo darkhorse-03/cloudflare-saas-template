@@ -13,6 +13,7 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
+    "@cloudflare/vite-plugin": "^1.23.1",
     "@marsidev/react-turnstile": "^1.4.1",
     "@polar-sh/better-auth": "^1.6.3",
     "@radix-ui/react-avatar": "^1.1.11",
@@ -27,8 +28,8 @@
     "@radix-ui/react-tooltip": "^1.2.8",
     "@repo/api": "*",
     "@repo/config": "*",
-    "@repo/theme": "*",
     "@repo/shared": "*",
+    "@repo/theme": "*",
     "@tailwindcss/vite": "^4.0.6",
     "@tanstack/react-devtools": "^0.8.4",
     "@tanstack/react-form": "^1.27.5",
