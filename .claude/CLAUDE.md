@@ -337,7 +337,7 @@ app.post('/items', async (c) => {
 
 **Log levels:** `debug`, `info`, `warn`, `error`
 
-**Automatic logging:** Every request logs `request.start` and `request.end` with method, path, status, duration, and userId.
+**Automatic tracing:** Cloudflare provides request tracing automatically. Custom logs are only emitted for errors (with stack traces) and business events.
 
 **View logs:**
 - Real-time: `wrangler tail --format=json`
