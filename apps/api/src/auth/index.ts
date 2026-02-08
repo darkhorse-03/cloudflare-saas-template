@@ -33,17 +33,12 @@ function createAuth(env?: Env, cf?: IncomingRequestCfProperties) {
   return betterAuth({
     baseURL: config.webUrl,
     basePath: '/auth',
-    trustedOrigins: ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:8787'],
-    advanced: {
-      crossSubDomainCookies: {
-        enabled: true,
-        domain: `.${config.domains.web.split('.').slice(-2).join('.')}`,
-      },
-    },
-    session: {
-      expiresIn: 60 * 60 * 24 * 7,
-      updateAge: 60 * 60 * 24,
-    },
+    trustedOrigins: [
+      config.webUrl,
+      'http://localhost:5173',
+      'http://localhost:5174',
+      'http://localhost:8787',
+    ],
     socialProviders: getSocialProviders(env),
     ...withCloudflare(
       {
@@ -63,13 +58,32 @@ function createAuth(env?: Env, cf?: IncomingRequestCfProperties) {
           enabled: true,
           window: 60,
           max: 100,
+          // Custom rules must have window >= 60s for Cloudflare KV minimum TTL
+          // These override Better Auth's default 10s window for auth routes
           customRules: {
-            '/sign-in/email': { window: 60, max: 10 },
-            '/sign-up/email': { window: 60, max: 5 },
+            '/sign-in/*': { window: 60, max: 10 },
+            '/sign-up/*': { window: 60, max: 5 },
+            '/change-password': { window: 60, max: 5 },
+            '/change-email': { window: 60, max: 5 },
           },
         },
       },
     ),
+    // These must come AFTER withCloudflare spread to override its defaults
+    advanced: {
+      // Cross-subdomain cookies disabled - this template uses same-domain API (/api/*)
+      // Enable if you need auth shared across subdomains (e.g., api.example.com + app.example.com)
+      crossSubDomainCookies: {
+        enabled: false,
+      },
+    },
+    session: {
+      expiresIn: 60 * 60 * 24 * 7,
+      updateAge: 60 * 60 * 24,
+    },
+    account: {
+      storeStateStrategy: 'cookie',
+    },
     emailVerification: emailService
       ? {
           sendOnSignUp: true,

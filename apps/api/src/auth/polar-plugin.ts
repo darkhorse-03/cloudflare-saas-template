@@ -8,6 +8,11 @@ export function getPolarPlugin(polarClient: any, env?: Env) {
   return polar({
     client: polarClient,
     createCustomerOnSignUp: true,
+    // Include externalId on creation to avoid the plugin trying to update it later
+    // (Polar doesn't allow updating externalId once set)
+    // Type assertion needed - the runtime spreads these params into customers.create()
+    getCustomerCreateParams: async ({ user }) =>
+      ({ externalId: user.id }) as { metadata?: Record<string, string | number | boolean> },
     use: [
       checkout({
         products: Object.entries(config.payments.plans).flatMap(([slug, plan]) => {
