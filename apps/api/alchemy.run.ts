@@ -1,8 +1,9 @@
 import path from 'node:path'
 import { config } from '@repo/config'
 import alchemy from 'alchemy'
-import { D1Database, KVNamespace, Queue, R2Bucket, Worker } from 'alchemy/cloudflare'
+import { D1Database, KVNamespace, Queue, R2Bucket, Worker, Workflow } from 'alchemy/cloudflare'
 import type { Job } from './src/jobs/types'
+import type { UserOnboardingParams } from './src/workflows/types'
 
 if (!process.env.ALCHEMY_PASSWORD) {
   throw new Error(
@@ -40,6 +41,12 @@ export const jobsQueue = config.jobs.enabled
     })
   : null
 
+// User onboarding workflow (demonstrates multi-day orchestration)
+const onboardingWorkflow = Workflow<UserOnboardingParams>('onboarding-workflow', {
+  workflowName: `${config.appName}-user-onboarding`,
+  className: 'UserOnboardingWorkflow',
+})
+
 export const api = await Worker('worker', {
   name: `${config.appName}-api`,
   entrypoint: path.join(import.meta.dirname, 'src', 'index.ts'),
@@ -73,6 +80,8 @@ export const api = await Worker('worker', {
     }),
     // Background jobs queue (optional)
     ...(jobsQueue && { JOBS: jobsQueue }),
+    // Workflows
+    ONBOARDING_WORKFLOW: onboardingWorkflow,
   },
   // Queue consumer configuration
   eventSources: jobsQueue

@@ -7,12 +7,12 @@
 - **Pages** - Frontend (React + Vite)
 - **D1** - SQLite database
 - **KV** - Session storage
+- **R2** - Object storage
+- **Queues** - Background jobs
+- **Cron Triggers** - Scheduled tasks
+- **Workflows** - Multi-step orchestration
 
 ### Planned Integrations 🎯
-- **R2** - Object storage (#5)
-- **Queues** - Background jobs (#8)
-- **Cron Triggers** - Scheduled tasks (#8)
-- **Workflows** - Multi-step orchestration (#8)
 - **Email Routing** - Transactional emails (#1)
 - **Turnstile** - Bot protection (#3)
 - **Rate Limiting API** - Advanced rate limits (#3)
@@ -83,12 +83,12 @@
 - [X] Payment documentation
 
 ### 7. Monitoring & Observability
-- [ ] Error tracking (Sentry/Cloudflare Workers Analytics)
+- [ ] Error tracking (TBD - options: Sentry, Tail Workers, Logtail, Axiom)
 - [X] Structured logging
 - [X] Performance monitoring
 - [ ] Database query logging
 - [X] Cloudflare Analytics Engine (custom metrics, user events, privacy-friendly)
-- [ ] Alerting setup
+- [ ] Alerting setup (TBD - options: Tail Workers → Discord/Slack webhook)
 
 ### 8. Background Jobs
 - [X] Cloudflare Queues integration
@@ -96,7 +96,7 @@
 - [X] Email queue worker
 - [X] Cleanup jobs (old sessions, etc.)
 - [X] Job retry logic with exponential backoff
-- [ ] Cloudflare Workflows (orchestration for multi-step processes)
+- [X] Cloudflare Workflows (orchestration for multi-step processes)
 
 ---
 

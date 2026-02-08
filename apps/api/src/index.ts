@@ -10,6 +10,7 @@ import { authMiddleware } from '@/middleware/auth'
 import { requestLogger } from '@/middleware/logger'
 import { exportRoutes } from '@/routes/demo/export'
 import { itemsRoutes } from '@/routes/demo/items'
+import { onboardingRoutes } from '@/routes/demo/onboarding'
 import { preferencesRoutes } from '@/routes/demo/preferences'
 import { todosRoutes } from '@/routes/demo/todos'
 import { seedRoutes } from '@/routes/seed'
@@ -79,6 +80,7 @@ const apiRoutes = new Hono<AppContext>()
   .route('/demo/items', itemsRoutes)
   .route('/demo/preferences', preferencesRoutes)
   .route('/demo/export', exportRoutes)
+  .route('/demo/onboarding', onboardingRoutes)
   .route('/storage', storageRoutes)
   .route('/seed', seedRoutes)
 
@@ -87,6 +89,9 @@ app.route('/', apiRoutes)
 
 // Export the apiRoutes type for RPC client
 export type AppType = typeof apiRoutes
+
+// Export workflow classes (required by Cloudflare runtime)
+export { UserOnboardingWorkflow } from '@/workflows'
 
 // Worker exports with queue and scheduled handlers
 export default {
