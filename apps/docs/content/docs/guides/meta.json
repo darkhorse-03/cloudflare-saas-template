@@ -9,6 +9,7 @@
     "payments",
     "jobs",
     "logging",
+    "rate-limiting",
     "deployment"
   ]
 }

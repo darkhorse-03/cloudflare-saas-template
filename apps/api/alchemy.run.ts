@@ -1,7 +1,15 @@
 import path from 'node:path'
 import { config } from '@repo/config'
 import alchemy from 'alchemy'
-import { D1Database, KVNamespace, Queue, R2Bucket, Worker, Workflow } from 'alchemy/cloudflare'
+import {
+  D1Database,
+  KVNamespace,
+  Queue,
+  R2Bucket,
+  RateLimit,
+  Worker,
+  Workflow,
+} from 'alchemy/cloudflare'
 import type { Job } from './src/jobs/types'
 import type { UserOnboardingParams } from './src/workflows/types'
 
@@ -47,6 +55,39 @@ const onboardingWorkflow = Workflow<UserOnboardingParams>('onboarding-workflow',
   className: 'UserOnboardingWorkflow',
 })
 
+// Rate limiter bindings — one per tier for independent enforcement
+const rateLimiter = RateLimit({
+  namespace_id: 1001,
+  simple: {
+    limit: config.rateLimit.tiers.global.limit,
+    period: config.rateLimit.tiers.global.period,
+  },
+})
+
+const rateLimiterUpload = RateLimit({
+  namespace_id: 1002,
+  simple: {
+    limit: config.rateLimit.tiers.upload.limit,
+    period: config.rateLimit.tiers.upload.period,
+  },
+})
+
+const rateLimiterExport = RateLimit({
+  namespace_id: 1003,
+  simple: {
+    limit: config.rateLimit.tiers.export.limit,
+    period: config.rateLimit.tiers.export.period,
+  },
+})
+
+const rateLimiterSeed = RateLimit({
+  namespace_id: 1004,
+  simple: {
+    limit: config.rateLimit.tiers.seed.limit,
+    period: config.rateLimit.tiers.seed.period,
+  },
+})
+
 export const api = await Worker('worker', {
   name: `${config.appName}-api`,
   entrypoint: path.join(import.meta.dirname, 'src', 'index.ts'),
@@ -80,6 +121,11 @@ export const api = await Worker('worker', {
     }),
     // Background jobs queue (optional)
     ...(jobsQueue && { JOBS: jobsQueue }),
+    // Rate limiting (one binding per tier for independent enforcement)
+    RATE_LIMITER: rateLimiter,
+    RATE_LIMITER_UPLOAD: rateLimiterUpload,
+    RATE_LIMITER_EXPORT: rateLimiterExport,
+    RATE_LIMITER_SEED: rateLimiterSeed,
     // Workflows
     ONBOARDING_WORKFLOW: onboardingWorkflow,
   },

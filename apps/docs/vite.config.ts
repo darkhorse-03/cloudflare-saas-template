@@ -42,6 +42,7 @@ export default defineConfig({
         { path: '/docs/guides/jobs' },
         { path: '/docs/guides/logging' },
         { path: '/docs/guides/pages' },
+        { path: '/docs/guides/rate-limiting' },
         { path: '/docs/guides/payments' },
         { path: '/docs/guides/storage' },
         // Reference

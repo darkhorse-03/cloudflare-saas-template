@@ -73,6 +73,18 @@ export const config = {
     },
   },
 
+  // Rate limiting configuration (Cloudflare Workers Rate Limiting)
+  // Tiers define different limits for different API operations
+  rateLimit: {
+    tiers: {
+      global: { limit: 100, period: 60 as const },
+      upload: { limit: 10, period: 60 as const },
+      export: { limit: 5, period: 60 as const },
+      public: { limit: 60, period: 60 as const },
+      seed: { limit: 5, period: 60 as const },
+    },
+  },
+
   // Payments configuration (Polar.sh)
   // Set enabled: true and configure products in Polar dashboard
   payments: {

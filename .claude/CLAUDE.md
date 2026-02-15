@@ -343,6 +343,37 @@ app.post('/items', async (c) => {
 - Real-time: `wrangler tail --format=json`
 - Historical: Cloudflare Dashboard → Workers → Logs
 
+## Rate Limiting
+
+All API routes (except `/auth/*`) are rate-limited via Cloudflare's Rate Limiting bindings. Each tier has its own binding with independently enforced limits. Auth routes use Better Auth's own KV-based rate limiter.
+
+**Middleware:** `apps/api/src/middleware/rate-limit.ts`
+
+**Bindings** (configured in `apps/api/alchemy.run.ts`, limits from `packages/config/src/index.ts` → `config.rateLimit.tiers`):
+
+| Binding | Tier | Routes | Limit |
+|---------|------|--------|-------|
+| `RATE_LIMITER` | `global` | All API routes | 100 req/60s |
+| `RATE_LIMITER_UPLOAD` | `upload` | `/storage/upload`, `/storage/avatars/*` | 10 req/60s |
+| `RATE_LIMITER_EXPORT` | `export` | `/demo/export/*` | 5 req/60s |
+| `RATE_LIMITER_SEED` | `seed` | `/seed/*` | 5 req/60s |
+
+**Key function:** Authenticated users are keyed by `userId`, public requests by `CF-Connecting-IP`.
+
+**Adding a route-specific rate limit:**
+1. Add a tier to `packages/config/src/index.ts` → `config.rateLimit.tiers`
+2. Add a `RateLimit()` binding in `apps/api/alchemy.run.ts` with a unique `namespace_id` and add it to the Worker bindings
+3. Export a limiter in `apps/api/src/middleware/rate-limit.ts`:
+   ```ts
+   export const myLimiter = createRateLimiter((env) => env.RATE_LIMITER_MY_TIER)
+   ```
+4. Apply it in `apps/api/src/index.ts`:
+   ```ts
+   apiRoutes.use('/my-route/*', myLimiter)
+   ```
+
+**429 response:** `{ error: "Rate limit exceeded" }` with HTTP 429 status.
+
 ## Background Jobs
 
 Use Cloudflare Queues for async job processing:

@@ -1,0 +1,152 @@
+---
+title: Rate Limiting
+description: Protect your API with tiered rate limits using Cloudflare's native Rate Limiting bindings
+---
+
+Zynth includes built-in rate limiting using [Cloudflare's Rate Limiting binding](https://developers.cloudflare.com/workers/runtime-apis/bindings/rate-limit/), applied automatically to all API routes.
+
+## How It Works
+
+Each rate limit tier has its own dedicated Cloudflare Rate Limiting binding, configured in `apps/api/alchemy.run.ts`. This means each tier independently enforces its own limit at the Cloudflare level — upload routes are genuinely capped at 10 req/60s, not sharing a 100 req/60s ceiling with all other routes.
+
+- **Authenticated users** are keyed by `userId`
+- **Public requests** are keyed by `CF-Connecting-IP`
+- **Auth routes** (`/auth/*`) use Better Auth's own KV-based rate limiter instead
+
+## Rate Limit Tiers
+
+Tier limits are configured in `packages/config/src/index.ts`. Each tier maps to a separate Worker binding:
+
+| Binding | Tier | Routes | Limit | Period |
+|---------|------|--------|-------|--------|
+| `RATE_LIMITER` | `global` | All API routes | 100 requests | 60 seconds |
+| `RATE_LIMITER_UPLOAD` | `upload` | `/storage/upload`, `/storage/avatars/*` | 10 requests | 60 seconds |
+| `RATE_LIMITER_EXPORT` | `export` | `/demo/export/*` | 5 requests | 60 seconds |
+| `RATE_LIMITER_SEED` | `seed` | `/seed/*` | 5 requests | 60 seconds |
+
+## 429 Response
+
+When a client exceeds the rate limit, they receive:
+
+```json
+{
+  "error": "Rate limit exceeded"
+}
+```
+
+With HTTP status code `429 Too Many Requests`.
+
+## Architecture
+
+```
+Request → CORS → Logger → Auth → Rate Limiter → Route Handler
+                                    ↓
+                          /auth/* → Better Auth's own limiter
+                          /api/*  → Cloudflare Rate Limiting bindings
+```
+
+The global limiter runs on all API routes. Route-specific limiters run **in addition** to the global limiter, providing stricter limits on sensitive endpoints. Each limiter uses its own independent Cloudflare binding, so a user hitting upload routes 10 times will be blocked by the upload limiter even though the global limiter (100 req/60s) hasn't been reached.
+
+## Adding a Custom Rate Limit
+
+### 1. Add a Tier to Config
+
+```ts
+// packages/config/src/index.ts
+rateLimit: {
+  tiers: {
+    global: { limit: 100, period: 60 as const },
+    upload: { limit: 10, period: 60 as const },
+    export: { limit: 5, period: 60 as const },
+    public: { limit: 60, period: 60 as const },
+    seed: { limit: 5, period: 60 as const },
+    // Add your tier
+    ai: { limit: 20, period: 60 as const },
+  },
+},
+```
+
+### 2. Add a RateLimit Binding
+
+```ts
+// apps/api/alchemy.run.ts
+const rateLimiterAi = RateLimit({
+  namespace_id: 1005, // unique ID
+  simple: {
+    limit: config.rateLimit.tiers.ai.limit,
+    period: config.rateLimit.tiers.ai.period,
+  },
+})
+
+// Add to Worker bindings:
+bindings: {
+  // ...existing bindings
+  RATE_LIMITER_AI: rateLimiterAi,
+}
+```
+
+### 3. Export a Limiter
+
+```ts
+// apps/api/src/middleware/rate-limit.ts
+export const aiRateLimiter = createRateLimiter((env) => env.RATE_LIMITER_AI)
+```
+
+### 4. Apply to Routes
+
+```ts
+// apps/api/src/index.ts
+apiRoutes.use('/ai/*', aiRateLimiter)
+```
+
+The route-specific limiter stacks with the global limiter, so requests to `/ai/*` are subject to both the global limit (100 req/60s) and the AI limit (20 req/60s).
+
+## How the Middleware Works
+
+The rate limit middleware is in `apps/api/src/middleware/rate-limit.ts`:
+
+```ts
+import type { RateLimit } from '@cloudflare/workers-types'
+import type { MiddlewareHandler } from 'hono'
+import type { AppContext } from '@/env'
+
+export function createRateLimiter(
+  getBinding: (env: AppContext['Bindings']) => RateLimit,
+): MiddlewareHandler<AppContext> {
+  return async (c, next) => {
+    const user = c.get('user')
+    const key = user?.id ?? c.req.header('cf-connecting-ip') ?? ''
+
+    if (!key) {
+      await next()
+      return
+    }
+
+    const result = await getBinding(c.env).limit({ key })
+
+    if (!result.success) {
+      return c.json({ error: 'Rate limit exceeded' }, 429)
+    }
+
+    await next()
+  }
+}
+```
+
+Each limiter receives a function that extracts its specific binding from the environment. This ensures each tier enforces its own limit independently at the Cloudflare level.
+
+## Adjusting Limits
+
+To change an existing tier's limits, edit `packages/config/src/index.ts`:
+
+```ts
+rateLimit: {
+  tiers: {
+    global: { limit: 200, period: 60 as const }, // Doubled global limit
+    upload: { limit: 20, period: 60 as const },   // More generous uploads
+    // ...
+  },
+},
+```
+
+After changing limits, redeploy with `bun run deploy` to update the Cloudflare Rate Limiting binding configuration.

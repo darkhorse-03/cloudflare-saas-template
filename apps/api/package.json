@@ -23,6 +23,7 @@
     "cf-typegen": "wrangler types --env-interface CloudflareBindings"
   },
   "dependencies": {
+    "@elithrar/workers-hono-rate-limit": "^0.5.1",
     "@hono/zod-validator": "^0.7.6",
     "@polar-sh/better-auth": "^1.6.3",
     "@polar-sh/sdk": "^0.42.1",

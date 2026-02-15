@@ -8,6 +8,12 @@ import { handleScheduled, processJobBatch } from '@/jobs'
 import { createEmailService } from '@/lib/email'
 import { authMiddleware } from '@/middleware/auth'
 import { requestLogger } from '@/middleware/logger'
+import {
+  exportRateLimiter,
+  globalRateLimiter,
+  seedRateLimiter,
+  uploadRateLimiter,
+} from '@/middleware/rate-limit'
 import { exportRoutes } from '@/routes/demo/export'
 import { itemsRoutes } from '@/routes/demo/items'
 import { onboardingRoutes } from '@/routes/demo/onboarding'
@@ -57,6 +63,17 @@ app.all('/auth/*', (c) => {
 
 // Define routes separately for proper type inference
 const apiRoutes = new Hono<AppContext>()
+
+// Global rate limit on all API routes (excludes /auth/* which is handled separately)
+apiRoutes.use('/*', globalRateLimiter)
+
+// Route-specific stricter rate limits
+apiRoutes.use('/storage/upload', uploadRateLimiter)
+apiRoutes.use('/storage/avatars/*', uploadRateLimiter)
+apiRoutes.use('/demo/export/*', exportRateLimiter)
+apiRoutes.use('/seed/*', seedRateLimiter)
+
+const apiRoutesWithTypes = apiRoutes
   .get('/', (c) =>
     c.json({
       message: `Welcome to ${config.appName} API`,
@@ -85,10 +102,10 @@ const apiRoutes = new Hono<AppContext>()
   .route('/seed', seedRoutes)
 
 // Mount routes on app
-app.route('/', apiRoutes)
+app.route('/', apiRoutesWithTypes)
 
 // Export the apiRoutes type for RPC client
-export type AppType = typeof apiRoutes
+export type AppType = typeof apiRoutesWithTypes
 
 // Export workflow classes (required by Cloudflare runtime)
 export { UserOnboardingWorkflow } from '@/workflows'
