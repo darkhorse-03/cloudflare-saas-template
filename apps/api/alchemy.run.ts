@@ -1,17 +1,22 @@
 import path from 'node:path'
 import { config } from '@repo/config'
 import alchemy from 'alchemy'
-import {
-  D1Database,
-  KVNamespace,
-  Queue,
-  R2Bucket,
-  RateLimit,
-  Worker,
-  Workflow,
-} from 'alchemy/cloudflare'
+import { D1Database, KVNamespace, RateLimit, Worker } from 'alchemy/cloudflare'
+// @feature storage
+import { R2Bucket } from 'alchemy/cloudflare'
+// @end storage
+// @feature jobs
+import { Queue } from 'alchemy/cloudflare'
+// @end jobs
+// @feature workflows
+import { Workflow } from 'alchemy/cloudflare'
+// @end workflows
+// @feature jobs
 import type { Job } from './src/jobs/types'
+// @end jobs
+// @feature workflows
 import type { UserOnboardingParams } from './src/workflows/types'
+// @end workflows
 
 if (!process.env.ALCHEMY_PASSWORD) {
   throw new Error(
@@ -34,26 +39,29 @@ const kv = await KVNamespace('kv', {
   adopt: true,
 })
 
-// R2 storage bucket (optional - only created if storage is enabled)
+// @feature storage
 const r2 = config.storage.enabled
   ? await R2Bucket('storage', {
       name: `${config.appName}-storage`,
       adopt: true,
     })
   : null
+// @end storage
 
-// Background jobs queue (optional - only created if jobs are enabled)
+// @feature jobs
 export const jobsQueue = config.jobs.enabled
   ? await Queue<Job>('jobs-queue', {
       name: `${config.appName}-jobs`,
     })
   : null
+// @end jobs
 
-// User onboarding workflow (demonstrates multi-day orchestration)
+// @feature workflows
 const onboardingWorkflow = Workflow<UserOnboardingParams>('onboarding-workflow', {
   workflowName: `${config.appName}-user-onboarding`,
   className: 'UserOnboardingWorkflow',
 })
+// @end workflows
 
 // Rate limiter bindings — one per tier for independent enforcement
 const rateLimiter = RateLimit({
@@ -64,6 +72,7 @@ const rateLimiter = RateLimit({
   },
 })
 
+// @feature storage
 const rateLimiterUpload = RateLimit({
   namespace_id: 1002,
   simple: {
@@ -71,7 +80,9 @@ const rateLimiterUpload = RateLimit({
     period: config.rateLimit.tiers.upload.period,
   },
 })
+// @end storage
 
+// @feature demo
 const rateLimiterExport = RateLimit({
   namespace_id: 1003,
   simple: {
@@ -87,6 +98,7 @@ const rateLimiterSeed = RateLimit({
     period: config.rateLimit.tiers.seed.period,
   },
 })
+// @end demo
 
 export const api = await Worker('worker', {
   name: `${config.appName}-api`,
@@ -94,42 +106,54 @@ export const api = await Worker('worker', {
   bindings: {
     DB: db,
     KV: kv,
-    // Email service (optional - auth works without it, just no email verification/magic links)
+    // @feature email
     ...(process.env.RESEND_API_KEY && {
       RESEND_API_KEY: alchemy.secret(process.env.RESEND_API_KEY),
       FROM_EMAIL: alchemy.secret(process.env.FROM_EMAIL ?? ''),
     }),
-    // OAuth providers (optional)
+    // @end email
+    // @feature google-oauth
     ...(process.env.GOOGLE_CLIENT_ID && {
       GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
       GOOGLE_CLIENT_SECRET: alchemy.secret(process.env.GOOGLE_CLIENT_SECRET ?? ''),
     }),
+    // @end google-oauth
+    // @feature github-oauth
     ...(process.env.GITHUB_CLIENT_ID && {
       GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
       GITHUB_CLIENT_SECRET: alchemy.secret(process.env.GITHUB_CLIENT_SECRET ?? ''),
     }),
-    // Cloudflare Turnstile bot protection (optional)
+    // @end github-oauth
+    // @feature turnstile
     ...(process.env.TURNSTILE_SECRET_KEY && {
       TURNSTILE_SECRET_KEY: alchemy.secret(process.env.TURNSTILE_SECRET_KEY),
     }),
-    // R2 storage (optional)
+    // @end turnstile
+    // @feature storage
     ...(r2 && { R2: r2 }),
-    // Polar.sh payments (optional)
+    // @end storage
+    // @feature payments
     ...(process.env.POLAR_ACCESS_TOKEN && {
       POLAR_ACCESS_TOKEN: alchemy.secret(process.env.POLAR_ACCESS_TOKEN),
       POLAR_WEBHOOK_SECRET: alchemy.secret(process.env.POLAR_WEBHOOK_SECRET ?? ''),
     }),
-    // Background jobs queue (optional)
+    // @end payments
+    // @feature jobs
     ...(jobsQueue && { JOBS: jobsQueue }),
-    // Rate limiting (one binding per tier for independent enforcement)
+    // @end jobs
     RATE_LIMITER: rateLimiter,
+    // @feature storage
     RATE_LIMITER_UPLOAD: rateLimiterUpload,
+    // @end storage
+    // @feature demo
     RATE_LIMITER_EXPORT: rateLimiterExport,
     RATE_LIMITER_SEED: rateLimiterSeed,
-    // Workflows
+    // @end demo
+    // @feature workflows
     ONBOARDING_WORKFLOW: onboardingWorkflow,
+    // @end workflows
   },
-  // Queue consumer configuration
+  // @feature jobs
   eventSources: jobsQueue
     ? [
         {
@@ -141,10 +165,10 @@ export const api = await Worker('worker', {
         },
       ]
     : [],
-  // Cron triggers for scheduled jobs
   crons: config.jobs.enabled
     ? [config.jobs.cron.sessionCleanup, config.jobs.cron.expiredTokens]
     : [],
+  // @end jobs
   compatibilityFlags: ['nodejs_compat'],
   url: false,
   placement: {

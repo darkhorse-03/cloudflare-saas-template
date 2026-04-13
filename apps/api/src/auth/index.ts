@@ -6,22 +6,34 @@ import type {
 import { config } from '@repo/config'
 import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
-import { captcha, lastLoginMethod } from 'better-auth/plugins'
+// @feature turnstile
+import { captcha } from 'better-auth/plugins'
+// @end turnstile
+import { lastLoginMethod } from 'better-auth/plugins'
 import { withCloudflare } from 'better-auth-cloudflare'
 import { getDb } from '@/db'
+// @feature email
 import { createEmailService } from '@/lib/email'
 import { VerificationEmail } from '@/lib/email/templates/verification-email'
 import { WelcomeEmail } from '@/lib/email/templates/welcome-email'
+// @end email
 import type { Env } from '../env'
+// @feature email
 import { getEmailPlugins } from './email-plugins'
+// @end email
+// @feature payments
 import { getPolarPlugin } from './polar-plugin'
+// @end payments
 import { getSocialProviders } from './social-providers'
 
 function createAuth(env?: Env, cf?: IncomingRequestCfProperties) {
   // biome-ignore lint/suspicious/noExplicitAny: D1 type mismatch between runtime and CLI
   const db = env ? getDb(env.DB) : ({} as any)
+  // @feature email
   const emailService = env ? createEmailService(env) : null
+  // @end email
 
+  // @feature payments
   const polarClient =
     config.payments.enabled && env?.POLAR_ACCESS_TOKEN
       ? new (require('@polar-sh/sdk').Polar)({
@@ -29,6 +41,7 @@ function createAuth(env?: Env, cf?: IncomingRequestCfProperties) {
           server: config.payments.server,
         })
       : null
+  // @end payments
 
   return betterAuth({
     baseURL: config.webUrl,
@@ -52,7 +65,9 @@ function createAuth(env?: Env, cf?: IncomingRequestCfProperties) {
         emailAndPassword: {
           enabled: true,
           autoSignIn: false,
+          // @feature email
           requireEmailVerification: !!emailService,
+          // @end email
         },
         rateLimit: {
           enabled: true,
@@ -84,6 +99,7 @@ function createAuth(env?: Env, cf?: IncomingRequestCfProperties) {
     account: {
       storeStateStrategy: 'cookie',
     },
+    // @feature email
     emailVerification: emailService
       ? {
           sendOnSignUp: true,
@@ -107,10 +123,13 @@ function createAuth(env?: Env, cf?: IncomingRequestCfProperties) {
           },
         }
       : undefined,
+    // @end email
     plugins: [
+      // @feature turnstile
       ...(config.auth.turnstileSiteKey && env?.TURNSTILE_SECRET_KEY
         ? [captcha({ provider: 'cloudflare-turnstile', secretKey: env.TURNSTILE_SECRET_KEY })]
         : []),
+      // @end turnstile
       lastLoginMethod({
         customResolveMethod: (ctx) => {
           if (ctx.path === '/magic-link/verify') {
@@ -122,8 +141,12 @@ function createAuth(env?: Env, cf?: IncomingRequestCfProperties) {
           return null
         },
       }),
+      // @feature email
       ...(emailService ? getEmailPlugins(emailService) : []),
+      // @end email
+      // @feature payments
       ...(polarClient ? [getPolarPlugin(polarClient, env)] : []),
+      // @end payments
     ],
     ...(env
       ? {}

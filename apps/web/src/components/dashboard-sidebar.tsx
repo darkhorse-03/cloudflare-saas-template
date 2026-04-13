@@ -1,19 +1,15 @@
 import { config } from '@repo/config'
 import { Link, useNavigate, useRouterState } from '@tanstack/react-router'
-import {
-  BarChart3,
-  ChevronUp,
-  CreditCard,
-  HardDrive,
-  Home,
-  LogOut,
-  Moon,
-  Package,
-  Settings,
-  Sun,
-  User,
-  Users,
-} from 'lucide-react'
+import { ChevronUp, Home, LogOut, Moon, Settings, Sun, User } from 'lucide-react'
+// @feature demo
+import { BarChart3, Package, Users } from 'lucide-react'
+// @end demo
+// @feature storage
+import { HardDrive } from 'lucide-react'
+// @end storage
+// @feature payments
+import { CreditCard } from 'lucide-react'
+// @end payments
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import {
   DropdownMenu,
@@ -45,6 +41,7 @@ const navItems = [
     url: '/dashboard',
     icon: Home,
   },
+  // @feature demo
   {
     title: 'Analytics',
     url: '/dashboard/analytics',
@@ -60,6 +57,8 @@ const navItems = [
     url: '/dashboard/items',
     icon: Package,
   },
+  // @end demo
+  // @feature storage
   ...(config.storage.enabled
     ? [
         {
@@ -69,6 +68,8 @@ const navItems = [
         },
       ]
     : []),
+  // @end storage
+  // @feature payments
   ...(config.payments.enabled
     ? [
         {
@@ -78,6 +79,7 @@ const navItems = [
         },
       ]
     : []),
+  // @end payments
 ]
 
 export function DashboardSidebar() {

@@ -13,6 +13,12 @@
     "rootDir": ".",
     "strictNullChecks": true
   },
-  "include": ["index.ts", "helpers/**/*"],
+  "include": [
+    "index.ts",
+    "types.ts",
+    "helpers/**/*",
+    "scaffold/**/*",
+    "launcher/**/*"
+  ],
   "exclude": ["node_modules", "dist"]
 }

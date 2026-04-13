@@ -3,6 +3,7 @@ import type { Env } from '../env'
 
 export function getSocialProviders(env?: Env) {
   return {
+    // @feature google-oauth
     ...(config.auth.enableGoogleOAuth && env?.GOOGLE_CLIENT_ID
       ? {
           google: {
@@ -11,6 +12,8 @@ export function getSocialProviders(env?: Env) {
           },
         }
       : {}),
+    // @end google-oauth
+    // @feature github-oauth
     ...(config.auth.enableGitHubOAuth && env?.GITHUB_CLIENT_ID
       ? {
           github: {
@@ -19,5 +22,6 @@ export function getSocialProviders(env?: Env) {
           },
         }
       : {}),
+    // @end github-oauth
   }
 }

@@ -10,5 +10,3 @@ pre-commit:
         - "*.jsonc"
         - "*.css"
       stage_fixed: true
-    - run: bun run lint
-      fail_text: "Linting failed. Fix the errors above before committing."

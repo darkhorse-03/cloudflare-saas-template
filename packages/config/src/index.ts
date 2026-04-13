@@ -33,18 +33,22 @@ export const config = {
     enabled: false,
   },
 
-  // Auth feature flags
   auth: {
+    // @feature email
     enableMagicLink: true,
+    // @end email
+    // @feature google-oauth
     enableGoogleOAuth: true,
+    // @end google-oauth
+    // @feature github-oauth
     enableGitHubOAuth: false,
-    // Cloudflare Turnstile (bot protection)
-    // Get keys from: https://dash.cloudflare.com/turnstile
-    turnstileSiteKey: '', // Leave empty to disable
+    // @end github-oauth
+    // @feature turnstile
+    turnstileSiteKey: '',
+    // @end turnstile
   },
 
-  // Storage configuration (Cloudflare R2 + Images)
-  // Set enabled: true and configure R2 bucket to activate
+  // @feature storage
   storage: {
     enabled: true,
     // General upload limits
@@ -56,8 +60,9 @@ export const config = {
       allowedTypes: ['image/jpeg', 'image/png', 'image/webp'],
     },
   },
+  // @end storage
 
-  // Background jobs configuration (Cloudflare Queues + Cron)
+  // @feature jobs
   // Set enabled: true to activate queue worker and cron triggers
   jobs: {
     enabled: true,
@@ -72,20 +77,23 @@ export const config = {
       expiredTokens: '0 * * * *', // Hourly
     },
   },
+  // @end jobs
 
-  // Rate limiting configuration (Cloudflare Workers Rate Limiting)
-  // Tiers define different limits for different API operations
   rateLimit: {
     tiers: {
       global: { limit: 100, period: 60 as const },
+      // @feature storage
       upload: { limit: 10, period: 60 as const },
+      // @end storage
+      // @feature demo
       export: { limit: 5, period: 60 as const },
-      public: { limit: 60, period: 60 as const },
       seed: { limit: 5, period: 60 as const },
+      // @end demo
+      public: { limit: 60, period: 60 as const },
     },
   },
 
-  // Payments configuration (Polar.sh)
+  // @feature payments
   // Set enabled: true and configure products in Polar dashboard
   payments: {
     enabled: true, // Enable when ready to accept payments
@@ -137,9 +145,9 @@ export const config = {
     // Use 'sandbox' for testing, 'production' for live
     server: 'sandbox' as const,
   },
+  // @end payments
 
-  // Public/Marketing navigation links (Header component only)
-  // Note: Dashboard sidebar navigation is defined separately in dashboard-sidebar.tsx
+  // @feature marketing
   nav: [
     { label: 'Home', href: '/', newTab: false },
     { label: 'Pricing', href: '/pricing', newTab: false },
@@ -286,6 +294,7 @@ export const config = {
       ],
     },
   },
+  // @end marketing
 } as const
 
 export type Config = typeof config

@@ -33,11 +33,11 @@ export function createRateLimiter(
 /** Global rate limiter — applied to all API routes */
 export const globalRateLimiter = createRateLimiter((env) => env.RATE_LIMITER)
 
-/** Stricter rate limiter for file upload routes */
+// @feature storage
 export const uploadRateLimiter = createRateLimiter((env) => env.RATE_LIMITER_UPLOAD)
+// @end storage
 
-/** Stricter rate limiter for export routes */
+// @feature demo
 export const exportRateLimiter = createRateLimiter((env) => env.RATE_LIMITER_EXPORT)
-
-/** Rate limiter for seed routes */
 export const seedRateLimiter = createRateLimiter((env) => env.RATE_LIMITER_SEED)
+// @end demo

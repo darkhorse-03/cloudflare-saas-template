@@ -4,23 +4,30 @@ import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { createAuth } from '@/auth'
 import type { AppContext } from '@/env'
+// @feature jobs
 import { handleScheduled, processJobBatch } from '@/jobs'
+// @end jobs
+// @feature email
 import { createEmailService } from '@/lib/email'
+// @end email
 import { authMiddleware } from '@/middleware/auth'
 import { requestLogger } from '@/middleware/logger'
-import {
-  exportRateLimiter,
-  globalRateLimiter,
-  seedRateLimiter,
-  uploadRateLimiter,
-} from '@/middleware/rate-limit'
+import { globalRateLimiter } from '@/middleware/rate-limit'
+// @feature storage
+import { uploadRateLimiter } from '@/middleware/rate-limit'
+// @end storage
+// @feature demo
+import { exportRateLimiter, seedRateLimiter } from '@/middleware/rate-limit'
 import { exportRoutes } from '@/routes/demo/export'
 import { itemsRoutes } from '@/routes/demo/items'
 import { onboardingRoutes } from '@/routes/demo/onboarding'
 import { preferencesRoutes } from '@/routes/demo/preferences'
 import { todosRoutes } from '@/routes/demo/todos'
 import { seedRoutes } from '@/routes/seed'
+// @end demo
+// @feature storage
 import { storageRoutes } from '@/routes/storage'
+// @end storage
 
 // Create base app with middleware
 const app = new Hono<AppContext>()
@@ -46,6 +53,7 @@ app.use('/*', async (c, next) => {
   await next()
 })
 
+// @feature email
 app.use('/*', async (c, next) => {
   const emailService = createEmailService(c.env)
   if (emailService) {
@@ -53,6 +61,7 @@ app.use('/*', async (c, next) => {
   }
   await next()
 })
+// @end email
 
 app.use('/*', authMiddleware)
 
@@ -67,11 +76,14 @@ const apiRoutes = new Hono<AppContext>()
 // Global rate limit on all API routes (excludes /auth/* which is handled separately)
 apiRoutes.use('/*', globalRateLimiter)
 
-// Route-specific stricter rate limits
+// @feature storage
 apiRoutes.use('/storage/upload', uploadRateLimiter)
 apiRoutes.use('/storage/avatars/*', uploadRateLimiter)
+// @end storage
+// @feature demo
 apiRoutes.use('/demo/export/*', exportRateLimiter)
 apiRoutes.use('/seed/*', seedRateLimiter)
+// @end demo
 
 const apiRoutesWithTypes = apiRoutes
   .get('/', (c) =>
@@ -93,13 +105,19 @@ const apiRoutesWithTypes = apiRoutes
       uuid: crypto.randomUUID(),
     }),
   )
+  // @feature demo
   .route('/demo/todos', todosRoutes)
   .route('/demo/items', itemsRoutes)
   .route('/demo/preferences', preferencesRoutes)
   .route('/demo/export', exportRoutes)
   .route('/demo/onboarding', onboardingRoutes)
+  // @end demo
+  // @feature storage
   .route('/storage', storageRoutes)
+  // @end storage
+  // @feature demo
   .route('/seed', seedRoutes)
+// @end demo
 
 // Mount routes on app
 app.route('/', apiRoutesWithTypes)
@@ -107,12 +125,14 @@ app.route('/', apiRoutesWithTypes)
 // Export the apiRoutes type for RPC client
 export type AppType = typeof apiRoutesWithTypes
 
-// Export workflow classes (required by Cloudflare runtime)
+// @feature workflows
 export { UserOnboardingWorkflow } from '@/workflows'
+// @end workflows
 
-// Worker exports with queue and scheduled handlers
 export default {
   fetch: app.fetch,
+  // @feature jobs
   queue: processJobBatch,
   scheduled: handleScheduled,
+  // @end jobs
 }
